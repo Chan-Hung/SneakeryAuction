@@ -18,9 +18,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     //Common approach where we only pass a String-based 'username' (or email) argument and
     //return a UserDetails
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(()->new UsernameNotFoundException("User Not Found with username: " + username));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        //In this case, email is the username of the application
+        User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(()->new UsernameNotFoundException("User Not Found with email: " + email));
 
         return UserDetailsImpl.build(user);
     }
