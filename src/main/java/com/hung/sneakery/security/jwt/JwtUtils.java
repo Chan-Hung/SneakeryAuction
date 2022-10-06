@@ -5,12 +5,9 @@ import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.WebUtils;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
@@ -23,48 +20,64 @@ public class JwtUtils {
     @Value("${hung.com.jwtExprirationMs}")
     private int jwtExpirationsMs;
 
-    @Value("${hung.com.jwtCookieName}")
-    private String jwtCookie;
 
-
-    //get JWT from Cookies by Cookie name
+    //region Use Cookie - getJwtFromCookie()
+    //Get JWT from Cookies by Cookie name
     //and then return cookie's value if cookie is non-null
-    public String getJwtFromCookies(HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
-        if (cookie != null) {
-            return cookie.getValue();
-        } else {
-            return null;
-        }
-    }
+//    public String getJwtFromCookies(HttpServletRequest request) {
+//        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
+//        if (cookie != null) {
+//            return cookie.getValue();
+//        } else {
+//            return null;
+//        }
+//    }
+    //endregion
 
-    public String generateTokenFromUsername(String username){
+    //region Use Cookie - 1.generateTokenFromUsername() (region with Ctrl + Alt + T)
+    //    public String generateTokenFromUsername(String username){
+//        return Jwts.builder()
+//                .setSubject(username)
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date((new Date()).getTime() + jwtExpirationsMs))
+//                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+//                .compact();
+//    }
+    //endregion
+
+    public String generateJwtToken(Authentication authentication){
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationsMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
+    //region Use Cookie - 2.generateJwtCookie()
     //Generating a JwtCookie after signing in, containing username, date, expiration, secret
-    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal){
-        String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
-                .path("/api")
-                .maxAge(24*60*60) //Expire in 1 day
-                .httpOnly(true)
-                .build();
-        return cookie;
-    }
+//    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal){
+//        String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+//        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
+//                .path("/api")
+//                .maxAge(24*60*60) //Expire in 1 day
+//                .httpOnly(true)
+//                .build();
+//        return cookie;
+//    }
+    //endregion
 
+    //region Use Cookie - getCleanJwtCookie()
     //Cleaning the cookie after logging out
-    public ResponseCookie getCleanJwtCookie(){
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
-                .path("/api")
-                .build();
-        return cookie;
-    }
+//    public ResponseCookie getCleanJwtCookie(){
+//        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
+//                .path("/api")
+//                .build();
+//        return cookie;
+//    }
+    //endregion
 
 
     public String getUsernameFromJwtToken(String token){

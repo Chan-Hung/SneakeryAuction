@@ -24,7 +24,7 @@ public class User {
     private String username;
 
     @NotBlank
-    @Size
+    @Size (max = 50)
     @Email
     private String email;
 

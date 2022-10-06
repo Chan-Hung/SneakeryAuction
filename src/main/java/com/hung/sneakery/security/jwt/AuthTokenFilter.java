@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -28,14 +29,25 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     //Call getJwtFromCookie() method to get cookie's value
     private String parseJwt(HttpServletRequest request){
-        String jwt = jwtUtils.getJwtFromCookies(request);
-        return jwt;
+
+        //Use cookies
+//        String jwt = jwtUtils.getJwtFromCookies(request);
+//        return jwt;
+
+        //Use Auth Header
+        String headerAuth = request.getHeader("Authorization");
+
+        if(StringUtils.hasText(headerAuth) && headerAuth
+                .startsWith("Bearer ")){
+            return headerAuth.substring(7);
+        }
+        return null;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
-            //get JWT from the HTTP cookie
+            //get JWT from the HTTP Auth Header
             String jwt = parseJwt(request);
             if(jwt != null && jwtUtils.validateJwtToken(jwt)){
 
