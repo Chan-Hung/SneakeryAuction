@@ -15,6 +15,7 @@ public class SignupRequest {
     @Email
     private String email;
 
+    //Can be blank
     private Set<String> role;
 
     @NotBlank

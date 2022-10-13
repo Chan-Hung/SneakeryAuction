@@ -4,14 +4,17 @@ package com.hung.sneakery.controller;
 import com.hung.sneakery.model.ERole;
 import com.hung.sneakery.model.Role;
 import com.hung.sneakery.model.User;
+import com.hung.sneakery.payload.request.EmailRequest;
 import com.hung.sneakery.payload.request.LoginRequest;
 import com.hung.sneakery.payload.request.SignupRequest;
+import com.hung.sneakery.payload.response.CheckEmailResponse;
 import com.hung.sneakery.payload.response.JwtResponse;
 import com.hung.sneakery.payload.response.MessageResponse;
 import com.hung.sneakery.repository.RoleRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.security.jwt.JwtUtils;
 import com.hung.sneakery.security.services.UserDetailsImpl;
+import com.hung.sneakery.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,14 +24,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins="*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:3000/")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -46,6 +51,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    MailService mailService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
@@ -69,13 +77,23 @@ public class AuthController {
                 userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles ));
     }
 
+    @PostMapping("/checkemail")
+    public ResponseEntity<?> checkEmail(@Valid @RequestBody EmailRequest emailRequest) throws MessagingException{
+        if (userRepository.existsByEmail(emailRequest.getEmail())){
+            return ResponseEntity.ok(new CheckEmailResponse(Boolean.TRUE));
+        }
+        return ResponseEntity.ok(new CheckEmailResponse(Boolean.FALSE));
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
+        //region Not necessary
 //        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 //            return ResponseEntity
 //                    .badRequest()
 //                    .body(new MessageResponse("Error: Username has already existed"));
 //        }
+        //endregion
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
@@ -88,7 +106,8 @@ public class AuthController {
                 signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
-
+        //Necessary or not?
+//        mailService.sendVerificationEmail(user);
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -119,6 +138,7 @@ public class AuthController {
 
         }
         user.setRoles(roles);
+
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
