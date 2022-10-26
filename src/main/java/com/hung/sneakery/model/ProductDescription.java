@@ -14,6 +14,27 @@ public class ProductDescription {
     @Column(name="color")
     private String color;
 
+    @Column(name="size")
+    private String size;
+
+    @Column(name = "price")
+    private Long price;
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
 
     public Long getId() {
         return id;
@@ -42,8 +63,11 @@ public class ProductDescription {
     public ProductDescription() {
     }
 
-    public ProductDescription(Long id, String color) {
+    public ProductDescription(Long id, String brand, String color, String size, Long price) {
         this.id = id;
+        this.brand = brand;
         this.color = color;
+        this.size = size;
+        this.price = price;
     }
 }

@@ -12,11 +12,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "product_name")
     private String name;
-
-    @Column(name="price")
-    private Long price;
 
     //'Condition' is a reserved word
     //which mean can not set as a property name
@@ -40,7 +37,7 @@ public class Product {
     private List<ProductImage> productImage;
 
     @ManyToOne
-    @JoinColumn(name="buyer_id", nullable = false)
+    @JoinColumn(name="seller_id", nullable = false)
     private User user;
 
     public Long getId() {
@@ -57,14 +54,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
     }
 
     public String getCondition() {
@@ -110,10 +99,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String name, Long price, String condition) {
+    public Product(Long id, String name, String condition) {
         this.id = id;
         this.name = name;
-        this.price = price;
         this.condition = condition;
     }
 }

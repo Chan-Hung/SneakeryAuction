@@ -1,9 +1,6 @@
 package com.hung.sneakery.model;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "product_category")
@@ -13,12 +10,8 @@ public class ProductCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "typeName")
+    @Column(name = "category_name")
     private String typeName;
-
-    @CreationTimestamp
-    @Temporal(TemporalType.DATE)
-    private Date createdAt;
 
     public Long getId() {
         return id;
@@ -36,21 +29,12 @@ public class ProductCategory {
         this.typeName = typeName;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public ProductCategory() {
     }
 
-    public ProductCategory(Long id, String typeName, Date createdAt) {
+    public ProductCategory(Long id, String typeName) {
         this.id = id;
         this.typeName = typeName;
-        this.createdAt = createdAt;
     }
 
 }

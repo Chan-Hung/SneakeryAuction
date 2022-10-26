@@ -1,5 +1,7 @@
 package com.hung.sneakery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,6 +14,7 @@ public class District {
     @Column(name = "district_name")
     private String name;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="city_id")
     private City city;

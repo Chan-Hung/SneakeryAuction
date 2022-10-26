@@ -1,5 +1,7 @@
 package com.hung.sneakery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,8 +15,9 @@ public class Ward {
     @Column(name = "ward_name")
     private String name;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="city_id")
+    @JoinColumn(name="district_id")
     private District district;
 
     public Long getId() {
