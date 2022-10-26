@@ -18,6 +18,7 @@ public class SignupRequest {
     //Can be blank
     private Set<String> role;
 
+    //Custom message exxception
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
