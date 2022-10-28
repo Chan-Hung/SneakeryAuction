@@ -3,8 +3,8 @@ package com.hung.sneakery.dto.product;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.model.ProductImage;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ProductDto {
@@ -26,7 +26,7 @@ public class ProductDto {
 
     private String size;
 
-    private Date endBid;
+    private Timestamp endBid;
 
     public ProductDto(Product product){
         this.setId(product.getId());
@@ -48,7 +48,7 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public ProductDto(Long id, String name, String condition, Long startPrice, List<String> imagePath, String category, String brand, String color, String size, Date endBid) {
+    public ProductDto(Long id, String name, String condition, Long startPrice, List<String> imagePath, String category, String brand, String color, String size, Timestamp endBid) {
         this.id = id;
         this.name = name;
         this.condition = condition;
@@ -133,11 +133,11 @@ public class ProductDto {
         this.size = size;
     }
 
-    public Date getEndBid() {
+    public Timestamp getEndBid() {
         return endBid;
     }
 
-    public void setEndBid(Date endBid) {
+    public void setEndBid(Timestamp endBid) {
         this.endBid = endBid;
     }
 }
