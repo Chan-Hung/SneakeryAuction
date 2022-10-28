@@ -1,5 +1,7 @@
 package com.hung.sneakery.model;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -28,6 +30,10 @@ public class Bid {
 
     @Column(name="step_bid")
     private Long step_bid;
+
+    @Column(name="price_win")
+    @Nullable
+    private Long priceWin;
 
 
     @ManyToMany(fetch = FetchType.EAGER)

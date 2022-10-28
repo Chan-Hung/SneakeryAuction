@@ -36,6 +36,10 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductImage> productImage;
 
+    @OneToOne
+    @JoinColumn(name = "bid_id")
+    private Bid bid;
+
     @ManyToOne
     @JoinColumn(name="seller_id", nullable = false)
     private User user;
@@ -86,6 +90,14 @@ public class Product {
 
     public void setProductImage(List<ProductImage> productImage) {
         this.productImage = productImage;
+    }
+
+    public Bid getBid() {
+        return bid;
+    }
+
+    public void setBid(Bid bid) {
+        this.bid = bid;
     }
 
     public User getUser() {
