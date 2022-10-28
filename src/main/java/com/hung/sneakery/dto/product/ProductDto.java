@@ -43,7 +43,7 @@ public class ProductDto {
         this.setBrand(product.getProductDescription().getBrand());
         this.setColor(product.getProductDescription().getColor());
         this.setSize(product.getProductDescription().getSize());
-        this.setEndBid(product.getBid().getEnd_bid());
+        //this.setEndBid(2022-10-28);
     }
     public ProductDto() {
     }
