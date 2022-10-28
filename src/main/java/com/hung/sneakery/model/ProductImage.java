@@ -1,5 +1,7 @@
 package com.hung.sneakery.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -39,6 +41,7 @@ public class ProductImage {
 
     @ManyToOne
     @JoinColumn(name="product_id", nullable = false)
+    @JsonBackReference
     private Product product;
 
     public Product getProduct() {
