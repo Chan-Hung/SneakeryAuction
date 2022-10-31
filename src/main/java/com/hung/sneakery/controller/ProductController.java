@@ -26,7 +26,7 @@ public class ProductController {
     @GetMapping("/products/homepage")
     public ResponseEntity<Map<String, Object>> getProductsHomepage(){
         try{
-            int page = 0, size = 8;
+            int page = 0, size = 100;
 //            List<Product> products = new ArrayList<Product>();
             Pageable paging = PageRequest.of(page, size);
             Page<Product> pageTuts;
