@@ -11,7 +11,7 @@ public class ProductCategory {
     private Long id;
 
     @Column(name = "category_name")
-    private String typeName;
+    private String categoryName;
 
     public Long getId() {
         return id;
@@ -21,20 +21,19 @@ public class ProductCategory {
         this.id = id;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public ProductCategory() {
     }
 
-    public ProductCategory(Long id, String typeName) {
+    public ProductCategory(Long id, String categoryName) {
         this.id = id;
-        this.typeName = typeName;
+        this.categoryName = categoryName;
     }
-
 }

@@ -39,7 +39,7 @@ public class ProductDetailedDto {
             imageList.add(imagePathSingle);
         }
         this.setImagePath(imageList);
-        this.setCategory(product.getProductCategory().getTypeName());
+        this.setCategory(product.getProductCategory().getCategoryName());
         this.setBrand(product.getProductDescription().getBrand());
         this.setColor(product.getProductDescription().getColor());
         this.setSize(product.getProductDescription().getSize());

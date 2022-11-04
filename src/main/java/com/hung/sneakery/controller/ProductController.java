@@ -3,6 +3,8 @@ package com.hung.sneakery.controller;
 import com.hung.sneakery.dto.product.ProductDetailedDto;
 import com.hung.sneakery.dto.product.ProductDto;
 import com.hung.sneakery.model.Product;
+import com.hung.sneakery.model.ProductCategory;
+import com.hung.sneakery.repository.ProductCategoryRepository;
 import com.hung.sneakery.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,27 +24,19 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+
+    @Autowired
+    private ProductCategoryRepository productCategoryRepository;
     //Pagination and Filter
-    @GetMapping("/products/homepage")
-    public ResponseEntity<Map<String, Object>> getProductsHomepage(){
+    @GetMapping("/products/homepage/{page}")
+    public ResponseEntity<Map<String, Object>> getProductsHomepage(@PathVariable Integer page){
         try{
-            int page = 0, size = 8;
+            int size = 8;
             Pageable paging = PageRequest.of(page, size);
             Page<Product> pageTuts;
 
             pageTuts = productRepository.findAll(paging);
-            List<ProductDto> productDtos = new ArrayList<>();
-            for(Product product : pageTuts.getContent())
-            {
-                ProductDto productHomepageDto = new ProductDto(product);
-                productDtos.add(productHomepageDto);
-            }
-            Map<String, Object> response = new HashMap<>();
-            response.put("products", productDtos);
-            response.put("currentPage", pageTuts.getNumber());
-            response.put("totalItems", pageTuts.getTotalElements());
-            response.put("totalPages", pageTuts.getTotalPages());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return getMapResponseEntity(pageTuts);
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -57,29 +51,36 @@ public class ProductController {
         return ResponseEntity.ok(productDetailedDto);
     }
 
-    @GetMapping("/products/{category}/{page}")
-    public ResponseEntity<Map<String, Object>> getProductsByCategory(@PathVariable String category, Integer page){
+    @GetMapping("/products/{categoryName}/{page}")
+    public ResponseEntity<Map<String, Object>> getProductsByCategory(@PathVariable String categoryName,@PathVariable Integer page){
         try{
             int size = 8;
             Pageable paging = PageRequest.of(page, size);
             Page<Product> pageTuts;
+            ProductCategory productCategory = productCategoryRepository.findByCategoryName(categoryName);
 
-            pageTuts = productRepository.findAll(paging);
-            List<ProductDto> productDtos = new ArrayList<>();
-            for(Product product : pageTuts.getContent())
-            {
-                ProductDto productHomepageDto = new ProductDto(product);
-                productDtos.add(productHomepageDto);
-            }
-            Map<String, Object> response = new HashMap<>();
-            response.put("products", productDtos);
-            response.put("currentPage", pageTuts.getNumber());
-            response.put("totalItems", pageTuts.getTotalElements());
-            response.put("totalPages", pageTuts.getTotalPages());
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            pageTuts = productRepository.findByProductCategory(productCategory, paging);
+            return getMapResponseEntity(pageTuts);
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    //GetMapResponseEntity
+    private ResponseEntity<Map<String, Object>> getMapResponseEntity(Page<Product> pageTuts) {
+        List<ProductDto> productDtos = new ArrayList<>();
+        for(Product product : pageTuts.getContent())
+        {
+            ProductDto productHomepageDto = new ProductDto(product);
+            productDtos.add(productHomepageDto);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", productDtos);
+        response.put("currentPage", pageTuts.getNumber());
+        response.put("totalItems", pageTuts.getTotalElements());
+        response.put("totalPages", pageTuts.getTotalPages());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
