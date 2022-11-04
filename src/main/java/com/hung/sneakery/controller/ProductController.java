@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://sneakery-kietdarealist.vercel.app/")
 @RequestMapping("/api")
 public class ProductController {
 

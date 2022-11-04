@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("https://localhost:3000")
+@CrossOrigin("https://sneakery-kietdarealist.vercel.app/")
 @RequestMapping("/api/address")
 public class AddressController {
 
