@@ -1,7 +1,7 @@
 package com.hung.sneakery.controller;
 
+import com.hung.sneakery.dto.product.ProductDetailedDto;
 import com.hung.sneakery.dto.product.ProductDto;
-import com.hung.sneakery.dto.product.ProductHomepageDto;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +22,19 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    //Pageination and Filter
+    //Pagination and Filter
     @GetMapping("/products/homepage")
     public ResponseEntity<Map<String, Object>> getProductsHomepage(){
         try{
             int page = 0, size = 8;
-//            List<Product> products = new ArrayList<Product>();
             Pageable paging = PageRequest.of(page, size);
             Page<Product> pageTuts;
 
             pageTuts = productRepository.findAll(paging);
-            List<ProductHomepageDto> productDtos = new ArrayList<>();
+            List<ProductDto> productDtos = new ArrayList<>();
             for(Product product : pageTuts.getContent())
             {
-                ProductHomepageDto productHomepageDto = new ProductHomepageDto(product);
+                ProductDto productHomepageDto = new ProductDto(product);
                 productDtos.add(productHomepageDto);
             }
             Map<String, Object> response = new HashMap<>();
@@ -50,12 +49,37 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-     public ResponseEntity<ProductDto> getProductDetailed(@PathVariable Long id){
+     public ResponseEntity<ProductDetailedDto> getProductDetailed(@PathVariable Long id){
         Optional<Product> optionalProduct = productRepository.findById(id);
-        Product product = optionalProduct.get();
+        Product product = optionalProduct.orElse(null);
         System.out.println(product);
-        ProductDto productDto = new ProductDto(product);
-        return ResponseEntity.ok(productDto);
+        ProductDetailedDto productDetailedDto = new ProductDetailedDto(product);
+        return ResponseEntity.ok(productDetailedDto);
+    }
+
+    @GetMapping("/products/{category}/{page}")
+    public ResponseEntity<Map<String, Object>> getProductsByCategory(@PathVariable String category, Integer page){
+        try{
+            int size = 8;
+            Pageable paging = PageRequest.of(page, size);
+            Page<Product> pageTuts;
+
+            pageTuts = productRepository.findAll(paging);
+            List<ProductDto> productDtos = new ArrayList<>();
+            for(Product product : pageTuts.getContent())
+            {
+                ProductDto productHomepageDto = new ProductDto(product);
+                productDtos.add(productHomepageDto);
+            }
+            Map<String, Object> response = new HashMap<>();
+            response.put("products", productDtos);
+            response.put("currentPage", pageTuts.getNumber());
+            response.put("totalItems", pageTuts.getTotalElements());
+            response.put("totalPages", pageTuts.getTotalPages());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

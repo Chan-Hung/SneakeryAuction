@@ -64,6 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //Allow all request go to endpoint ("/api/auth/**") and ("/api/test/**") without being authenticated
         http
+                .cors()
+                .and()
                 .csrf()
                 .disable()
                 .exceptionHandling()

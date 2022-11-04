@@ -3,62 +3,33 @@ package com.hung.sneakery.dto.product;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.model.ProductImage;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
 public class ProductDto {
     private Long id;
-
     private String name;
-
-    private String condition;
-
     private Long startPrice;
-
-    private List<String> imagePath;
-
-    private String category;
-
-    private String brand;
-
-    private String color;
-
-    private String size;
-
-    private Timestamp endBid;
+    private String imagePath;
+    private String username;
 
     public ProductDto(Product product){
         this.setId(product.getId());
         this.setName(product.getName());
-        this.setCondition(product.getCondition());
-        this.setStartPrice(product.getProductDescription().getPrice());
-        List<String> imageList = new ArrayList<String>();
         for (ProductImage productImage: product.getProductImage()) {
-            String imagePathSingle = productImage.getPath();
-            imageList.add(imagePathSingle);
+            this.setImagePath(productImage.getPath());
+            break;
         }
-        this.setImagePath(imageList);
-        this.setCategory(product.getProductCategory().getTypeName());
-        this.setBrand(product.getProductDescription().getBrand());
-        this.setColor(product.getProductDescription().getColor());
-        this.setSize(product.getProductDescription().getSize());
-        //this.setEndBid(2022-10-28);
+        this.setStartPrice(product.getProductDescription().getPrice());
+        this.setUsername(product.getUser().getUsername());
     }
+
     public ProductDto() {
     }
 
-    public ProductDto(Long id, String name, String condition, Long startPrice, List<String> imagePath, String category, String brand, String color, String size, Timestamp endBid) {
+    public ProductDto(Long id, String name, Long startPrice, String imagePath, String username) {
         this.id = id;
         this.name = name;
-        this.condition = condition;
         this.startPrice = startPrice;
         this.imagePath = imagePath;
-        this.category = category;
-        this.brand = brand;
-        this.color = color;
-        this.size = size;
-        this.endBid = endBid;
+        this.username = username;
     }
 
     public Long getId() {
@@ -77,14 +48,6 @@ public class ProductDto {
         this.name = name;
     }
 
-    public String getCondition() {
-        return condition;
-    }
-
-    public void setCondition(String condition) {
-        this.condition = condition;
-    }
-
     public Long getStartPrice() {
         return startPrice;
     }
@@ -93,51 +56,19 @@ public class ProductDto {
         this.startPrice = startPrice;
     }
 
-    public List<String> getImagePath() {
+    public String getImagePath() {
         return imagePath;
     }
 
-    public void setImagePath(List<String> imagePath) {
+    public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
-    public String getCategory() {
-        return category;
+    public String getUsername() {
+        return username;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public Timestamp getEndBid() {
-        return endBid;
-    }
-
-    public void setEndBid(Timestamp endBid) {
-        this.endBid = endBid;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
