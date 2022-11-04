@@ -28,13 +28,15 @@ public class ProductController {
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
     //Pagination and Filter
-    @GetMapping("/products/homepage/{page}")
-    public ResponseEntity<Map<String, Object>> getProductsHomepage(@PathVariable Integer page){
+    @GetMapping("/products/homepage")
+    public ResponseEntity<Map<String, Object>> getProductsHomepage(){
         try{
-            int size = 8;
-            Pageable paging = PageRequest.of(page, size);
+            //Products displayed on homepage
+            int size = 40;
+            Pageable paging = PageRequest.of(0, size);
             Page<Product> pageTuts;
 
+            //Return Entity if successful
             pageTuts = productRepository.findAll(paging);
             return getMapResponseEntity(pageTuts);
         }catch (Exception e) {
@@ -54,11 +56,15 @@ public class ProductController {
     @GetMapping("/products/{categoryName}/{page}")
     public ResponseEntity<Map<String, Object>> getProductsByCategory(@PathVariable String categoryName,@PathVariable Integer page){
         try{
-            int size = 8;
+            //9 products displayed per page
+            int size = 9;
             Pageable paging = PageRequest.of(page, size);
             Page<Product> pageTuts;
+
+            //Find Product Category by categoryName first
             ProductCategory productCategory = productCategoryRepository.findByCategoryName(categoryName);
 
+            //then pass that product category into fundByProductCategory() method
             pageTuts = productRepository.findByProductCategory(productCategory, paging);
             return getMapResponseEntity(pageTuts);
         }catch (Exception e) {
