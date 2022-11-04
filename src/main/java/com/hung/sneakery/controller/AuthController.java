@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "https://sneakery-kietdarealist.vercel.app/")
+@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/","http://localhost:3000"})
 @RequestMapping("/api/auth")
 public class AuthController {
 
