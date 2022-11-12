@@ -15,6 +15,9 @@ public class ProductImage {
     @Column(name="image_path")
     private String path;
 
+    @Column(name="is_thumbnail")
+    private Boolean isThumbnail;
+    
     public Long getId() {
         return id;
     }
@@ -31,7 +34,22 @@ public class ProductImage {
         this.path = path;
     }
 
+    public Boolean getThumbnail() {
+        return isThumbnail;
+    }
+
+    public void setThumbnail(Boolean thumbnail) {
+        isThumbnail = thumbnail;
+    }
+
     public ProductImage() {
+    }
+
+    public ProductImage(Long id, String path, Boolean isThumbnail, Product product) {
+        this.id = id;
+        this.path = path;
+        this.isThumbnail = isThumbnail;
+        this.product = product;
     }
 
     public ProductImage(Long id, String path) {

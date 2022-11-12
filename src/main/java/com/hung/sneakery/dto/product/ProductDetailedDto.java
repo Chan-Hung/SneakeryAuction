@@ -3,7 +3,7 @@ package com.hung.sneakery.dto.product;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.model.ProductImage;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ProductDetailedDto {
 
     private String size;
 
-    private Timestamp endBid;
+    private LocalDateTime bidClosingDate;
 
     public ProductDetailedDto(Product product){
         this.setId(product.getId());
@@ -43,12 +43,12 @@ public class ProductDetailedDto {
         this.setBrand(product.getProductDescription().getBrand());
         this.setColor(product.getProductDescription().getColor());
         this.setSize(product.getProductDescription().getSize());
-        //this.setEndBid(2022-10-28);
+        this.setBidClosingDate(product.getBidClosingDateTime());
     }
     public ProductDetailedDto() {
     }
 
-    public ProductDetailedDto(Long id, String name, String condition, Long startPrice, List<String> imagePath, String category, String brand, String color, String size, Timestamp endBid) {
+    public ProductDetailedDto(Long id, String name, String condition, Long startPrice, List<String> imagePath, String category, String brand, String color, String size, LocalDateTime bidClosingDate) {
         this.id = id;
         this.name = name;
         this.condition = condition;
@@ -58,7 +58,7 @@ public class ProductDetailedDto {
         this.brand = brand;
         this.color = color;
         this.size = size;
-        this.endBid = endBid;
+        this.bidClosingDate = bidClosingDate;
     }
 
     public Long getId() {
@@ -133,11 +133,11 @@ public class ProductDetailedDto {
         this.size = size;
     }
 
-    public Timestamp getEndBid() {
-        return endBid;
+    public LocalDateTime getBidClosingDate() {
+        return bidClosingDate;
     }
 
-    public void setEndBid(Timestamp endBid) {
-        this.endBid = endBid;
+    public void setBidClosingDate(LocalDateTime bidClosingDate) {
+        this.bidClosingDate = bidClosingDate;
     }
 }

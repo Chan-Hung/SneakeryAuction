@@ -24,7 +24,6 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
     //Pagination and Filter
@@ -72,7 +71,25 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProductsByFilter(
+            @RequestParam(name="category",required = false) String category,
+            @RequestParam(name="keyword", required = false) String keyword){
+//        try{
+            //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
+            //9 products displayed per page
+//            int size = 9;
+            List<Product> products = productRepository.productSearch(category,keyword);
+//            Pageable paging = PageRequest.of(0, size);
+//            Page<Product> pageTuts;
+            return ResponseEntity.ok(products);
 
+//        }catch{
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+
+
+    }
     //GetMapResponseEntity
     private ResponseEntity<Map<String, Object>> getMapResponseEntity(Page<Product> pageTuts) {
         List<ProductDto> productDtos = new ArrayList<>();

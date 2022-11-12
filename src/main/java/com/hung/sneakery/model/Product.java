@@ -3,6 +3,7 @@ package com.hung.sneakery.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,9 @@ public class Product {
     //=> use "condition_description" instead
     @Column(name="condition_description")
     private String condition;
+
+    @Column(name="bid_closing_date")
+    private LocalDateTime bidClosingDateTime;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_category_id", nullable = false)
@@ -66,6 +70,14 @@ public class Product {
 
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public LocalDateTime getBidClosingDateTime() {
+        return bidClosingDateTime;
+    }
+
+    public void setBidClosingDateTime(LocalDateTime bidClosingDateTime) {
+        this.bidClosingDateTime = bidClosingDateTime;
     }
 
     public ProductCategory getProductCategory() {

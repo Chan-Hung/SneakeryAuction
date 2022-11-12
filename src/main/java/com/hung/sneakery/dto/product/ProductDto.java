@@ -3,33 +3,25 @@ package com.hung.sneakery.dto.product;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.model.ProductImage;
 
+import java.time.LocalDateTime;
+
 public class ProductDto {
     private Long id;
     private String name;
     private Long startPrice;
     private String imagePath;
     private String username;
+    private LocalDateTime bidClosingDate;
 
     public ProductDto(Product product){
         this.setId(product.getId());
         this.setName(product.getName());
-        for (ProductImage productImage: product.getProductImage()) {
-            this.setImagePath(productImage.getPath());
-            break;
-        }
+        for (ProductImage productImage: product.getProductImage())
+            if(productImage.getThumbnail())
+                this.setImagePath(productImage.getPath());
         this.setStartPrice(product.getProductDescription().getPrice());
         this.setUsername(product.getUser().getUsername());
-    }
-
-    public ProductDto() {
-    }
-
-    public ProductDto(Long id, String name, Long startPrice, String imagePath, String username) {
-        this.id = id;
-        this.name = name;
-        this.startPrice = startPrice;
-        this.imagePath = imagePath;
-        this.username = username;
+        this.setBidClosingDate(product.getBidClosingDateTime());
     }
 
     public Long getId() {
@@ -70,5 +62,13 @@ public class ProductDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public LocalDateTime getBidClosingDate() {
+        return bidClosingDate;
+    }
+
+    public void setBidClosingDate(LocalDateTime bidClosingDate) {
+        this.bidClosingDate = bidClosingDate;
     }
 }
