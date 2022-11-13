@@ -1,9 +1,18 @@
 package com.hung.sneakery.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "product_category")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductCategory {
 
     @Id
@@ -12,28 +21,4 @@ public class ProductCategory {
 
     @Column(name = "category_name")
     private String categoryName;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public ProductCategory() {
-    }
-
-    public ProductCategory(Long id, String categoryName) {
-        this.id = id;
-        this.categoryName = categoryName;
-    }
 }

@@ -39,6 +39,7 @@ public class ProductController {
             pageTuts = productRepository.findAll(paging);
             return getMapResponseEntity(pageTuts);
         }catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -72,18 +73,30 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProductsByFilter(
+    public ResponseEntity<Map<String, Object>> getProductsByFilter(
             @RequestParam(name="category",required = false) String category,
             @RequestParam(name="keyword", required = false) String keyword){
 //        try{
             //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
             //9 products displayed per page
-//            int size = 9;
-            List<Product> products = productRepository.productSearch(category,keyword);
-//            Pageable paging = PageRequest.of(0, size);
-//            Page<Product> pageTuts;
-            return ResponseEntity.ok(products);
+            int size = 9;
+            Pageable paging = PageRequest.of(0, size);
+            List<Product> pageTuts;
 
+            pageTuts = productRepository.productSearch(category,keyword, paging);
+
+        List<ProductDto> productDtos = new ArrayList<>();
+        for(Product product : pageTuts)
+        {
+            ProductDto productHomepageDto = new ProductDto(product);
+            productDtos.add(productHomepageDto);
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("products", productDtos);
+//        response.put("currentPage", pageTuts.getNumber());
+//        response.put("totalItems", pageTuts.getTotalElements());
+//        response.put("totalPages", pageTuts.getTotalPages());
+        return new ResponseEntity<>(response, HttpStatus.OK);
 //        }catch{
 //            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 //        }

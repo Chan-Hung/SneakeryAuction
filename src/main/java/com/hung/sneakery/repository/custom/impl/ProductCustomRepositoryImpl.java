@@ -2,6 +2,8 @@ package com.hung.sneakery.repository.custom.impl;
 
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.repository.custom.ProductCustomRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,7 +22,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     EntityManager em;
 
     @Override
-    public List<Product> productSearch(String category, String keyword) {
+    public List<Product> productSearch(String category, String keyword, Pageable pageable) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Product> cq = cb.createQuery(Product.class);
         Root<Product> root = cq.from(Product.class);
@@ -57,6 +59,8 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
 
         cq.select(root).where(predicate);
         TypedQuery<Product> query = em.createQuery(cq);
+        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+        query.setMaxResults(pageable.getPageSize());
 
 
         return query.getResultList();

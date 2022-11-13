@@ -1,11 +1,19 @@
 package com.hung.sneakery.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="districts")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class District {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,41 +22,8 @@ public class District {
     @Column(name = "district_name")
     private String name;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="city_id")
+    @JsonIgnore
     private City city;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
-
-    public District() {
-    }
-
-    public District(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }

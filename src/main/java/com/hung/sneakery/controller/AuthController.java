@@ -1,7 +1,7 @@
 package com.hung.sneakery.controller;
 
 
-import com.hung.sneakery.model.ERole;
+import com.hung.sneakery.model.datatype.ERole;
 import com.hung.sneakery.model.Role;
 import com.hung.sneakery.model.User;
 import com.hung.sneakery.payload.request.EmailRequest;

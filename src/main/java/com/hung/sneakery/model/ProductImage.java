@@ -1,11 +1,19 @@
 package com.hung.sneakery.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "product_image")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductImage {
 
     @Id
@@ -17,56 +25,9 @@ public class ProductImage {
 
     @Column(name="is_thumbnail")
     private Boolean isThumbnail;
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public Boolean getThumbnail() {
-        return isThumbnail;
-    }
-
-    public void setThumbnail(Boolean thumbnail) {
-        isThumbnail = thumbnail;
-    }
-
-    public ProductImage() {
-    }
-
-    public ProductImage(Long id, String path, Boolean isThumbnail, Product product) {
-        this.id = id;
-        this.path = path;
-        this.isThumbnail = isThumbnail;
-        this.product = product;
-    }
-
-    public ProductImage(Long id, String path) {
-        this.id = id;
-        this.path = path;
-    }
 
     @ManyToOne
     @JoinColumn(name="product_id", nullable = false)
     @JsonBackReference
     private Product product;
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
 }

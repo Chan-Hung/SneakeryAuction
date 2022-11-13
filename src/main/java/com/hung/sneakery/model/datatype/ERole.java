@@ -1,4 +1,4 @@
-package com.hung.sneakery.model;
+package com.hung.sneakery.model.datatype;
 
 public enum ERole {
     ROLE_USER,

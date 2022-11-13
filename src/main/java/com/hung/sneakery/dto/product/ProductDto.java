@@ -1,74 +1,38 @@
 package com.hung.sneakery.dto.product;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.model.ProductImage;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductDto {
     private Long id;
     private String name;
     private Long startPrice;
     private String imagePath;
     private String username;
+    //Format date time with JsonFormat
+    //https://www.baeldung.com/jackson-jsonformat
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
     private LocalDateTime bidClosingDate;
 
     public ProductDto(Product product){
         this.setId(product.getId());
         this.setName(product.getName());
         for (ProductImage productImage: product.getProductImage())
-            if(productImage.getThumbnail())
+            if(productImage.getIsThumbnail())
                 this.setImagePath(productImage.getPath());
-        this.setStartPrice(product.getProductDescription().getPrice());
+        this.setStartPrice(product.getBid().getPriceStart());
         this.setUsername(product.getUser().getUsername());
-        this.setBidClosingDate(product.getBidClosingDateTime());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getStartPrice() {
-        return startPrice;
-    }
-
-    public void setStartPrice(Long startPrice) {
-        this.startPrice = startPrice;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public LocalDateTime getBidClosingDate() {
-        return bidClosingDate;
-    }
-
-    public void setBidClosingDate(LocalDateTime bidClosingDate) {
-        this.bidClosingDate = bidClosingDate;
+        this.setBidClosingDate(product.getBid().getBidClosingDateTime());
     }
 }
