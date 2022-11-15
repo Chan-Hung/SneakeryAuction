@@ -20,8 +20,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Bid {
+    //Using a Shared Primary Key
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="product_id")
     private Long id;
 
 //    @NotNull(message="The starting date is required")
@@ -44,10 +45,15 @@ public class Bid {
     @Nullable
     private Long priceWin;
 
+    //Using a Shared Primary Key - Behaves as a foreign key
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name= "bid_history",
-    joinColumns = @JoinColumn(name="bid_id"),
+    joinColumns = @JoinColumn(name="product_id"),
     inverseJoinColumns = @JoinColumn(name="buyer_id"))
     private Set<User> users = new HashSet<>();
 }

@@ -34,10 +34,10 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_category_id", nullable = false)
     @JsonIgnore
-    private ProductCategory productCategory;
+    private Category category;
 
-    @OneToOne
-    @JoinColumn(name = "product_description_id")
+    @OneToOne(mappedBy="product")
+    @PrimaryKeyJoinColumn
     private ProductDescription productDescription;
 
     //mappedBy must have the same name as @ManyToOne variable
@@ -46,8 +46,8 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductImage> productImage;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bid_id")
+    @OneToOne(mappedBy="product")
+    @PrimaryKeyJoinColumn
     private Bid bid;
 
     @ManyToOne

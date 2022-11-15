@@ -1,18 +1,15 @@
 package com.hung.sneakery.repository.custom.impl;
 
-import com.hung.sneakery.model.Product;
+import com.hung.sneakery.model.*;
+import com.hung.sneakery.model.datatype.ECondition;
 import com.hung.sneakery.repository.custom.ProductCustomRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,48 +19,52 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     EntityManager em;
 
     @Override
-    public List<Product> productSearch(String category, String keyword, Pageable pageable) {
+    public List<Product> productSearch(String keyword, String category, ECondition condition, String brand, String color, String size, Pageable pageable) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Product> cq = cb.createQuery(Product.class);
-        Root<Product> root = cq.from(Product.class);
+        CriteriaQuery<Product> criteriaQuery = cb.createQuery(Product.class);
+        Root<Product> root = criteriaQuery.from(Product.class);
         List<Predicate> predicateList = new ArrayList<>();
 
-        if(category != null)
-            predicateList.add(cb.equal(root.get("categoryName"),category));
 
         if(keyword != null)
-            predicateList.add(cb.like(root.get("keyword"),"%"+keyword+"%"));
-//
-//        if(condition != null)
-//            predicateList.add(cb.equal(root.get("condition"), condition ));
-//
-//        if (brand != null)
-//            predicateList.add(cb.equal(root.get("productDescription"),brand));
-//
-//        if(price != null)
-//            predicateList.add(cb.greaterThanOrEqualTo(root.get("productDescription"), price));
-//        if(size != null)
-//            predicateList.add(cb.equal(root.get("productDescription"), size));
-//
-//        Predicate predicate = cb.and(predicateList.toArray(new Predicate[0]));
-//
-//        cq.select(root).where(predicate);
+            predicateList.add(cb.like(root.get(Product_.NAME),"%"+keyword+"%"));
 
-        //Set page query at ProductController
-//        TypedQuery<Product> query = em.createQuery(cq);
-//
-//        query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-//        query.setMaxResults(pageable.getPageSize());
+        if(category != null){
+            Join<Product, Category> productCategoryJoin = root.join(Product_.CATEGORY);
+            predicateList.add(cb.equal(productCategoryJoin.get(Category_.CATEGORY_NAME),category));
+        }
 
-        Predicate predicate = cb.and(predicateList.toArray(new Predicate[0]));
+        if(condition!=null){
+            predicateList.add(cb.equal(root.get(Product_.CONDITION), condition));
+        }
 
-        cq.select(root).where(predicate);
-        TypedQuery<Product> query = em.createQuery(cq);
+        //Properties of ProductDescription
+        Join<Product, ProductDescription> productDescriptionJoin = root.join(Product_.PRODUCT_DESCRIPTION);
+
+        if (brand !=null){
+            predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.BRAND),brand));
+        }
+        if(color != null){
+            predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.COLOR),color));
+        }
+        if(size != null){
+            predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.SIZE), size));
+        }
+
+        //Main query
+        criteriaQuery.where(predicateList.toArray(new Predicate[0]));
+
+        //Count products after filtered
+//        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+//        Root<Product> productCount = countQuery.from(Product.class);
+//        countQuery.select(cb.count(productCount)).where(predicateList.toArray(new Predicate[0]));
+//        Long count = em.createQuery(countQuery).getSingleResult();
+//        System.out.println(count);
+
+        TypedQuery<Product> query = em.createQuery(criteriaQuery);
+
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
-
-
         return query.getResultList();
-
     }
 }
