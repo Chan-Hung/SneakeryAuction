@@ -51,9 +51,12 @@ public class Bid {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name= "bid_history",
-    joinColumns = @JoinColumn(name="product_id"),
-    inverseJoinColumns = @JoinColumn(name="buyer_id"))
-    private Set<User> users = new HashSet<>();
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name= "bid_history",
+//    joinColumns = @JoinColumn(name="product_id"),
+//    inverseJoinColumns = @JoinColumn(name="buyer_id"))
+//    private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "bid")
+    private Set<BidHistory> bidHistories = new HashSet<>();
 }

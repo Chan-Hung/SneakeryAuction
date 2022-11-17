@@ -1,6 +1,5 @@
 package com.hung.sneakery.dto.product;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.model.ProductImage;
 import com.hung.sneakery.model.datatype.ECondition;
@@ -38,7 +37,7 @@ public class ProductDetailedDto {
 
     //Format date time with JsonFormat
     //https://www.baeldung.com/jackson-jsonformat
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
     private LocalDateTime bidClosingDate;
 
     public ProductDetailedDto(Product product){
