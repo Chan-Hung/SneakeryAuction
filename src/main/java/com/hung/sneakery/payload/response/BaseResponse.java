@@ -1,6 +1,9 @@
 package com.hung.sneakery.payload.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
 @Setter
