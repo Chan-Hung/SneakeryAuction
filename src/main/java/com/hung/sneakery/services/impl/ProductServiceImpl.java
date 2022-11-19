@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public DataResponse<Map<String, Object>> getProductsHomepage() {
         //Products displayed on homepage
-        int size = 20;
+        int size = 40;
         Pageable paging = PageRequest.of(0, size);
         Page<Product> pageTuts;
         pageTuts = productRepository.findAll(paging);
