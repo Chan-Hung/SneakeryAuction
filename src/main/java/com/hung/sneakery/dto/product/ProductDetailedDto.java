@@ -25,6 +25,8 @@ public class ProductDetailedDto {
 
     private Long startPrice;
 
+    private Long bidIncrement;
+
     private List<String> imagePath;
 
     private String category;
@@ -34,6 +36,7 @@ public class ProductDetailedDto {
     private String color;
 
     private Integer size;
+
 
     //Format date time with JsonFormat
     //https://www.baeldung.com/jackson-jsonformat
@@ -55,7 +58,7 @@ public class ProductDetailedDto {
         this.setBrand(product.getProductDescription().getBrand());
         this.setColor(product.getProductDescription().getColor());
         this.setSize(product.getProductDescription().getSize());
-
+        this.setBidIncrement(product.getBid().getStepBid());
         this.setBidClosingDate(product.getBid().getBidClosingDateTime());
     }
 }
