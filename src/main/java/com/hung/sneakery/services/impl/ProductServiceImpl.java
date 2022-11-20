@@ -9,6 +9,7 @@ import com.hung.sneakery.model.User;
 import com.hung.sneakery.model.datatype.ECondition;
 import com.hung.sneakery.payload.response.DataResponse;
 import com.hung.sneakery.repository.CategoryRepository;
+import com.hung.sneakery.repository.ProductImageRepository;
 import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.services.ProductService;
@@ -31,6 +32,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ProductImageRepository productImageRepository;
 
     @Override
     public DataResponse<ProductDetailedDto> getProductDetailed(Long productId) {
@@ -116,8 +120,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductImage insertProductImage(List<ProductImage> productImages) {
-        return null;
+    public void insertProductImage(List<ProductImage> productImages, Long productId) {
+        Product product = productRepository.findById(productId).get();
+        for (ProductImage productImage: productImages){
+            ProductImage image = new ProductImage();
+            image.setProduct(product);
+            image.setPath(productImage.getPath());
+            if (productImage.getIsThumbnail())
+                image.setIsThumbnail(true);
+            productImageRepository.save(image);
+        }
     }
 
     //GetMapResponseEntity

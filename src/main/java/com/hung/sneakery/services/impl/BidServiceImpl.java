@@ -59,7 +59,7 @@ public class BidServiceImpl implements BidService {
         bidHistory.setCreatedAt(LocalDateTime.now());
         bidHistory.setUser(buyer);
         bidHistory.setBid(bid);
-        bid.setPriceStart(amount);
+//        bid.setPriceStart(amount);
 
         bidHistoryRepository.save(bidHistory);
 

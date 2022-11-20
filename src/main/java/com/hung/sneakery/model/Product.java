@@ -41,7 +41,7 @@ public class Product {
     private ProductDescription productDescription;
 
     //mappedBy must have the same name as @ManyToOne variable
-    //in ProductImage.java class
+    //in ProductImageRepository.java class
     //One Product have Many Images => FK is in image
     @OneToMany(mappedBy = "product")
     private List<ProductImage> productImage;

@@ -24,5 +24,5 @@ public interface ProductService {
 
     DataResponse<ProductDetailedDto> createBiddingProduct(Long categoryId, Long sellerId, String productName, ECondition condition, String brand, String color, Integer size, LocalDateTime bidStartingDate, LocalDateTime bidClosingDate, Long priceStart, Long bidIncrement);
 
-    ProductImage insertProductImage(List<ProductImage> productImages);
+    void insertProductImage(List<ProductImage> productImages, Long productId);
 }
