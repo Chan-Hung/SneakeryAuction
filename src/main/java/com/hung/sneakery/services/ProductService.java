@@ -22,7 +22,7 @@ public interface ProductService {
 
     DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, String brand, String color, String size);
 
-    DataResponse<ProductDetailedDto> createBiddingProduct(Long categoryId, Long sellerId, String productName, ECondition condition, String brand, String color, Integer size, LocalDateTime bidStartingDate, LocalDateTime bidClosingDate, Long priceStart, Long bidIncrement);
+    DataResponse<ProductDetailedDto> createBiddingProduct(Long categoryId, Long sellerId, String productName, ECondition condition, String brand, String color, Integer size, List<ProductImage> productImages, LocalDateTime bidStartingDate, LocalDateTime bidClosingDate, Long priceStart, Long bidIncrement);
 
     void insertProductImage(List<ProductImage> productImages, Long productId);
 }

@@ -1,5 +1,6 @@
 package com.hung.sneakery.dto.product;
 
+import com.hung.sneakery.model.BidHistory;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.model.ProductImage;
 import com.hung.sneakery.model.datatype.ECondition;
@@ -10,7 +11,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -24,6 +27,8 @@ public class ProductDetailedDto {
     private ECondition condition;
 
     private Long startPrice;
+
+    private Long currentPrice;
 
     private Long bidIncrement;
 
@@ -59,6 +64,19 @@ public class ProductDetailedDto {
         this.setColor(product.getProductDescription().getColor());
         this.setSize(product.getProductDescription().getSize());
         this.setBidIncrement(product.getBid().getStepBid());
+
+        List<Long> productId = new ArrayList<>();
+        for (BidHistory lastestBidHistory: product.getBid().getBidHistories()) {
+            if(Objects.equals(lastestBidHistory.getBid().getProduct().getId(), product.getId())){
+                productId.add(lastestBidHistory.getId());
+            }
+        }
+        Long max = Collections.max(productId);
+        for (BidHistory lastestBidHistory: product.getBid().getBidHistories()) {
+            if(Objects.equals(lastestBidHistory.getId(), max)){
+                this.setCurrentPrice(lastestBidHistory.getPrice());
+            }
+        }
         this.setBidClosingDate(product.getBid().getBidClosingDateTime());
     }
 }

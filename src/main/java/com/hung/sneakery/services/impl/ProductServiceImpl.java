@@ -108,12 +108,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public DataResponse<ProductDetailedDto> createBiddingProduct(Long categoryId, Long sellerId, String productName, ECondition condition, String brand, String color, Integer size, LocalDateTime bidStartingDate, LocalDateTime bidClosingDate, Long priceStart, Long bidIncrement) {
+    public DataResponse<ProductDetailedDto> createBiddingProduct(Long categoryId, Long sellerId, String productName, ECondition condition, String brand, String color, Integer size, List<ProductImage> productImages, LocalDateTime bidStartingDate, LocalDateTime bidClosingDate, Long priceStart, Long bidIncrement) {
         Category category = categoryRepository.findById(categoryId).get();
         User seller = userRepository.findById(sellerId).get();
         Product product = new Product();
         product.setCondition(condition);
-//        product.set
+
+        productImageRepository.saveAll(productImages);
+
 
 
         return null;
