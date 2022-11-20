@@ -4,10 +4,13 @@ import com.hung.sneakery.dto.product.ProductDetailedDto;
 import com.hung.sneakery.dto.product.ProductDto;
 import com.hung.sneakery.model.Category;
 import com.hung.sneakery.model.Product;
+import com.hung.sneakery.model.ProductImage;
+import com.hung.sneakery.model.User;
 import com.hung.sneakery.model.datatype.ECondition;
 import com.hung.sneakery.payload.response.DataResponse;
 import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.repository.ProductRepository;
+import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -25,6 +29,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     public DataResponse<ProductDetailedDto> getProductDetailed(Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
@@ -32,6 +39,13 @@ public class ProductServiceImpl implements ProductService {
             throw new RuntimeException("Product not found with ID: " + productId);
         ProductDetailedDto productDetailedDto = new ProductDetailedDto(optionalProduct.get());
         return new DataResponse<>(productDetailedDto);
+    }
+
+    //Get ID of all products
+    @Override
+    public DataResponse<?> getAllProductsId() {
+        List<Long> allId = productRepository.getAllId();
+        return new DataResponse<>(allId);
     }
 
     @Override
@@ -59,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public DataResponse<Map<String, Object>> getProductsHomepage() {
         //Products displayed on homepage
-        int size = 16;
+        int size = 40;
         Pageable paging = PageRequest.of(0, size);
         Page<Product> pageTuts;
         pageTuts = productRepository.findAll(paging);
@@ -87,6 +101,23 @@ public class ProductServiceImpl implements ProductService {
         response.put("products", productDtos);
 
         return new DataResponse<>(response);
+    }
+
+    @Override
+    public DataResponse<ProductDetailedDto> createBiddingProduct(Long categoryId, Long sellerId, String productName, ECondition condition, String brand, String color, Integer size, LocalDateTime bidStartingDate, LocalDateTime bidClosingDate, Long priceStart, Long bidIncrement) {
+        Category category = categoryRepository.findById(categoryId).get();
+        User seller = userRepository.findById(sellerId).get();
+        Product product = new Product();
+        product.setCondition(condition);
+//        product.set
+
+
+        return null;
+    }
+
+    @Override
+    public ProductImage insertProductImage(List<ProductImage> productImages) {
+        return null;
     }
 
     //GetMapResponseEntity

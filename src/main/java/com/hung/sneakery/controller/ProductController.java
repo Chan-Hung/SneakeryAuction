@@ -16,6 +16,20 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping("/allid")
+    public ResponseEntity<?> getAllProductId(){
+        try {
+            return ResponseEntity
+                    .ok(productService.getAllProductsId());
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
+        }
+    }
+
     //Pagination and Filter
     @GetMapping("/homepage")
     public ResponseEntity<?> getProductsHomepage(){
@@ -79,4 +93,7 @@ public class ProductController {
                             e.getMessage()));
         }
     }
+
+
+
 }
