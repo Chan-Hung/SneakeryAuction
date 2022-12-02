@@ -25,7 +25,6 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         Root<Product> root = criteriaQuery.from(Product.class);
         List<Predicate> predicateList = new ArrayList<>();
 
-
         if(keyword != null)
             predicateList.add(cb.like(root.get(Product_.NAME),"%"+keyword+"%"));
 
@@ -41,15 +40,12 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         //Properties of ProductDescription
         Join<Product, ProductDescription> productDescriptionJoin = root.join(Product_.PRODUCT_DESCRIPTION);
 
-        if (brand !=null){
+        if (brand !=null)
             predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.BRAND),brand));
-        }
-        if(color != null){
+        if(color != null)
             predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.COLOR),color));
-        }
-        if(size != null){
+        if(size != null)
             predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.SIZE), size));
-        }
 
         //Main query
         criteriaQuery.where(predicateList.toArray(new Predicate[0]));

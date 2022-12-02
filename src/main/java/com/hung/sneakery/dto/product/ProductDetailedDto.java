@@ -42,7 +42,6 @@ public class ProductDetailedDto {
 
     private Integer size;
 
-
     //Format date time with JsonFormat
     //https://www.baeldung.com/jackson-jsonformat
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
@@ -65,17 +64,20 @@ public class ProductDetailedDto {
         this.setSize(product.getProductDescription().getSize());
         this.setBidIncrement(product.getBid().getStepBid());
 
-        List<Long> productId = new ArrayList<>();
-        for (BidHistory lastestBidHistory: product.getBid().getBidHistories()) {
-            if(Objects.equals(lastestBidHistory.getBid().getProduct().getId(), product.getId())){
-                productId.add(lastestBidHistory.getId());
-            }
-        }
-        Long max = Collections.max(productId);
-        for (BidHistory lastestBidHistory: product.getBid().getBidHistories()) {
-            if(Objects.equals(lastestBidHistory.getId(), max)){
-                this.setCurrentPrice(lastestBidHistory.getPrice());
-            }
+        //BidId = ProductId: OneToOne Relationship
+        List<Long> bidId = new ArrayList<>();
+
+        //Get BidHistory of that product
+        for (BidHistory latestBidHistory: product.getBid().getBidHistories())
+            if(Objects.equals(latestBidHistory.getBid().getProduct().getId(), product.getId()))
+                bidId.add(latestBidHistory.getId());
+        if(bidId.isEmpty())
+            this.setCurrentPrice(product.getBid().getPriceStart());
+        else{
+            Long max = Collections.max(bidId);
+            for (BidHistory latestBidHistory: product.getBid().getBidHistories())
+                if(Objects.equals(latestBidHistory.getId(), max))
+                    this.setCurrentPrice(latestBidHistory.getPrice());
         }
         this.setBidClosingDate(product.getBid().getBidClosingDateTime());
     }

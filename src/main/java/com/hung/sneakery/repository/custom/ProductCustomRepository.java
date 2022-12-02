@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface ProductCustomRepository {
     List<Product> productSearch(String keyword, String category, ECondition condition, String brand, String color, String size, Pageable pageable);
-
 }
 
