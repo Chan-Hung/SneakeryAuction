@@ -24,9 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,7 +76,7 @@ public class AuthController {
     }
 
     @PostMapping("/checkemail")
-    public ResponseEntity<?> checkEmail(@Valid @RequestBody EmailRequest emailRequest) throws MessagingException{
+    public ResponseEntity<?> checkEmail(@Valid @RequestBody EmailRequest emailRequest) {
         if (userRepository.existsByEmail(emailRequest.getEmail())){
             return ResponseEntity.ok(new CheckEmailResponse(Boolean.TRUE));
         }
@@ -86,7 +84,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         //region Not necessary
 //        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 //            return ResponseEntity
@@ -113,29 +111,24 @@ public class AuthController {
 
         //If roles are null, default assigning to USER
         if (strRoles == null) {
-            Role userRole = roleRepository
-                    .findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER);
+            if (userRole == null)
+                throw new RuntimeException("Error: Role is not found");
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleRepository
-                                .findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
-                        break;
-
-                    default:
-                        Role userRole = roleRepository
-                                .findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
+                if ("admin".equals(role)) {
+                    Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
+                    if(adminRole == null)
+                        throw new RuntimeException("Error: Role is not found.");
+                    roles.add(adminRole);
+                } else {
+                    Role userRole = roleRepository.findByName(ERole.ROLE_USER);
+                    if(userRole == null)
+                        throw new RuntimeException("Error: Role is not found.");
+                    roles.add(userRole);
                 }
             });
-
-
         }
         user.setRoles(roles);
 

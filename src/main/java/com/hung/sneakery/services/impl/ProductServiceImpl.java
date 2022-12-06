@@ -4,8 +4,6 @@ import com.hung.sneakery.dto.product.ProductDetailedDto;
 import com.hung.sneakery.dto.product.ProductDto;
 import com.hung.sneakery.model.Category;
 import com.hung.sneakery.model.Product;
-import com.hung.sneakery.model.ProductImage;
-import com.hung.sneakery.model.User;
 import com.hung.sneakery.model.datatype.ECondition;
 import com.hung.sneakery.payload.response.DataResponse;
 import com.hung.sneakery.repository.CategoryRepository;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -105,33 +102,6 @@ public class ProductServiceImpl implements ProductService {
         response.put("products", productDtos);
 
         return new DataResponse<>(response);
-    }
-
-    @Override
-    public DataResponse<ProductDetailedDto> createBiddingProduct(Long categoryId, Long sellerId, String productName, ECondition condition, String brand, String color, Integer size, List<ProductImage> productImages, LocalDateTime bidStartingDate, LocalDateTime bidClosingDate, Long priceStart, Long bidIncrement) {
-        Category category = categoryRepository.findById(categoryId).get();
-        User seller = userRepository.findById(sellerId).get();
-        Product product = new Product();
-        product.setCondition(condition);
-
-        productImageRepository.saveAll(productImages);
-
-
-
-        return null;
-    }
-
-    @Override
-    public void insertProductImage(List<ProductImage> productImages, Long productId) {
-        Product product = productRepository.findById(productId).get();
-        for (ProductImage productImage: productImages){
-            ProductImage image = new ProductImage();
-            image.setProduct(product);
-            image.setPath(productImage.getPath());
-            if (productImage.getIsThumbnail())
-                image.setIsThumbnail(true);
-            productImageRepository.save(image);
-        }
     }
 
     //GetMapResponseEntity

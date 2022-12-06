@@ -1,21 +1,24 @@
 package com.hung.sneakery.services.impl;
 
-import com.hung.sneakery.model.Bid;
-import com.hung.sneakery.model.BidHistory;
-import com.hung.sneakery.model.Product;
-import com.hung.sneakery.model.User;
+import com.hung.sneakery.model.*;
+import com.hung.sneakery.payload.request.BidCreateRequest;
 import com.hung.sneakery.payload.request.BidPlaceRequest;
-import com.hung.sneakery.payload.response.DataResponse;
-import com.hung.sneakery.repository.BidHistoryRepository;
-import com.hung.sneakery.repository.BidRepository;
-import com.hung.sneakery.repository.ProductRepository;
-import com.hung.sneakery.repository.UserRepository;
+import com.hung.sneakery.payload.response.BaseResponse;
+import com.hung.sneakery.repository.*;
 import com.hung.sneakery.services.BidService;
+import com.hung.sneakery.services.CountdownService;
+import com.hung.sneakery.services.ProductImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BidServiceImpl implements BidService {
@@ -27,21 +30,41 @@ public class BidServiceImpl implements BidService {
     ProductRepository productRepository;
 
     @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
+    ProductDescriptionRepository productDescriptionRepository;
+
+    @Autowired
     BidRepository bidRepository;
 
     @Autowired
     BidHistoryRepository bidHistoryRepository;
 
-    @Override
-    public DataResponse<BidHistory> placeBid(BidPlaceRequest bidPlaceRequest) {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        User buyer = userRepository.findByUsername(userName).get();
+    @Autowired
+    ProductImageRepository productImageRepository;
+    @Autowired
+    ProductImageService productImageService;
 
+    @Override
+    public BaseResponse placeBid(BidPlaceRequest bidPlaceRequest) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User buyer = userRepository.findByUsername(userName);
+
+        if (!productRepository.findById(bidPlaceRequest.getProductId()).isPresent())
+            throw new RuntimeException("Product not found");
         Product product = productRepository.findById(bidPlaceRequest.getProductId()).get();
+
+        if(!bidRepository.findById(bidPlaceRequest.getProductId()).isPresent())
+            throw new RuntimeException("Bid not found");
         Bid bid = bidRepository.findById(bidPlaceRequest.getProductId()).get();
+
         Long amount = bidPlaceRequest.getAmount();
         Long stepBid = bid.getStepBid();
+
         //Find seller using product.getUser.getId()
+        if(!userRepository.findById(product.getUser().getId()).isPresent())
+            throw new RuntimeException("Seller not found for this product");
         User seller = userRepository.findById(product.getUser().getId()).get();
 
         Long currentAmount = bid.getPriceStart();
@@ -63,6 +86,59 @@ public class BidServiceImpl implements BidService {
 
         bidHistoryRepository.save(bidHistory);
 
-        return new DataResponse<>(bidHistory);
+        return new BaseResponse(true, "Place bid successfully");
+    }
+
+    @Override
+    public BaseResponse createBid(BidCreateRequest bidCreateRequest, MultipartFile thumbnail, List<MultipartFile> images) throws IOException, ParseException {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User seller = userRepository.findByUsername(userName);
+
+        Category category = categoryRepository.findByCategoryName(bidCreateRequest.getCategory());
+
+        //Map Product
+        Product product = new Product();
+        product.setName(bidCreateRequest.getName());
+        product.setCondition(bidCreateRequest.getCondition());
+        product.setUser(seller);
+        product.setCategory(category);
+
+        List<ProductImage> productImages = new ArrayList<>();
+
+        ProductImage image = productImageService.upload(thumbnail.getBytes(), product, true);
+
+        productImages.add(image);
+        for (MultipartFile file : images){
+            ProductImage productImage = productImageService.upload(file.getBytes(), product, false);
+            productImages.add(productImage);
+        }
+
+
+        Bid bid = new Bid();
+        bid.setPriceStart(bidCreateRequest.getPriceStart());
+        bid.setBidStartingDate(LocalDate.now());
+        bid.setStepBid(bidCreateRequest.getStepBid());
+        bid.setBidClosingDateTime(bidCreateRequest.getBidClosingDateTime());
+        bid.setProduct(product);
+
+
+        //Map ProductDescription
+        ProductDescription productDescription = new ProductDescription();
+        productDescription.setBrand(bidCreateRequest.getBrand());
+        productDescription.setColor(bidCreateRequest.getColor());
+        productDescription.setSize(bidCreateRequest.getSize());
+        productDescription.setProduct(product);
+        productDescriptionRepository.save(productDescription);
+
+        product.setProductDescription(productDescription);
+        productRepository.save(product);
+
+        productImageRepository.saveAll(productImages);
+
+        bidRepository.save(bid);
+
+        CountdownService.executeTask(bidCreateRequest.getBidClosingDateTime());
+
+        return new BaseResponse(true, "Created bidding product successfully");
     }
 }

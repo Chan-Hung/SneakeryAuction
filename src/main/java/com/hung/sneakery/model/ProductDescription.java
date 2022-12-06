@@ -1,5 +1,6 @@
 package com.hung.sneakery.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,5 +34,6 @@ public class ProductDescription {
     @OneToOne
     @MapsId
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 }
