@@ -25,13 +25,11 @@ public class CountdownServiceImpl implements CountdownService {
         public void run() {
             System.out.println("Running Task");
             System.out.println("Current Time: " + df.format( new Date()));
-            timer.cancel();
         }
     }
 
     public void executeTask(LocalDateTime localDateTime) {
         System.out.println("Current Time Execute: " + df.format( new Date()));
-
         //Date and time at which you want to execute
         Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
         System.out.println(date);
