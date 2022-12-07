@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,6 +45,8 @@ public class BidServiceImpl implements BidService {
     @Autowired
     ProductImageService productImageService;
 
+    @Autowired
+    CountdownService countdownService;
     @Override
     public BaseResponse placeBid(BidPlaceRequest bidPlaceRequest) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -90,7 +91,7 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public BaseResponse createBid(BidCreateRequest bidCreateRequest, MultipartFile thumbnail, List<MultipartFile> images) throws IOException, ParseException {
+    public BaseResponse createBid(BidCreateRequest bidCreateRequest, MultipartFile thumbnail, List<MultipartFile> images) throws IOException {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User seller = userRepository.findByUsername(userName);
 
@@ -113,14 +114,12 @@ public class BidServiceImpl implements BidService {
             productImages.add(productImage);
         }
 
-
         Bid bid = new Bid();
         bid.setPriceStart(bidCreateRequest.getPriceStart());
         bid.setBidStartingDate(LocalDate.now());
         bid.setStepBid(bidCreateRequest.getStepBid());
         bid.setBidClosingDateTime(bidCreateRequest.getBidClosingDateTime());
         bid.setProduct(product);
-
 
         //Map ProductDescription
         ProductDescription productDescription = new ProductDescription();
@@ -130,14 +129,18 @@ public class BidServiceImpl implements BidService {
         productDescription.setProduct(product);
         productDescriptionRepository.save(productDescription);
 
+        //Save Product
         product.setProductDescription(productDescription);
         productRepository.save(product);
 
+        //Save ProductImage
         productImageRepository.saveAll(productImages);
 
+        //Save Bid
         bidRepository.save(bid);
 
-        CountdownService.executeTask(bidCreateRequest.getBidClosingDateTime());
+        //Call countdownSercice
+        countdownService.executeTask(bidCreateRequest.getBidClosingDateTime());
 
         return new BaseResponse(true, "Created bidding product successfully");
     }

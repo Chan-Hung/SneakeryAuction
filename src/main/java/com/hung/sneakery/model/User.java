@@ -34,7 +34,7 @@ public class User {
 
     @NotBlank
     @Size (max = 50)
-    @Email
+    @Email (message = "Email is not valid")
     private String email;
 
     @NotBlank

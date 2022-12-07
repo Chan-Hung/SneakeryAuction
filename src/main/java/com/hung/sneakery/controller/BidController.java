@@ -44,13 +44,11 @@ public class BidController {
             return ResponseEntity
                     .ok(bidService.createBid(bidCreateRequest, thumbnail, images));
         }
-        catch (RuntimeException | IOException e){
+        catch (RuntimeException | IOException | ParseException e){
             return ResponseEntity
                     .status(500)
                     .body(new BaseResponse(false,
                             e.getMessage()));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
     }
 }

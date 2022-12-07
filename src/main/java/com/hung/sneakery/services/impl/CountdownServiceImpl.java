@@ -1,0 +1,40 @@
+package com.hung.sneakery.services.impl;
+
+import com.hung.sneakery.repository.CityRepository;
+import com.hung.sneakery.services.CountdownService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
+@Service
+public class CountdownServiceImpl implements CountdownService {
+    @Autowired
+    CityRepository cityRepository;
+    static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    static Timer timer = new Timer();
+
+    private static class MyTimeTask extends TimerTask {
+        public void run() {
+            System.out.println("Running Task");
+            System.out.println("Current Time: " + df.format( new Date()));
+            timer.cancel();
+        }
+    }
+
+    public void executeTask(LocalDateTime localDateTime) {
+        System.out.println("Current Time Execute: " + df.format( new Date()));
+
+        //Date and time at which you want to execute
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        System.out.println(date);
+        timer.schedule(new MyTimeTask(), date);
+    }
+}

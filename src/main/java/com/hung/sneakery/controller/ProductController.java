@@ -83,7 +83,6 @@ public class ProductController {
             ) {
         //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
         try {
-            //Test xem gọi API sau 3 giây có in Console ko
             return ResponseEntity
                     .ok(productService.getProductsByFilter(keyword, category, condition, brand, color, size));
         } catch (RuntimeException e) {

@@ -5,11 +5,10 @@ import com.hung.sneakery.model.Role;
 import com.hung.sneakery.model.User;
 import com.hung.sneakery.model.datatype.ERole;
 import com.hung.sneakery.payload.request.EmailRequest;
-import com.hung.sneakery.payload.request.LoginRequest;
-import com.hung.sneakery.payload.request.SignupRequest;
-import com.hung.sneakery.payload.response.CheckEmailResponse;
+import com.hung.sneakery.payload.request.SignInRequest;
+import com.hung.sneakery.payload.request.SignUpRequest;
+import com.hung.sneakery.payload.response.BaseResponse;
 import com.hung.sneakery.payload.response.JwtResponse;
-import com.hung.sneakery.payload.response.MessageResponse;
 import com.hung.sneakery.repository.RoleRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.security.jwt.JwtUtils;
@@ -24,7 +23,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,9 +55,9 @@ public class AuthController {
     MailService mailService;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> signIn(@Valid @RequestBody SignInRequest signinRequest){
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getEmail(), signinRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -76,27 +77,29 @@ public class AuthController {
     }
 
     @PostMapping("/checkemail")
-    public ResponseEntity<?> checkEmail(@Valid @RequestBody EmailRequest emailRequest) {
+    public ResponseEntity<BaseResponse> checkEmail(@Valid @RequestBody EmailRequest emailRequest) {
         if (userRepository.existsByEmail(emailRequest.getEmail())){
-            return ResponseEntity.ok(new CheckEmailResponse(Boolean.TRUE));
+            return ResponseEntity
+                    .ok()
+                    .body(new BaseResponse(true, "Email is already existed"));
         }
-        return ResponseEntity.ok(new CheckEmailResponse(Boolean.FALSE));
+        return ResponseEntity
+                .ok()
+                .body(new BaseResponse(true, "This email can be used"));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        //region Not necessary
-//        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-//            return ResponseEntity
-//                    .badRequest()
-//                    .body(new MessageResponse("Error: Username has already existed"));
-//        }
-        //endregion
+    public ResponseEntity<BaseResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new BaseResponse(false, "Username has already existed"));
+        }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new BaseResponse(true, "Email is already in use"));
         }
 
         //Create new user's account
@@ -104,8 +107,9 @@ public class AuthController {
                 signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
-        //Necessary or not?
-//        mailService.sendVerificationEmail(user);
+
+        mailService.sendVerificationEmail(user);
+
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
@@ -134,9 +138,12 @@ public class AuthController {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User registered successfully"));
+        return ResponseEntity
+                .ok()
+                .body(new BaseResponse(true, "User registered successfully"));
     }
 
+    //Ask Kit about deleting/ clearing local storage
     //region Use Cooke - logoutUser()
     //    @PostMapping("/signout")
 //    public ResponseEntity<?> logoutUser() {

@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class SignupRequest {
+public class SignUpRequest {
     @NotBlank
     @Size(min = 3, max = 20)
     private String username;
