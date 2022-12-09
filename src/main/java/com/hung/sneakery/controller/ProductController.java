@@ -1,6 +1,7 @@
 package com.hung.sneakery.controller;
 
 import com.hung.sneakery.model.datatype.ECondition;
+import com.hung.sneakery.model.datatype.ESorting;
 import com.hung.sneakery.payload.response.BaseResponse;
 import com.hung.sneakery.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,12 +84,13 @@ public class ProductController {
             @RequestParam(name = "color", required = false) List<String> colors,
             @RequestParam(name = "size", required = false) List<Integer> sizes,
             @RequestParam(name = "priceStart", required = false) Long priceStart,
-            @RequestParam(name = "priceEnd", required = false) Long priceEnd
+            @RequestParam(name = "priceEnd", required = false) Long priceEnd,
+            @RequestParam(name = "sorting", required = false) ESorting sorting
             ) {
         //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
         try {
             return ResponseEntity
-                    .ok(productService.getProductsByFilter(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd));
+                    .ok(productService.getProductsByFilter(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting));
         } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)

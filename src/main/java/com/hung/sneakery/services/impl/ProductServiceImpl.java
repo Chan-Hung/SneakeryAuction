@@ -5,6 +5,7 @@ import com.hung.sneakery.dto.product.ProductDto;
 import com.hung.sneakery.model.Category;
 import com.hung.sneakery.model.Product;
 import com.hung.sneakery.model.datatype.ECondition;
+import com.hung.sneakery.model.datatype.ESorting;
 import com.hung.sneakery.payload.response.DataResponse;
 import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.repository.ProductImageRepository;
@@ -82,12 +83,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd) {
+    public DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd, ESorting sorting) {
         int sizePage = 40;
         Pageable paging = PageRequest.of(0, sizePage);
         List<Product> pageTuts;
 
-        pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, paging);
+        pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting, paging);
         List<ProductDto> productDtos = new ArrayList<>();
         for(Product product : pageTuts)
         {
