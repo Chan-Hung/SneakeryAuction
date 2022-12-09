@@ -73,29 +73,34 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
 
 
         //Main query
-        switch (sorting) {
-            case LOW_TO_HIGH:
-                criteriaQuery
-                        .where(predicateList.toArray(new Predicate[0]))
-                        .orderBy(cb.asc(productBidJoin.get(Bid_.PRICE_START)));
-                break;
-            case HIGH_TO_LOW:
-                criteriaQuery
-                        .where(predicateList.toArray(new Predicate[0]))
-                        .orderBy(cb.desc(productBidJoin.get(Bid_.PRICE_START)));
-                break;
-            case NEWEST:
-                criteriaQuery
-                        .where(predicateList.toArray(new Predicate[0]))
-                        .orderBy(cb.desc(productBidJoin.get(Bid_.BID_STARTING_DATE)));
-                break;
-            default:
-                //Sort A_TO_Z name
-                criteriaQuery
-                        .where(predicateList.toArray(new Predicate[0]))
-                        .orderBy(cb.asc(root.get(Product_.NAME)));
-                break;
-        }
+        if (sorting != null)
+            switch (sorting) {
+                case A_TO_Z:
+                    criteriaQuery
+                            .where(predicateList.toArray(new Predicate[0]))
+                            .orderBy(cb.asc(root.get(Product_.NAME)));
+                    break;
+                case LOW_TO_HIGH:
+                    criteriaQuery
+                            .where(predicateList.toArray(new Predicate[0]))
+                            .orderBy(cb.asc(productBidJoin.get(Bid_.PRICE_START)));
+                    break;
+                case HIGH_TO_LOW:
+                    criteriaQuery
+                            .where(predicateList.toArray(new Predicate[0]))
+                            .orderBy(cb.desc(productBidJoin.get(Bid_.PRICE_START)));
+                    break;
+                case NEWEST:
+                    criteriaQuery
+                            .where(predicateList.toArray(new Predicate[0]))
+                            .orderBy(cb.desc(productBidJoin.get(Bid_.BID_STARTING_DATE)));
+                    break;
+            }
+        else
+            //Default sorting
+            criteriaQuery
+                .where(predicateList.toArray(new Predicate[0]))
+                .orderBy(cb.asc(root.get(Product_.NAME)));
         //Count products after filtered
 //        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
 //        Root<Product> productCount = countQuery.from(Product.class);
