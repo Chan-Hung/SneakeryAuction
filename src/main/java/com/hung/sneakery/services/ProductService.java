@@ -13,5 +13,5 @@ public interface ProductService {
     DataResponse<?> getAllProductsId();
     DataResponse<Map<String, Object>> getProductsByCategory(String categoryName, Integer page);
     DataResponse<Map<String,Object>> getProductsHomepage();
-    DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes);
+    DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd);
 }

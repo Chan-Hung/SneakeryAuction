@@ -19,7 +19,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     EntityManager em;
 
     @Override
-    public List<Product> productSearch(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Pageable pageable) {
+    public List<Product> productSearch(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd, Pageable pageable) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = cb.createQuery(Product.class);
         Root<Product> root = criteriaQuery.from(Product.class);
@@ -66,9 +66,11 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         }
 
         Join<Product, Bid> productBidJoin = root.join(Product_.BID);
-//        if ((priceStart != null & priceEnd != null){
-//            Predicate priceStartPredicate = cb.greaterThanOrEqualTo(Bid_.)
-//        }
+
+        if (priceStart != null & priceEnd != null){
+            predicateList.add(cb.greaterThanOrEqualTo(productBidJoin.get(Bid_.PRICE_START), priceStart));
+            predicateList.add(cb.lessThanOrEqualTo(productBidJoin.get(Bid_.PRICE_START), priceEnd));
+        }
 
         //Main query
         criteriaQuery.where(predicateList.toArray(new Predicate[0]));

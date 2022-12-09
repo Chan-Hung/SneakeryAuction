@@ -81,14 +81,14 @@ public class ProductController {
             @RequestParam(name = "condition", required = false) ECondition condition,
             @RequestParam(name = "brand", required = false) List<String> brands,
             @RequestParam(name = "color", required = false) List<String> colors,
-            @RequestParam(name = "size", required = false) List<Integer> sizes
-//            @RequestParam(name = "priceStart", required = false) Long priceStart,
-//            @RequestParam(name = "priceEnd", required = false) Long priceEnd
+            @RequestParam(name = "size", required = false) List<Integer> sizes,
+            @RequestParam(name = "priceStart", required = false) Long priceStart,
+            @RequestParam(name = "priceEnd", required = false) Long priceEnd
             ) {
         //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
         try {
             return ResponseEntity
-                    .ok(productService.getProductsByFilter(keyword, category, condition, brands, colors, sizes));
+                    .ok(productService.getProductsByFilter(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd));
         } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
