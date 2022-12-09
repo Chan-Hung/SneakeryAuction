@@ -82,12 +82,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, String brand, String color, String size) {
+    public DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes) {
         int sizePage = 40;
         Pageable paging = PageRequest.of(0, sizePage);
         List<Product> pageTuts;
 
-        pageTuts = productRepository.productSearch(keyword, category, condition, brand, color, size, paging);
+        pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, paging);
         List<ProductDto> productDtos = new ArrayList<>();
         for(Product product : pageTuts)
         {

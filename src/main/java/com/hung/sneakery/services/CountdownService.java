@@ -1,7 +1,7 @@
 package com.hung.sneakery.services;
 
-import java.time.LocalDateTime;
+import com.hung.sneakery.model.Bid;
 
 public interface CountdownService {
-    void executeTask(LocalDateTime localDateTime);
+    void biddingCountdown(Bid bid);
 }

@@ -3,12 +3,15 @@ package com.hung.sneakery.controller;
 import com.hung.sneakery.model.City;
 import com.hung.sneakery.model.District;
 import com.hung.sneakery.model.Ward;
+import com.hung.sneakery.repository.BidHistoryRepository;
 import com.hung.sneakery.repository.CityRepository;
 import com.hung.sneakery.repository.DistrictRepository;
 import com.hung.sneakery.repository.WardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Tuple;
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -25,6 +28,20 @@ public class AddressController {
     @Autowired
     private WardRepository wardRepository;
 
+
+    @Autowired
+    BidHistoryRepository bidHistoryRepository;
+
+    @GetMapping("/test")
+    public List<Ward> getAllWard(){
+        Tuple winner = bidHistoryRepository.getWinner(100L);
+        BigInteger buyerId = winner.get("buyerId", BigInteger.class);
+        BigInteger priceWin = winner.get("priceWin", BigInteger.class);
+        System.out.println(buyerId);
+        System.out.println(priceWin);
+
+        return wardRepository.findAll();
+    }
     @GetMapping ("/cities")
     public List<City> getAllCities(){
         return cityRepository.findAll();
@@ -44,4 +61,5 @@ public class AddressController {
     public List<Ward> getAllWards(){
         return wardRepository.findAll();
     }
+
 }

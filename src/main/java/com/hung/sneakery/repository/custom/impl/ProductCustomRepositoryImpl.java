@@ -19,7 +19,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     EntityManager em;
 
     @Override
-    public List<Product> productSearch(String keyword, String category, ECondition condition, String brand, String color, String size, Pageable pageable) {
+    public List<Product> productSearch(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Pageable pageable) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = cb.createQuery(Product.class);
         Root<Product> root = criteriaQuery.from(Product.class);
@@ -40,12 +40,35 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         //Properties of ProductDescription
         Join<Product, ProductDescription> productDescriptionJoin = root.join(Product_.PRODUCT_DESCRIPTION);
 
-        if (brand !=null)
-            predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.BRAND),brand));
-        if(color != null)
-            predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.COLOR),color));
-        if(size != null)
-            predicateList.add(cb.equal(productDescriptionJoin.get(ProductDescription_.SIZE), size));
+        if (brands.size() != 0)
+        {
+            List<Predicate> brandPredicate = new ArrayList<>();
+            for(String brand : brands)
+                brandPredicate.add(cb.equal(productDescriptionJoin.get(ProductDescription_.BRAND),brand));
+            predicateList.add(addOrPredicate(brandPredicate));
+        }
+
+
+        if(colors.size() != 0)
+        {
+            List<Predicate> colorPredicate = new ArrayList<>();
+            for(String color : colors)
+                colorPredicate.add(cb.equal(productDescriptionJoin.get(ProductDescription_.COLOR),color));
+            predicateList.add(addOrPredicate(colorPredicate));
+        }
+
+        if(sizes.size() != 0)
+        {
+            List<Predicate> sizePredicate = new ArrayList<>();
+            for(Integer size : sizes)
+                sizePredicate.add(cb.equal(productDescriptionJoin.get(ProductDescription_.SIZE),size));
+            predicateList.add(addOrPredicate(sizePredicate));
+        }
+
+        Join<Product, Bid> productBidJoin = root.join(Product_.BID);
+//        if ((priceStart != null & priceEnd != null){
+//            Predicate priceStartPredicate = cb.greaterThanOrEqualTo(Bid_.)
+//        }
 
         //Main query
         criteriaQuery.where(predicateList.toArray(new Predicate[0]));
@@ -62,5 +85,27 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
         return query.getResultList();
+    }
+
+    //Add many OR predicates to 1 common predicate
+    private Predicate addOrPredicate(List<Predicate> predicateList){
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        Predicate predicate = null;
+        int size = predicateList.size();
+        switch (size){
+            case 1:
+                predicate = cb.or(predicateList.get(0));
+                break;
+            case 2:
+                predicate = cb.or(predicateList.get(0), predicateList.get(1));
+                break;
+            case 3:
+                predicate = cb.or(predicateList.get(0), predicateList.get(1), predicateList.get(2));
+                break;
+            case 4:
+                predicate = cb.or(predicateList.get(0), predicateList.get(1), predicateList.get(2), predicateList.get(3));
+                break;
+        }
+        return predicate;
     }
 }

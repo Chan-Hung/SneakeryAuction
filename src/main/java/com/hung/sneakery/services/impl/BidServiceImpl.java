@@ -95,6 +95,7 @@ public class BidServiceImpl implements BidService {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User seller = userRepository.findByUsername(userName);
 
+        //Map Category
         Category category = categoryRepository.findByCategoryName(bidCreateRequest.getCategory());
 
         //Map Product
@@ -103,23 +104,6 @@ public class BidServiceImpl implements BidService {
         product.setCondition(bidCreateRequest.getCondition());
         product.setUser(seller);
         product.setCategory(category);
-
-        List<ProductImage> productImages = new ArrayList<>();
-
-        ProductImage image = productImageService.upload(thumbnail.getBytes(), product, true);
-
-        productImages.add(image);
-        for (MultipartFile file : images){
-            ProductImage productImage = productImageService.upload(file.getBytes(), product, false);
-            productImages.add(productImage);
-        }
-
-        Bid bid = new Bid();
-        bid.setPriceStart(bidCreateRequest.getPriceStart());
-        bid.setBidStartingDate(LocalDate.now());
-        bid.setStepBid(bidCreateRequest.getStepBid());
-        bid.setBidClosingDateTime(bidCreateRequest.getBidClosingDateTime());
-        bid.setProduct(product);
 
         //Map ProductDescription
         ProductDescription productDescription = new ProductDescription();
@@ -134,13 +118,26 @@ public class BidServiceImpl implements BidService {
         productRepository.save(product);
 
         //Save ProductImage
+        List<ProductImage> productImages = new ArrayList<>();
+        ProductImage image = productImageService.upload(thumbnail.getBytes(), product, true);
+        productImages.add(image);
+        for (MultipartFile file : images){
+            ProductImage productImage = productImageService.upload(file.getBytes(), product, false);
+            productImages.add(productImage);
+        }
         productImageRepository.saveAll(productImages);
 
         //Save Bid
+        Bid bid = new Bid();
+        bid.setPriceStart(bidCreateRequest.getPriceStart());
+        bid.setBidStartingDate(LocalDate.now());
+        bid.setStepBid(bidCreateRequest.getStepBid());
+        bid.setBidClosingDateTime(bidCreateRequest.getBidClosingDateTime());
+        bid.setProduct(product);
         bidRepository.save(bid);
 
-        //Call countdownSercice
-        countdownService.executeTask(bidCreateRequest.getBidClosingDateTime());
+        //Call countdownService
+        countdownService.biddingCountdown(bid);
 
         return new BaseResponse(true, "Created bidding product successfully");
     }
