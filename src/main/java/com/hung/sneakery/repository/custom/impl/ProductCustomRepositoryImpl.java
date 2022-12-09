@@ -40,7 +40,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         //Properties of ProductDescription
         Join<Product, ProductDescription> productDescriptionJoin = root.join(Product_.PRODUCT_DESCRIPTION);
 
-        if (brands.size() != 0)
+        if (brands != null)
         {
             List<Predicate> brandPredicate = new ArrayList<>();
             for(String brand : brands)
@@ -49,7 +49,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         }
 
 
-        if(colors.size() != 0)
+        if(colors != null)
         {
             List<Predicate> colorPredicate = new ArrayList<>();
             for(String color : colors)
@@ -57,7 +57,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
             predicateList.add(addOrPredicate(colorPredicate));
         }
 
-        if(sizes.size() != 0)
+        if(sizes != null)
         {
             List<Predicate> sizePredicate = new ArrayList<>();
             for(Integer size : sizes)
