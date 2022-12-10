@@ -142,14 +142,4 @@ public class AuthController {
                 .ok()
                 .body(new BaseResponse(true, "User registered successfully"));
     }
-
-    //Ask Kit about deleting/ clearing local storage
-    //region Use Cooke - logoutUser()
-    //    @PostMapping("/signout")
-//    public ResponseEntity<?> logoutUser() {
-//        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-//        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-//                .body(new MessageResponse("You've been signed out!"));
-//    }
-    //endregion
 }

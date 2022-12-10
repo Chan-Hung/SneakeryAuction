@@ -3,11 +3,16 @@ package com.hung.sneakery.controller;
 import com.hung.sneakery.model.City;
 import com.hung.sneakery.model.District;
 import com.hung.sneakery.model.Ward;
+import com.hung.sneakery.payload.request.AddressRequest;
+import com.hung.sneakery.payload.response.BaseResponse;
 import com.hung.sneakery.repository.BidHistoryRepository;
 import com.hung.sneakery.repository.CityRepository;
 import com.hung.sneakery.repository.DistrictRepository;
 import com.hung.sneakery.repository.WardRepository;
+import com.hung.sneakery.services.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Tuple;
@@ -31,6 +36,9 @@ public class AddressController {
 
     @Autowired
     BidHistoryRepository bidHistoryRepository;
+
+    @Autowired
+    AddressService addressService;
 
     @GetMapping("/test")
     public List<Ward> getAllWard(){
@@ -62,4 +70,31 @@ public class AddressController {
         return wardRepository.findAll();
     }
 
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<BaseResponse> createAddress(@RequestBody AddressRequest addressRequest){
+        try{
+            return ResponseEntity
+                    .ok(addressService.create(addressRequest));
+        }
+        catch(RuntimeException e){
+            return ResponseEntity
+                    .status(500)
+                    .body(new BaseResponse(false, e.getMessage()));
+        }
+    }
+
+    @PutMapping("/update")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<BaseResponse> updateAddress(@RequestBody AddressRequest addressRequest){
+        try{
+            return ResponseEntity
+                    .ok(addressService.update(addressRequest));
+        }
+        catch(RuntimeException e){
+            return ResponseEntity
+                    .status(500)
+                    .body(new BaseResponse(false, e.getMessage()));
+        }
+    }
 }

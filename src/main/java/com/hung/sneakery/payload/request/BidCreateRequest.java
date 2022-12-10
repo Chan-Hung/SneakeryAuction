@@ -29,9 +29,6 @@ public class BidCreateRequest {
     @NotBlank
     private Integer size;
 
-//    @NotBlank
-//    private Date bidStartingDate;
-
     @NotBlank
     private LocalDateTime bidClosingDateTime;
 
