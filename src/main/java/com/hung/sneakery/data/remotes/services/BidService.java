@@ -1,0 +1,16 @@
+package com.hung.sneakery.data.remotes.services;
+
+import com.hung.sneakery.data.models.dto.request.BidCreateRequest;
+import com.hung.sneakery.data.models.dto.request.BidPlaceRequest;
+import com.hung.sneakery.data.models.dto.response.BaseResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.List;
+
+public interface BidService {
+    BaseResponse placeBid(BidPlaceRequest bidPlaceRequest);
+
+    BaseResponse createBid(BidCreateRequest bidCreateRequest, MultipartFile thumbnail, List<MultipartFile> images) throws IOException, ParseException;
+}
