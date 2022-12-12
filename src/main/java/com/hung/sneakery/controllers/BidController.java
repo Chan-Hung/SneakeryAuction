@@ -5,6 +5,7 @@ import com.hung.sneakery.data.models.dto.request.BidPlaceRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.remotes.services.BidService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,20 +19,19 @@ import java.util.List;
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/","http://localhost:3000"})
 @RequestMapping("/api/bids")
 public class BidController {
-
     @Autowired
     BidService bidService;
 
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> placeBid(@RequestBody BidPlaceRequest bidPlaceRequest){
+    public ResponseEntity<BaseResponse> placeBid(@RequestBody BidPlaceRequest bidPlaceRequest){
         try{
                return ResponseEntity
                        .ok(bidService.placeBid(bidPlaceRequest));
         }
         catch (RuntimeException e){
             return ResponseEntity
-                    .status(500)
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,
                             e.getMessage()));
         }
@@ -39,14 +39,17 @@ public class BidController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
-        public ResponseEntity<?> createBidProduct(@RequestPart BidCreateRequest bidCreateRequest, @RequestPart(name = "thumbnail") MultipartFile thumbnail, @RequestPart(name = "images") List<MultipartFile> images){
+        public ResponseEntity<BaseResponse> createBidProduct(
+                @RequestPart BidCreateRequest bidCreateRequest,
+                @RequestPart(name = "thumbnail") MultipartFile thumbnail,
+                @RequestPart(name = "images") List<MultipartFile> images){
         try{
             return ResponseEntity
                     .ok(bidService.createBid(bidCreateRequest, thumbnail, images));
         }
         catch (RuntimeException | IOException | ParseException e){
             return ResponseEntity
-                    .status(500)
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,
                             e.getMessage()));
         }

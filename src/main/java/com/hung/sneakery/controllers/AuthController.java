@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/","http://localhost:3000"})
 @RequestMapping("/api/auth")
 public class AuthController {
-
     @Autowired
     AuthenticationManager authenticationManager;
 

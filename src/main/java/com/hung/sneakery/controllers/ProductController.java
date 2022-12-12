@@ -15,12 +15,11 @@ import java.util.List;
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/","http://localhost:3000"})
 @RequestMapping("/api/products")
 public class ProductController {
-
     @Autowired
     private ProductService productService;
 
     @GetMapping("/allid")
-    public ResponseEntity<?> getAllProductId(){
+    public ResponseEntity<BaseResponse> getAllProductId(){
         try {
             return ResponseEntity
                     .ok(productService.getAllProductsId());
@@ -35,7 +34,7 @@ public class ProductController {
 
     //Pagination and Filter
     @GetMapping("/homepage")
-    public ResponseEntity<?> getProductsHomepage(){
+    public ResponseEntity<BaseResponse> getProductsHomepage(){
         try {
             return ResponseEntity
                     .ok(productService.getProductsHomepage());
@@ -49,7 +48,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-     public ResponseEntity<?> getProductDetailed(@PathVariable Long productId){
+     public ResponseEntity<BaseResponse> getProductDetailed(@PathVariable Long productId){
         try {
             return ResponseEntity
                     .ok(productService.getProductDetailed(productId));
@@ -63,7 +62,7 @@ public class ProductController {
     }
 
     @GetMapping("/{categoryName}/{page}")
-    public ResponseEntity<?> getProductsByCategory(@PathVariable String categoryName,@PathVariable Integer page){
+    public ResponseEntity<BaseResponse> getProductsByCategory(@PathVariable String categoryName,@PathVariable Integer page){
         try{
             return ResponseEntity
                     .ok(productService.getProductsByCategory(categoryName,page));
@@ -76,7 +75,7 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getProductsByFilter(
+    public ResponseEntity<BaseResponse> getProductsByFilter(
             @RequestParam(name = "keyword", required = false) String keyword,
             @RequestParam(name = "category",required = false) String category,
             @RequestParam(name = "condition", required = false) ECondition condition,
@@ -85,8 +84,7 @@ public class ProductController {
             @RequestParam(name = "size", required = false) List<Integer> sizes,
             @RequestParam(name = "priceStart", required = false) Long priceStart,
             @RequestParam(name = "priceEnd", required = false) Long priceEnd,
-            @RequestParam(name = "sorting", required = false) ESorting sorting
-            ) {
+            @RequestParam(name = "sorting", required = false) ESorting sorting) {
         //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
         try {
             return ResponseEntity

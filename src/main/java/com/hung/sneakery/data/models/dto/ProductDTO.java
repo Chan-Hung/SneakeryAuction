@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.models.dto.product;
+package com.hung.sneakery.data.models.dto;
 
 import com.hung.sneakery.data.models.entities.Product;
 import com.hung.sneakery.data.models.entities.ProductImage;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class ProductDTO {
     private Long id;
     private String name;
     private Long startPrice;
@@ -24,7 +24,7 @@ public class ProductDto {
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
     private LocalDateTime bidClosingDate;
 
-    public ProductDto(Product product){
+    public ProductDTO(Product product){
         this.setId(product.getId());
         this.setName(product.getName());
         for (ProductImage productImage: product.getProductImage())

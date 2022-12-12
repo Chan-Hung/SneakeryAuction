@@ -136,5 +136,4 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         }
         return predicate;
     }
-
 }

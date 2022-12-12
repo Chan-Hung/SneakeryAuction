@@ -1,8 +1,8 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
 import com.hung.sneakery.data.remotes.services.ProductService;
-import com.hung.sneakery.data.models.dto.product.ProductDetailedDto;
-import com.hung.sneakery.data.models.dto.product.ProductDto;
+import com.hung.sneakery.data.models.dto.ProductDetailedDTO;
+import com.hung.sneakery.data.models.dto.ProductDTO;
 import com.hung.sneakery.data.models.entities.Category;
 import com.hung.sneakery.data.models.entities.Product;
 import com.hung.sneakery.utils.enums.ECondition;
@@ -35,11 +35,11 @@ public class ProductServiceImpl implements ProductService {
     ProductImageRepository productImageRepository;
 
     @Override
-    public DataResponse<ProductDetailedDto> getProductDetailed(Long productId) {
+    public DataResponse<ProductDetailedDTO> getProductDetailed(Long productId) {
         Optional<Product> optionalProduct = productRepository.findById(productId);
         if (!optionalProduct.isPresent())
             throw new RuntimeException("Product not found with ID: " + productId);
-        ProductDetailedDto productDetailedDto = new ProductDetailedDto(optionalProduct.get());
+        ProductDetailedDTO productDetailedDto = new ProductDetailedDTO(optionalProduct.get());
         return new DataResponse<>(productDetailedDto);
     }
 
@@ -89,32 +89,32 @@ public class ProductServiceImpl implements ProductService {
         List<Product> pageTuts;
 
         pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting, paging);
-        List<ProductDto> productDtos = new ArrayList<>();
+        List<ProductDTO> productDTOs = new ArrayList<>();
         for(Product product : pageTuts)
         {
-            ProductDto productHomepageDto = new ProductDto(product);
-            productDtos.add(productHomepageDto);
+            ProductDTO productHomepageDto = new ProductDTO(product);
+            productDTOs.add(productHomepageDto);
         }
-        if(productDtos.isEmpty())
+        if(productDTOs.isEmpty())
         {
             throw new RuntimeException("Products not found");
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("products", productDtos);
+        response.put("products", productDTOs);
 
         return new DataResponse<>(response);
     }
 
     //GetMapResponseEntity
     private Map<String, Object> getMapResponseEntity(Page<Product> pageTuts) {
-        List<ProductDto> productDtos = new ArrayList<>();
+        List<ProductDTO> productDTOs = new ArrayList<>();
         for(Product product : pageTuts.getContent())
         {
-            ProductDto productHomepageDto = new ProductDto(product);
-            productDtos.add(productHomepageDto);
+            ProductDTO productHomepageDto = new ProductDTO(product);
+            productDTOs.add(productHomepageDto);
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("products", productDtos);
+        response.put("products", productDTOs);
         response.put("currentPage", pageTuts.getNumber());
         response.put("totalItems", pageTuts.getTotalElements());
         response.put("totalPages", pageTuts.getTotalPages());

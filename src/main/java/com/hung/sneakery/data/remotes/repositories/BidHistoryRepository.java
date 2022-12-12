@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Tuple;
+import java.util.List;
 
 @Repository()
 public interface BidHistoryRepository extends JpaRepository<BidHistory, Long> {
     @Query(value = "SELECT buyer_id as buyerId, max(price) as priceWin from bid_history where product_id = ?1 group by product_id", nativeQuery = true )
     Tuple getWinner(Long productId);
+
+    List<BidHistory> findByBid_Id(Long bidId);
 }
