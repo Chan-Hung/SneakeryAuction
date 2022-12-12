@@ -5,6 +5,7 @@ import com.hung.sneakery.utils.enums.ESorting;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.remotes.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-     public ResponseEntity<BaseResponse> getProductDetailed(@PathVariable Long productId){
+    @Cacheable(value = "products",key = "#productId")
+    public ResponseEntity<BaseResponse> getProductDetailed(@PathVariable Long productId){
         try {
             return ResponseEntity
                     .ok(productService.getProductDetailed(productId));
