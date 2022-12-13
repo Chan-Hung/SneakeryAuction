@@ -1,6 +1,7 @@
 package com.hung.sneakery.data.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hung.sneakery.utils.enums.ECondition;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -16,7 +18,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,11 +45,12 @@ public class Product {
     //mappedBy must have the same name as @ManyToOne variable
     //in ProductImageRepository.java class
     //One Product have Many Images => FK is in image
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private List<ProductImage> productImage;
 
     @OneToOne(mappedBy="product")
     @PrimaryKeyJoinColumn
+    @JsonManagedReference
     private Bid bid;
 
     @ManyToOne

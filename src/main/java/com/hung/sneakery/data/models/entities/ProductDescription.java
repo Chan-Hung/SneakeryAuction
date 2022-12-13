@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="product_description")
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDescription {
+public class ProductDescription implements Serializable {
     //Using a Shared Primary Key
     //In this strategy, instead of creating a new column product_description_id, we'll mark the primary key column (product_id) of the product_description table as the foreign key to the products table (Primary key as a foreign key)
     @Id
