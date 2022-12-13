@@ -11,7 +11,6 @@ import com.hung.sneakery.data.remotes.repositories.DistrictRepository;
 import com.hung.sneakery.data.remotes.repositories.WardRepository;
 import com.hung.sneakery.data.remotes.services.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,7 +66,7 @@ public class AddressController {
     }
 
     @GetMapping("/wards")
-    @Cacheable(value = "wards")
+//    @Cacheable(value = "wards")
     public List<Ward> getAllWards() {
         return wardRepository.findAll();
     }
