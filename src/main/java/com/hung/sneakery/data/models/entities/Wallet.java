@@ -1,40 +1,32 @@
 package com.hung.sneakery.data.models.entities;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
-@Table (name= "address")
+@Table(name= "wallets")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address implements Serializable {
-
+public class Wallet implements Serializable {
     @Id
     @Column(name="user_id")
     private Long id;
 
-    @Column(name = "home_number")
-    private String homeNumber;
+    @Column(name = "wallet_balance")
+    private Long balance;
 
-    @OneToOne
-    @JoinColumn(name = "city_id")
-    private City city;
-
-    @OneToOne
-    @JoinColumn(name = "ward_id")
-    private Ward ward;
-
-    @OneToOne
-    @JoinColumn(name = "district_id")
-    private District district;
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @OneToOne
     @MapsId

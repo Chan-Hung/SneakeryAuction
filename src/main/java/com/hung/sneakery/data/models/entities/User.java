@@ -51,6 +51,10 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     private Set<BidHistory> bidHistories = new HashSet<>();
 
+    @OneToOne(mappedBy = "user")
+    @PrimaryKeyJoinColumn
+    private Wallet wallet;
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
