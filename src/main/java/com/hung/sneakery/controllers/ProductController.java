@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
     @Autowired
-    private ProductService productService;
+    ProductService productService;
 
     @GetMapping("/allid")
     public ResponseEntity<BaseResponse> getAllProductId(){
