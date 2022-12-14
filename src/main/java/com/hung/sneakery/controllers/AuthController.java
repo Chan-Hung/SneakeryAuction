@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 
 @RestController
-@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000"})
+@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
 @RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
