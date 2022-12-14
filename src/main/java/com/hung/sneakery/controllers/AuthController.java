@@ -1,19 +1,19 @@
 package com.hung.sneakery.controllers;
 
 
-import com.hung.sneakery.data.models.entities.Role;
-import com.hung.sneakery.data.models.entities.User;
-import com.hung.sneakery.utils.enums.ERole;
 import com.hung.sneakery.data.models.dto.request.EmailRequest;
 import com.hung.sneakery.data.models.dto.request.SignInRequest;
 import com.hung.sneakery.data.models.dto.request.SignUpRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.JwtResponse;
+import com.hung.sneakery.data.models.entities.Role;
+import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.RoleRepository;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
-import com.hung.sneakery.utils.config.security.jwt.JwtUtils;
-import com.hung.sneakery.utils.config.security.impl.UserDetailsImpl;
 import com.hung.sneakery.data.remotes.services.MailService;
+import com.hung.sneakery.utils.config.security.impl.UserDetailsImpl;
+import com.hung.sneakery.utils.config.security.jwt.JwtUtils;
+import com.hung.sneakery.utils.enums.ERole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
