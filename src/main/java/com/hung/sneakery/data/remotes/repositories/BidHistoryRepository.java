@@ -14,4 +14,6 @@ public interface BidHistoryRepository extends JpaRepository<BidHistory, Long> {
     Tuple getWinner(Long productId);
 
     List<BidHistory> findByBid_Id(Long bidId);
+
+    List<BidHistory> findByUser_Id(Long userId);
 }

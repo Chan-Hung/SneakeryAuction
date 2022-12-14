@@ -1,6 +1,7 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
 import com.hung.sneakery.data.models.dto.BidHistoryDTO;
+import com.hung.sneakery.data.models.dto.request.GetBidHistoryByUser;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.BidHistory;
 import com.hung.sneakery.data.remotes.repositories.BidHistoryRepository;
@@ -32,6 +33,23 @@ public class BisHistoryServiceImpl implements BidHistoryService {
         }
     }
 
+
+    @Override
+    public DataResponse<List<GetBidHistoryByUser>> getHistoryByUser(Long userId) {
+        //One-To-One relation: bid<->product
+        List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_Id(userId);
+        if (bidHistoryList == null)
+            throw new RuntimeException("User has not placed any bid");
+        else {
+            List<GetBidHistoryByUser> getBidHistoryByUsers = new ArrayList<>();
+            for(BidHistory bidHistory : bidHistoryList){
+                GetBidHistoryByUser getBidHistoryByUser = mapToGetBidHistoryByUser(bidHistory);
+                getBidHistoryByUsers.add(getBidHistoryByUser);
+            }
+            return new DataResponse<>(getBidHistoryByUsers) ;
+        }
+    }
+
     private BidHistoryDTO mapToBidHistoryDTO(BidHistory bidHistory){
         BidHistoryDTO bidHistoryDTO = new BidHistoryDTO();
 
@@ -41,4 +59,16 @@ public class BisHistoryServiceImpl implements BidHistoryService {
 
         return bidHistoryDTO;
     }
+
+    private GetBidHistoryByUser mapToGetBidHistoryByUser(BidHistory bidHistory){
+        GetBidHistoryByUser getBidHistoryByUser = new GetBidHistoryByUser();
+
+        getBidHistoryByUser.setProductId(bidHistory.getBid().getId());
+        getBidHistoryByUser.setCreatedAt(bidHistory.getCreatedAt());
+        getBidHistoryByUser.setPrice(bidHistory.getPrice());
+        return getBidHistoryByUser;
+    }
 }
+
+
+

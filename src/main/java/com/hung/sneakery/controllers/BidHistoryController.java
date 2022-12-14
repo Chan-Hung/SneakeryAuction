@@ -29,4 +29,19 @@ public class BidHistoryController {
                             e.getMessage()));
         }
     }
+
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<BaseResponse> getOneByUser(@PathVariable Long userId){
+        try{
+            return ResponseEntity
+                    .ok(bidHistoryService.getHistoryByUser(userId));
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
+        }
+    }
 }
