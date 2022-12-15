@@ -63,7 +63,7 @@ public class TransactionController {
         }
         return ResponseEntity
                 .ok(new BaseResponse(false,
-                        "Paypal is not available now, please contact to our customer service"));
+                        "Paypal is not available now, please contact to our customer service"));//
     }
 
 }
