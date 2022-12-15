@@ -29,4 +29,17 @@ public class WalletController {
         }
     }
 
+    @GetMapping("/get/{userId}")
+    public ResponseEntity<BaseResponse> getOne(@PathVariable Long userId){
+        try{
+            return ResponseEntity
+                    .ok(walletService.getOne(userId));
+        }
+        catch (RuntimeException e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
+        }
+    }
 }

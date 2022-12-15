@@ -1,5 +1,6 @@
 package com.hung.sneakery.data.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +27,12 @@ public class Wallet implements Serializable {
 
     @CreationTimestamp
     @Column(name = "created_at")
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 }

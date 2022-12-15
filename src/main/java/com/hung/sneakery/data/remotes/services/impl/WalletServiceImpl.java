@@ -1,6 +1,7 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
+import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Wallet;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.repositories.WalletRepository;
@@ -24,5 +25,10 @@ public class WalletServiceImpl implements WalletService {
         walletRepository.save(wallet);
 
         return new BaseResponse(true, "User's wallet created successfully");
+    }
+
+    @Override
+    public DataResponse<Wallet> getOne(Long userId) {
+        return new DataResponse<>(walletRepository.findByUser_Id(userId));
     }
 }

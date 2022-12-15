@@ -1,13 +1,14 @@
 package com.hung.sneakery.data.remotes.services;
 
+import com.hung.sneakery.data.models.dto.request.DepositRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 
 public interface TransactionHistoryService {
-    Payment createPayment(Long userId, String cancelUrl, String successUrl) throws PayPalRESTException;
+    Payment createPayment(DepositRequest depositRequest) throws PayPalRESTException;
 
     Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
 
-    BaseResponse handleSuccess(Payment payment, Long userId);
+    BaseResponse handleSuccess(Payment payment, DepositRequest depositRequest);
 }

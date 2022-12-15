@@ -30,6 +30,18 @@ public class Order implements Serializable {
     @Column(name = "status")
     private String status;
 
+    @OneToOne
+    @JoinColumn(name="shipping_fee_id")
+    private ShippingFee shippingFee;
+
+    @OneToOne()
+    @JoinColumn(name = "winner_id")
+    private User winner;
+
+    @OneToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="bid_id")
     private Bid bid;

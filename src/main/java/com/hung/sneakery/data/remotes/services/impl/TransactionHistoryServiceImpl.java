@@ -1,5 +1,6 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
+import com.hung.sneakery.data.models.dto.request.DepositRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.entities.TransactionHistory;
 import com.hung.sneakery.data.models.entities.User;
@@ -39,40 +40,28 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
 
     @Override
-    public Payment createPayment(Long userId, String cancelUrl, String successUrl) throws PayPalRESTException {
-        if (userId == null)
-            throw new RuntimeException("Order must not be null !");
-        Optional<User> user = userRepository.findById(userId);
-//        if (order.getStatus() == EROrderStatus.PAID)
-//            throw new CommonRuntimeException("You already paid for this post .!");
-//        Post post = order.getPost();
-//        Service service = post.getService();
+    public Payment createPayment(DepositRequest depositRequest) throws PayPalRESTException {
+        if (depositRequest.getUserId() == null)
+            throw new RuntimeException("User not found");
+        Optional<User> user = userRepository.findById(depositRequest.getUserId());
 
-//        Double total = order.getTotal();
-//        String currency = order.getCurrency().toString();
-//        String method = "paypal";
-//        String intent = "sale";
-//        String description = String.format("Rent service for post id (%d) with title (%s) in %d months (%d).",
-//                post.getId(), post.getTitle(), order.getDuration(), order.getId());
-//
         ItemList itemList = new ItemList();
         List<Item> items = new ArrayList<>();
-//
+
         Item item = new Item();
-        item.setName("Nạp tiền vào Sneakery");
+        item.setName("Nạp tiền cọc Sneakery");
         item.setCurrency("USD");
-        item.setPrice("88");
+        item.setPrice(depositRequest.getAmount().toString());
         item.setQuantity("1");
         items.add(item);
         itemList.setItems(items);
 
         Amount amount = new Amount();
         amount.setCurrency("USD");
-//        total = new BigDecimal(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        amount.setTotal("88");
+        amount.setTotal(depositRequest.getAmount().toString());
 
         Transaction transaction = new Transaction();
-        transaction.setDescription(null);
+        transaction.setDescription("Nạp tiền cọc Sneakery");
         transaction.setAmount(amount);
         transaction.setItemList(itemList);
 
@@ -86,9 +75,10 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         payment.setIntent("sale");
         payment.setPayer(payer);
         payment.setTransactions(transactions);
+
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(cancelUrl);
-        redirectUrls.setReturnUrl(successUrl);
+        redirectUrls.setCancelUrl("http://localhost:8080/success");
+        redirectUrls.setReturnUrl("http://localhost:8080/cancel");
 
         payment.setRedirectUrls(redirectUrls);
 
@@ -108,36 +98,21 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     }
 
     @Override
-    public BaseResponse handleSuccess(Payment payment, Long userId) {
+    public BaseResponse handleSuccess(Payment payment, DepositRequest depositRequest) {
         try {
-            Wallet wallet = walletRepository.findByUser_Id(userId);
+            Wallet wallet = walletRepository.findByUser_Id(depositRequest.getUserId());
             TransactionHistory transactionHistory = new TransactionHistory();
             transactionHistory.setStatus(EStatus.DEPOSIT);
             transactionHistory.setWallet(wallet);
-            Long amount = Long.valueOf(payment.getTransactions().get(0).getAmount().getTotal().substring(0, 2));
-            transactionHistory.setAmount(amount);
+            transactionHistory.setAmount(depositRequest.getAmount());
 
             Long currentBalance = wallet.getBalance();
-            wallet.setBalance(currentBalance+amount);
+            wallet.setBalance(currentBalance+depositRequest.getAmount());
             walletRepository.save(wallet);
 
-//            Long postId = (long) lstNum.get(0);
-//            Long orderId = (long) lstNum.get(lstNum.size() - 1);
-//
-//            Post post = postRepo.findById(postId).get();
-//            PostOrder order = orderRepo.findById(orderId).get();
-//
-//            post.setStatus(EStatus.WAIT_FOR_ACCEPT);
-//
-//            order.setPaidDate(new Date());
-//            order.setStatus(EROrderStatus.PAID);
-//            order.setPost(post);
-//
-//            orderRepo.save(order);
             transactionHistoryRepository.save(transactionHistory);
         } catch (Exception e) {
-            return new BaseResponse(false, e.getMessage());
-
+            throw new RuntimeException(e.getMessage());
         }
         return new BaseResponse(true, "Payment successfully");
 

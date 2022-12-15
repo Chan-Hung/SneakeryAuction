@@ -1,5 +1,6 @@
 package com.hung.sneakery.controllers;
 
+import com.hung.sneakery.data.models.dto.request.DepositRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.remotes.services.TransactionHistoryService;
 import com.paypal.api.payments.Links;
@@ -17,15 +18,11 @@ public class TransactionController {
     @Autowired
     TransactionHistoryService transactionHistoryService;
 
-    public static final String SUCCESS_URL = "/success";
-    public static final String CANCEL_URL = "/cancel";
 
-
-    @PostMapping("/deposit/{userId}")
-    public ResponseEntity<BaseResponse> payment(@PathVariable Long userId) {
+    @PostMapping("/deposit")
+    public ResponseEntity<BaseResponse> payment(@RequestBody DepositRequest depositRequest) {
         try {
-            Payment payment = transactionHistoryService.createPayment(userId, "http://localhost:8080/" + CANCEL_URL,
-                    "http://localhost:8080/" + SUCCESS_URL);
+            Payment payment = transactionHistoryService.createPayment(depositRequest);
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
                     return ResponseEntity
@@ -46,21 +43,22 @@ public class TransactionController {
                         "Paypal is not available now, please contact to our customer service"));
     }
 
-    @GetMapping(CANCEL_URL)
-    public ResponseEntity<?> cancelPay() {
-        return ResponseEntity.ok(new BaseResponse(false, "cancel"));
+    @GetMapping("/deposit/cancel")
+    public ResponseEntity<BaseResponse> cancelPay() {
+        return ResponseEntity
+                .ok(new BaseResponse(false, "cancel"));
     }
 
-    @GetMapping(SUCCESS_URL)
-    public ResponseEntity<?> successPay(@RequestParam("paymentId") String paymentId,
+    @GetMapping("/deposit/success")
+    public ResponseEntity<BaseResponse> successPay(@RequestParam("paymentId") String paymentId,
                                         @RequestParam("payerId") String payerId,
-                                        @RequestParam("userId") Long userId) {
+                                        @RequestBody DepositRequest depositRequest) {
         try {
             Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
                 // Do update here
                 return ResponseEntity
-                        .ok(transactionHistoryService.handleSuccess(payment, userId));
+                        .ok(transactionHistoryService.handleSuccess(payment, depositRequest));
 
             }
         } catch (PayPalRESTException e) {
@@ -68,7 +66,7 @@ public class TransactionController {
         }
         return ResponseEntity
                 .ok(new BaseResponse(false,
-                        "There is some thing wrong !"));
+                        "There is some thing wrong"));
     }
 
 }

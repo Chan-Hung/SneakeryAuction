@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,6 +28,7 @@ public class BidHistory implements Serializable {
     private Long price;
 
     @Column(name="created_at")
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @ManyToOne(cascade = CascadeType.ALL)
