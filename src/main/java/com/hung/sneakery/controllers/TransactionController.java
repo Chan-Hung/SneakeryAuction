@@ -56,17 +56,15 @@ public class TransactionController {
         try {
             Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-                // Do update here
                 return ResponseEntity
                         .ok(transactionHistoryService.handleSuccess(payment, depositRequest));
-
             }
         } catch (PayPalRESTException e) {
             System.out.println(e.getMessage());
         }
         return ResponseEntity
                 .ok(new BaseResponse(false,
-                        "There is some thing wrong"));
+                        "Paypal is not available now, please contact to our customer service"));
     }
 
 }
