@@ -78,8 +78,8 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         payment.setTransactions(transactions);
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl("http://localhost:8080/success");
-        redirectUrls.setReturnUrl("http://localhost:8080/cancel");
+        redirectUrls.setReturnUrl("http://localhost:3000/success");
+        redirectUrls.setCancelUrl("http://localhost:3000/cancel");
 
         payment.setRedirectUrls(redirectUrls);
 

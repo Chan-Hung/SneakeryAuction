@@ -77,6 +77,7 @@ public class CountdownServiceImpl implements CountdownService {
                 bidRepository.save(bid);
                 System.out.println("Update priceWin successfully");
 
+                //Create Order
                 Order order = new Order();
                 order.setBid(bid);
                 order.setStatus("SUCCESS");
