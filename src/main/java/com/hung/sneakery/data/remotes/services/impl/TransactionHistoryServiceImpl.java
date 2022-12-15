@@ -80,9 +80,9 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setReturnUrl("http://localhost:3000/success");
         redirectUrls.setCancelUrl("http://localhost:3000/cancel");
-
         payment.setRedirectUrls(redirectUrls);
 
+        apiContext.setMaskRequestId(true);
         return payment.create(apiContext);
     }
 
@@ -93,7 +93,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
         PaymentExecution paymentExecute = new PaymentExecution();
         paymentExecute.setPayerId(payerId);
-
         return payment.execute(apiContext, paymentExecute);
 
     }
