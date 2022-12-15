@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +97,7 @@ public class BidServiceImpl implements BidService {
         BidHistory bidHistory = new BidHistory();
         bidHistory.setPrice(amount);
         bidHistory.setUser(buyer);
+        bidHistory.setCreatedAt(LocalDateTime.now());
         bidHistory.setBid(bid);
         bidHistoryRepository.save(bidHistory);
 

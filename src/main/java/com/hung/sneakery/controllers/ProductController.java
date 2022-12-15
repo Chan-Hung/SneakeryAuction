@@ -97,6 +97,19 @@ public class ProductController {
         }
     }
 
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<BaseResponse> delete(@PathVariable Long productId){
+        try {
+            return ResponseEntity
+                    .ok(productService.deleteProduct(productId));
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
+        }
+    }
 
 
 }

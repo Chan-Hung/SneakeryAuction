@@ -2,6 +2,7 @@ package com.hung.sneakery.data.remotes.services.impl;
 
 import com.hung.sneakery.data.models.dto.ProductDTO;
 import com.hung.sneakery.data.models.dto.ProductDetailedDTO;
+import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Category;
 import com.hung.sneakery.data.models.entities.Product;
@@ -103,6 +104,15 @@ public class ProductServiceImpl implements ProductService {
         response.put("products", productDTOs);
 
         return new DataResponse<>(response);
+    }
+
+    @Override
+    public BaseResponse deleteProduct(Long productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (!optionalProduct.isPresent())
+            throw new RuntimeException("Product not found with ID: " + productId);
+        productRepository.delete(optionalProduct.get());
+        return new BaseResponse(true, "Deleted product successfully");
     }
 
     //GetMapResponseEntity
