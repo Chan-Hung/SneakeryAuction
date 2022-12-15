@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ public class Order implements Serializable {
 
     @NotNull(message="The winner price is required")
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
 
     @Column(name = "status")

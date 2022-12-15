@@ -87,7 +87,7 @@ public class BidServiceImpl implements BidService {
         if (buyer == seller)
             throw new RuntimeException("Seller can not place a bid on this product");
         if(currentAmount + stepBid > amount)
-            throw new RuntimeException("The bid increment for this product is " + bidIncrement + " VND. Your bid amount should be higher");
+            throw new RuntimeException("The bid increment for this product is " + bidIncrement + " $. Your bid amount should be higher");
         if(!compareWalletBalanceToCurrentBidPrice(currentAmount))
             throw new RuntimeException("Your wallet's balance is lower than the current price");
         if(!compareWalletBalanceToCurrentBidPrice(amount))

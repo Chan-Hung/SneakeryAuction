@@ -14,6 +14,7 @@ import com.hung.sneakery.utils.enums.EStatus;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +65,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         transaction.setDescription("Nạp tiền cọc Sneakery");
         transaction.setAmount(amount);
         transaction.setItemList(itemList);
-
+        transaction.setInvoiceNumber(RandomString.make(30));
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
 
