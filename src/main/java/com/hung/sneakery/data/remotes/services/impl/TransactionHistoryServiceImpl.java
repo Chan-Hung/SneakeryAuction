@@ -73,7 +73,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
         Payer payer = new Payer();
         payer.setPaymentMethod("paypal");
-
+//
         Payment payment = new Payment();
         payment.setIntent("sale");
         payment.setPayer(payer);
