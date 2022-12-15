@@ -10,5 +10,5 @@ public interface TransactionHistoryService {
 
     Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
 
-    BaseResponse handleSuccess(Payment payment, DepositRequest depositRequest);
+    BaseResponse handleSuccess(Payment payment);
 }

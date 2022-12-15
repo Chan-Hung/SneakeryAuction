@@ -51,13 +51,12 @@ public class TransactionController {
 
     @GetMapping("/deposit/success")
     public ResponseEntity<BaseResponse> successPay(@RequestParam("paymentId") String paymentId,
-                                        @RequestParam("payerId") String payerId,
-                                        @RequestBody DepositRequest depositRequest) {
+                                        @RequestParam("payerId") String payerId) {
         try {
             Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
                 return ResponseEntity
-                        .ok(transactionHistoryService.handleSuccess(payment, depositRequest));
+                        .ok(transactionHistoryService.handleSuccess(payment));
             }
         } catch (PayPalRESTException e) {
             System.out.println(e.getMessage());

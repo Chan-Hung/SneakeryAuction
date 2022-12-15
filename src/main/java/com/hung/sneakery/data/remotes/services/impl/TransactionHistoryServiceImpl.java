@@ -15,7 +15,9 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import net.bytebuddy.utility.RandomString;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -99,16 +101,20 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     }
 
     @Override
-    public BaseResponse handleSuccess(Payment payment, DepositRequest depositRequest) {
+    public BaseResponse handleSuccess(Payment payment) {
         try {
-            Wallet wallet = walletRepository.findByUser_Id(depositRequest.getUserId());
+            String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(userName);
+
+            Wallet wallet = walletRepository.findByUser_Id(user.getId());
             TransactionHistory transactionHistory = new TransactionHistory();
             transactionHistory.setStatus(EStatus.DEPOSIT);
             transactionHistory.setWallet(wallet);
-            transactionHistory.setAmount(depositRequest.getAmount());
+            String amount = StringUtils.removeEnd(payment.getTransactions().get(0).getAmount().getTotal(),".00");
+            transactionHistory.setAmount(Long.valueOf(amount));
 
             Long currentBalance = wallet.getBalance();
-            wallet.setBalance(currentBalance+depositRequest.getAmount());
+            wallet.setBalance(currentBalance+Long.parseLong(amount));
             walletRepository.save(wallet);
 
             transactionHistoryRepository.save(transactionHistory);
