@@ -18,7 +18,6 @@ public class TransactionController {
     @Autowired
     TransactionHistoryService transactionHistoryService;
 
-
     @PostMapping("/deposit")
     public ResponseEntity<BaseResponse> payment(@RequestBody DepositRequest depositRequest) {
         try {

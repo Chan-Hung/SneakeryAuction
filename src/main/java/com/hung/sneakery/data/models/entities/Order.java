@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -22,12 +20,8 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //private Product product;
-
-    @NotNull(message="The winner price is required")
     @Column(name = "created_at")
-    @CreationTimestamp
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "status")
     private String status;
@@ -44,7 +38,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "seller_id")
     private User seller;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(name="bid_id")
     private Bid bid;
 }

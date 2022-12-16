@@ -10,6 +10,7 @@ import javax.persistence.Tuple;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Timer;
@@ -47,6 +48,8 @@ public class CountdownServiceImpl implements CountdownService {
         //DateTime when executing
         Date date = Date.from(bid.getBidClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
         timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository,shippingFeeRepository, userRepository, addressRepository, orderRepository, walletRepository), date);
+        System.out.println("Current Time Schedule: " + df.format( new Date()));
+
     }
 
     private static class CountdownTask extends TimerTask {
@@ -66,26 +69,30 @@ public class CountdownServiceImpl implements CountdownService {
         @Override
         public void run() {
             Tuple winnerTuple = bidHistoryRepository.getWinner(bid.getId());
-            BigInteger priceWin = winnerTuple.get("priceWin", BigInteger.class);
-            BigInteger userId = winnerTuple.get("buyer_id", BigInteger.class);
-
-            if (priceWin == null)
-                //Bid ends without winner
+            if (winnerTuple == null){
                 bid.setPriceWin(0L);
+                bidRepository.save(bid);
+                System.out.println("Time Schedule Set Price Win = 0: " + LocalDateTime.now());
+            }
+                //Bid ends without winner
             else {
+                System.out.println("Time Schedule Set Price Win ...: " + LocalDateTime.now());
+                BigInteger priceWin = winnerTuple.get("priceWin", BigInteger.class);
+                BigInteger userId = winnerTuple.get("buyerId", BigInteger.class);
                 bid.setPriceWin(priceWin.longValue());//End bid totally
                 bidRepository.save(bid);
                 System.out.println("Update priceWin successfully");
 
+                Bid bid1  = bidRepository.findById(bid.getId()).get();
                 //Create Order
                 Order order = new Order();
-                order.setBid(bid);
+                order.setBid(bid1);
                 order.setStatus("SUCCESS");
 
                 //Set order's seller
                 User seller = bid.getProduct().getUser();
                 order.setSeller(seller);
-
+                order.setCreatedAt(LocalDateTime.now());
                 //Set order's winner
                 Long userIdWin = userId.longValue();
                 User winner = userRepository.findById(userIdWin).get();
