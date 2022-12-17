@@ -1,6 +1,7 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
 import com.hung.sneakery.data.models.dto.BidHistoryDTO;
+import com.hung.sneakery.data.models.dto.ProductDTO;
 import com.hung.sneakery.data.models.dto.request.GetBidHistoryByUser;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.BidHistory;
@@ -72,9 +73,10 @@ public class BisHistoryServiceImpl implements BidHistoryService {
     private GetBidHistoryByUser mapToGetBidHistoryByUser(BidHistory bidHistory){
         GetBidHistoryByUser getBidHistoryByUser = new GetBidHistoryByUser();
 
-        getBidHistoryByUser.setProductId(bidHistory.getBid().getId());
         getBidHistoryByUser.setCreatedAt(bidHistory.getCreatedAt());
-        getBidHistoryByUser.setPrice(bidHistory.getPrice());
+        getBidHistoryByUser.setAmount(bidHistory.getPrice());
+        getBidHistoryByUser.setProduct(new ProductDTO(bidHistory.getBid().getProduct()));
+
         return getBidHistoryByUser;
     }
 }
