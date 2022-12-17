@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class BisHistoryServiceImpl implements BidHistoryService {
+public class BidHistoryServiceImpl implements BidHistoryService {
     @Autowired
     BidHistoryRepository bidHistoryRepository;
 

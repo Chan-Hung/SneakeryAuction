@@ -1,6 +1,5 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
-import com.hung.sneakery.data.models.dto.request.EmailRequest;
 import com.hung.sneakery.data.models.dto.request.SignInRequest;
 import com.hung.sneakery.data.models.dto.request.SignUpRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
@@ -126,8 +125,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public BaseResponse checkEmail(EmailRequest emailRequest) {
-        if (userRepository.existsByEmail(emailRequest.getEmail()))
+    public BaseResponse checkEmail(String email) {
+        if (userRepository.existsByEmail(email))
             return new BaseResponse(true, "Email is already existed");
         return new BaseResponse(true, "Email can be used");
     }

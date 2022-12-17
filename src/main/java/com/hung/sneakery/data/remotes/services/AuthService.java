@@ -1,6 +1,5 @@
 package com.hung.sneakery.data.remotes.services;
 
-import com.hung.sneakery.data.models.dto.request.EmailRequest;
 import com.hung.sneakery.data.models.dto.request.SignInRequest;
 import com.hung.sneakery.data.models.dto.request.SignUpRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
@@ -13,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 public interface AuthService {
     DataResponse<JwtResponse> signIn(SignInRequest signInRequest);
     BaseResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException;
-    BaseResponse checkEmail(EmailRequest emailRequest);
+    BaseResponse checkEmail(String email);
     BaseResponse verify(String verificationCode);
 
 }

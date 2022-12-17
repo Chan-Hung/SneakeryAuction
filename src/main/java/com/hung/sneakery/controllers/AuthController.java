@@ -1,7 +1,6 @@
 package com.hung.sneakery.controllers;
 
 
-import com.hung.sneakery.data.models.dto.request.EmailRequest;
 import com.hung.sneakery.data.models.dto.request.SignInRequest;
 import com.hung.sneakery.data.models.dto.request.SignUpRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
@@ -46,10 +45,10 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/checkemail")
-    public ResponseEntity<BaseResponse> checkEmail(@Valid @RequestBody EmailRequest emailRequest) {
+    @GetMapping("/checkemail")
+    public ResponseEntity<BaseResponse> checkEmail(@RequestParam String email) {
         return ResponseEntity
-                .ok(authService.checkEmail(emailRequest));
+                .ok(authService.checkEmail(email));
     }
 
     @GetMapping("/verify/{code}")
