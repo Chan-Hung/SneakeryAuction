@@ -14,4 +14,6 @@ public interface AuthService {
     DataResponse<JwtResponse> signIn(SignInRequest signInRequest);
     BaseResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException;
     BaseResponse checkEmail(EmailRequest emailRequest);
+    BaseResponse verify(String verificationCode);
+
 }

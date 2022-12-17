@@ -34,12 +34,6 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/checkemail")
-    public ResponseEntity<BaseResponse> checkEmail(@Valid @RequestBody EmailRequest emailRequest) {
-        return ResponseEntity
-                .ok(authService.checkEmail(emailRequest));
-    }
-
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse> signUp(@Valid @RequestBody SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
         try {
@@ -49,6 +43,25 @@ public class AuthController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false, e.getMessage()));
+        }
+    }
+
+    @PostMapping("/checkemail")
+    public ResponseEntity<BaseResponse> checkEmail(@Valid @RequestBody EmailRequest emailRequest) {
+        return ResponseEntity
+                .ok(authService.checkEmail(emailRequest));
+    }
+
+    @GetMapping("/verify/{code}")
+    public ResponseEntity<BaseResponse> verify(@PathVariable String code) {
+        try{
+            return ResponseEntity
+                    .ok(authService.verify(code));
+        }catch(RuntimeException e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
         }
     }
 }

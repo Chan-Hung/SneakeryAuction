@@ -18,7 +18,7 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender mailSender;
 
     @Override
-    public void sendVerificationEmail(User user) throws MessagingException, UnsupportedEncodingException {
+    public void sendVerificationEmail(User user, String verificationCode) throws MessagingException, UnsupportedEncodingException {
         String fromAddress = "sneakeryauction@gmail.com\n";
         String toAddress = user.getEmail();
 
@@ -169,7 +169,7 @@ public class MailServiceImpl implements MailService {
                 "                                    <td bgcolor=\"#ffffff\" align=\"center\" style=\"padding: 20px 30px 60px 30px;\">\n" +
                 "                                        <table border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n" +
                 "                                            <tr>\n" +
-                "                                                <td align=\"center\" style=\"border-radius: 3px;\" bgcolor=\"#FFA73B\"><a href=\"URLPATH\" target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;\">Confirm Account</a></td>\n" +
+                "                                                <td align=\"center\" style=\"border-radius: 3px;\" bgcolor=\"#FFA73B\"><a href=\"[[URL]]\" target=\"_blank\" style=\"font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;\">Confirm Account</a></td>\n" +
                 "                                            </tr>\n" +
                 "                                        </table>\n" +
                 "                                    </td>\n" +
@@ -235,10 +235,10 @@ public class MailServiceImpl implements MailService {
         helper.setTo(toAddress);
         helper.setSubject(subject);
 
-        //content = content.replace("[[name]]", user.getUsername());
-        //String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
+        content = content.replace("[[name]]", user.getUsername());
+        String verifyURL = "http://localhost:3000" + "/verify?code=" + verificationCode;
 
-        //content = content.replace("[[URL]]", verifyURL);
+        content = content.replace("[[URL]]", verifyURL);
 
         helper.setText(content, true);
 

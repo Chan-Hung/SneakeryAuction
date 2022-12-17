@@ -42,6 +42,12 @@ public class User implements Serializable {
     @Size(max = 120)
     private String password;
 
+    @Column(name = "verification_code", length = 30)
+    private String verificationCode;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
                 joinColumns = @JoinColumn(name="user_id"),
@@ -54,10 +60,4 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user")
     @PrimaryKeyJoinColumn
     private Wallet wallet;
-
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
 }

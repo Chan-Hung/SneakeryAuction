@@ -15,6 +15,7 @@ import com.hung.sneakery.data.remotes.services.MailService;
 import com.hung.sneakery.utils.config.security.impl.UserDetailsImpl;
 import com.hung.sneakery.utils.config.security.jwt.JwtUtils;
 import com.hung.sneakery.utils.enums.ERole;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,6 +54,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public DataResponse<JwtResponse> signIn(SignInRequest signInRequest) {
+        User user = userRepository.findByEmail(signInRequest.getEmail());
+        if(!user.getIsActive())
+            throw new RuntimeException("User hasn't been activated");
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -61,7 +66,6 @@ public class AuthServiceImpl implements AuthService {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
         List<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(item -> item.getAuthority())
@@ -79,12 +83,17 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Email is already in use");
 
         //Create new user's account
-        User user = new User(
-                signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+        User user = new User();
 
-        mailService.sendVerificationEmail(user);
+        user.setUsername(signUpRequest.getUsername());
+        user.setEmail(signUpRequest.getEmail());
+        user.setPassword(encoder.encode(signUpRequest.getPassword()));
+
+        String verificationCode = RandomString.make(30);
+        user.setVerificationCode(verificationCode);
+        user.setIsActive(false);
+
+        mailService.sendVerificationEmail(user, verificationCode);
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -121,5 +130,18 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.existsByEmail(emailRequest.getEmail()))
             return new BaseResponse(true, "Email is already existed");
         return new BaseResponse(true, "Email can be used");
+    }
+
+    @Override
+    public BaseResponse verify(String verificationCode) {
+        User user = userRepository.findByVerificationCode(verificationCode);
+        if (user == null || user.getIsActive()) {
+            return new BaseResponse(false, "User has already been active");
+        } else {
+            user.setVerificationCode(null);
+            user.setIsActive(true);
+            userRepository.save(user);
+            return new BaseResponse(true, "Activate user successfully");
+        }
     }
 }

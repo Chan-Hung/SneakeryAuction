@@ -6,6 +6,6 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
 public interface MailService {
-    void sendVerificationEmail(User user) throws MessagingException, UnsupportedEncodingException;
+    void sendVerificationEmail(User user, String verificationCode) throws MessagingException, UnsupportedEncodingException;
 }
 
