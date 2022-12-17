@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/","https://www.sandbox.paypal.com/"})
-@RequestMapping("/api/transaction")//Remind Kiet to change this path
+@RequestMapping("/api/transaction")
 public class TransactionController {
     @Autowired
     TransactionHistoryService transactionHistoryService;
