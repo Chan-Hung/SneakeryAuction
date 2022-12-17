@@ -15,8 +15,7 @@ public class BidHistoryController {
     @Autowired
     BidHistoryService bidHistoryService;
 
-    @GetMapping("/{productId}")
-    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/product/{productId}")
     public ResponseEntity<BaseResponse> getOneByProduct(@PathVariable Long productId){
         try{
             return ResponseEntity
@@ -30,12 +29,12 @@ public class BidHistoryController {
         }
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BaseResponse> getOneByUser(@PathVariable Long userId){
+    public ResponseEntity<BaseResponse> getOneByUser(){
         try{
             return ResponseEntity
-                    .ok(bidHistoryService.getHistoryByUser(userId));
+                    .ok(bidHistoryService.getHistoryByUser());
         }
         catch (RuntimeException e) {
             return ResponseEntity

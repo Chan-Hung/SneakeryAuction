@@ -2,6 +2,7 @@ package com.hung.sneakery.data.remotes.services.impl;
 
 import com.hung.sneakery.data.models.dto.request.DepositRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
+import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.TransactionHistory;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.models.entities.Wallet;
@@ -71,11 +72,15 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
         Payer payer = new Payer();
         payer.setPaymentMethod("paypal");
-//
+
+//        Payee payee = new Payee();
+//        payee.setEmail("sb-bmjkl23382454@personal.example.com");
+
         Payment payment = new Payment();
         payment.setIntent("sale");
         payment.setPayer(payer);
         payment.setTransactions(transactions);
+//        payment.setPayee(payee);
 
         RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setReturnUrl("http://localhost:3000/success");
@@ -94,7 +99,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         PaymentExecution paymentExecute = new PaymentExecution();
         paymentExecute.setPayerId(payerId);
         return payment.execute(apiContext, paymentExecute);
-
     }
 
     @Override
@@ -119,7 +123,15 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
             throw new RuntimeException(e.getMessage());
         }
         return new BaseResponse(true, "Payment successfully");
+    }
 
+    @Override
+    public DataResponse<List<TransactionHistory>> getAllByWallet() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
 
+        Wallet wallet = walletRepository.findByUser_Id(user.getId());
+        List<TransactionHistory> transactionHistoryList = transactionHistoryRepository.findAllByWallet(wallet);
+        return new DataResponse<>(transactionHistoryList);
     }
 }

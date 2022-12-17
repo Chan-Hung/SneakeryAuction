@@ -1,5 +1,6 @@
 package com.hung.sneakery.data.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hung.sneakery.utils.enums.EStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,5 +36,6 @@ public class TransactionHistory implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "wallet_id")
+    @JsonIgnore
     private Wallet wallet;
 }

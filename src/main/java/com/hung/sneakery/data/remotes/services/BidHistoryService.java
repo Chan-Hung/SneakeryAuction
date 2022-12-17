@@ -9,5 +9,5 @@ import java.util.List;
 public interface BidHistoryService {
     DataResponse<List<BidHistoryDTO>> getHistoryByProduct(Long productId);
 
-    DataResponse<List<GetBidHistoryByUser>> getHistoryByUser(Long userId);
+    DataResponse<List<GetBidHistoryByUser>> getHistoryByUser();
 }

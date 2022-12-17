@@ -4,9 +4,12 @@ import com.hung.sneakery.data.models.dto.BidHistoryDTO;
 import com.hung.sneakery.data.models.dto.request.GetBidHistoryByUser;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.BidHistory;
+import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.BidHistoryRepository;
+import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.services.BidHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +19,9 @@ import java.util.List;
 public class BisHistoryServiceImpl implements BidHistoryService {
     @Autowired
     BidHistoryRepository bidHistoryRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public DataResponse<List<BidHistoryDTO>> getHistoryByProduct(Long productId) {
@@ -35,9 +41,12 @@ public class BisHistoryServiceImpl implements BidHistoryService {
 
 
     @Override
-    public DataResponse<List<GetBidHistoryByUser>> getHistoryByUser(Long userId) {
+    public DataResponse<List<GetBidHistoryByUser>> getHistoryByUser() {
         //One-To-One relation: bid<->product
-        List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_Id(userId);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
+
+        List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_Id(user.getId());
         if (bidHistoryList == null)
             throw new RuntimeException("User has not placed any bid");
         else {

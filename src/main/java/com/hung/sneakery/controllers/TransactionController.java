@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/","https://www.sandbox.paypal.com/"})
-@RequestMapping("/api/paypal")
+@RequestMapping("/api/transaction")//Remind Kiet to change this path
 public class TransactionController {
     @Autowired
     TransactionHistoryService transactionHistoryService;
@@ -63,6 +63,19 @@ public class TransactionController {
         return ResponseEntity
                 .ok(new BaseResponse(false,
                         "Paypal is not available now, please contact to our customer service"));//
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<BaseResponse> getAllByWallet(){
+        try{
+            return ResponseEntity
+                    .ok(transactionHistoryService.getAllByWallet());
+        }catch(RuntimeException e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
+        }
     }
 
 }
