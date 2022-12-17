@@ -24,12 +24,11 @@ public class BidController {
 
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BaseResponse> placeBid(@RequestBody BidPlaceRequest bidPlaceRequest){
-        try{
-               return ResponseEntity
-                       .ok(bidService.placeBid(bidPlaceRequest));
-        }
-        catch (RuntimeException e){
+    public ResponseEntity<BaseResponse> placeBid(@RequestBody BidPlaceRequest bidPlaceRequest) {
+        try {
+            return ResponseEntity
+                    .ok(bidService.placeBid(bidPlaceRequest));
+        } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,
@@ -39,15 +38,28 @@ public class BidController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
-        public ResponseEntity<BaseResponse> createBidProduct(
-                @RequestPart BidCreateRequest bidCreateRequest,
-                @RequestPart(name = "thumbnail") MultipartFile thumbnail,
-                @RequestPart(name = "images") List<MultipartFile> images){
-        try{
+    public ResponseEntity<BaseResponse> createBidProduct(
+            @RequestPart BidCreateRequest bidCreateRequest,
+            @RequestPart(name = "thumbnail") MultipartFile thumbnail,
+            @RequestPart(name = "images") List<MultipartFile> images) {
+        try {
             return ResponseEntity
                     .ok(bidService.createBid(bidCreateRequest, thumbnail, images));
+        } catch (RuntimeException | IOException | ParseException e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
         }
-        catch (RuntimeException | IOException | ParseException e){
+    }
+
+    @GetMapping("/get_uploaded_products")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<BaseResponse> getAll() {
+        try {
+            return ResponseEntity
+                    .ok(bidService.getAllUploadedProduct());
+        } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,

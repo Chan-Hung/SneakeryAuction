@@ -1,8 +1,11 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
+import com.hung.sneakery.data.models.dto.BidDTO;
+import com.hung.sneakery.data.models.dto.ProductDTO;
 import com.hung.sneakery.data.models.dto.request.BidCreateRequest;
 import com.hung.sneakery.data.models.dto.request.BidPlaceRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
+import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.*;
 import com.hung.sneakery.data.remotes.repositories.*;
 import com.hung.sneakery.data.remotes.services.BidService;
@@ -115,6 +118,31 @@ public class BidServiceImpl implements BidService {
         countdownService.biddingCountdown(bid);
 
         return new BaseResponse(true, "Created bidding product successfully");
+    }
+
+    @Override
+    public DataResponse<List<BidDTO>> getAllUploadedProduct() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User seller = userRepository.findByUsername(userName);
+
+        List<Product> uploadedProducts = productRepository.findByUser(seller);
+        List<BidDTO> bidDTOList = new ArrayList<>();
+
+        for (Product product: uploadedProducts){
+            Bid bid = bidRepository.findById(product.getId()).get();
+
+            BidDTO bidDTO = new BidDTO();
+            bidDTO.setBidId(bid.getId());
+            bidDTO.setPriceWin(bidDTO.getPriceWin());
+            bidDTO.setStepBid(bid.getStepBid());
+            bidDTO.setPriceStart(bid.getPriceStart());
+            bidDTO.setBidStartingDate(bid.getBidStartingDate());
+            bidDTO.setProduct(new ProductDTO(product));
+
+            bidDTOList.add(bidDTO);
+        }
+
+        return new DataResponse<>(bidDTOList);
     }
 
     private Boolean compareWalletBalanceToCurrentBidPrice(Long currentPrice){

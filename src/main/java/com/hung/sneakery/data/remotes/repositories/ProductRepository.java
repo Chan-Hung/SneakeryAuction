@@ -2,6 +2,7 @@ package com.hung.sneakery.data.remotes.repositories;
 
 import com.hung.sneakery.data.models.entities.Category;
 import com.hung.sneakery.data.models.entities.Product;
+import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.custom.ProductCustomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
     @Query(value="SELECT id from products order by id",nativeQuery = true)
     List<Long> getAllId();
+
+    List<Product> findByUser(User user);
 }
