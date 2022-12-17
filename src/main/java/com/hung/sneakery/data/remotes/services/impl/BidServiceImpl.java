@@ -133,7 +133,7 @@ public class BidServiceImpl implements BidService {
 
             BidDTO bidDTO = new BidDTO();
             bidDTO.setBidId(bid.getId());
-            bidDTO.setPriceWin(bidDTO.getPriceWin());
+            bidDTO.setPriceWin(bid.getPriceWin());
             bidDTO.setStepBid(bid.getStepBid());
             bidDTO.setPriceStart(bid.getPriceStart());
             bidDTO.setBidStartingDate(bid.getBidStartingDate());
