@@ -1,5 +1,8 @@
 package com.hung.sneakery.data.models.dto;
 
+import com.hung.sneakery.data.models.entities.City;
+import com.hung.sneakery.data.models.entities.District;
+import com.hung.sneakery.data.models.entities.Ward;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +14,9 @@ public class AddressDTO {
 
     public String homeNumber;
 
-    private String cityName;
+    private City city;
 
-    private String districtName;
+    private District district;
 
-    private String wardName;
+    private Ward ward;
 }

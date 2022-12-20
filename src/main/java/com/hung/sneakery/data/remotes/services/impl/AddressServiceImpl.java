@@ -40,20 +40,20 @@ public class AddressServiceImpl implements AddressService {
         address.setUser(user);
         address.setHomeNumber(addressDTO.getHomeNumber());
 
-        City city = cityRepository.findByName(addressDTO.getCityName());
-        if (city == null)
-            throw new RuntimeException("City not found");
-        address.setCity(city);
-
-        District district = districtRepository.findByNameAndCity(addressDTO.getDistrictName(), city);
-        if(district == null)
-            throw new RuntimeException("District not found with city's name: " + city.getName());
-        address.setDistrict(district);
-
-        Ward ward = wardRepository.findByNameAndDistrict(addressDTO.getWardName(), district);
-        if(ward == null)
-            throw new RuntimeException("Ward not found with district's name: " + district.getName());
-        address.setWard(ward);
+//        City city = cityRepository.findByName(addressDTO.getCityName());
+//        if (city == null)
+//            throw new RuntimeException("City not found");
+//        address.setCity(city);
+//
+//        District district = districtRepository.findByNameAndCity(addressDTO.getDistrictName(), city);
+//        if(district == null)
+//            throw new RuntimeException("District not found with city's name: " + city.getName());
+//        address.setDistrict(district);
+//
+//        Ward ward = wardRepository.findByNameAndDistrict(addressDTO.getWardName(), district);
+//        if(ward == null)
+//            throw new RuntimeException("Ward not found with district's name: " + district.getName());
+//        address.setWard(ward);
 
         addressRepository.save(address);
 
@@ -70,20 +70,20 @@ public class AddressServiceImpl implements AddressService {
             Address address = optAddress.get();
             address.setHomeNumber(addressDTO.getHomeNumber());
 
-            City city = cityRepository.findByName(addressDTO.getCityName());
-            if (city == null)
-                throw new RuntimeException("City not found");
-            address.setCity(city);
-
-            District district = districtRepository.findByNameAndCity(addressDTO.getDistrictName(), city);
-            if(district == null)
-                throw new RuntimeException("District not found with city's name: " + city.getName());
-            address.setDistrict(district);
-
-            Ward ward = wardRepository.findByNameAndDistrict(addressDTO.getWardName(), district);
-            if(ward == null)
-                throw new RuntimeException("Ward not found with district's name: " + district.getName());
-            address.setWard(ward);
+//            City city = cityRepository.findByName(addressDTO.getCityName());
+//            if (city == null)
+//                throw new RuntimeException("City not found");
+//            address.setCity(city);
+//
+//            District district = districtRepository.findByNameAndCity(addressDTO.getDistrictName(), city);
+//            if(district == null)
+//                throw new RuntimeException("District not found with city's name: " + city.getName());
+//            address.setDistrict(district);
+//
+//            Ward ward = wardRepository.findByNameAndDistrict(addressDTO.getWardName(), district);
+//            if(ward == null)
+//                throw new RuntimeException("Ward not found with district's name: " + district.getName());
+//            address.setWard(ward);
 
             addressRepository.save(address);
         }
@@ -145,14 +145,14 @@ public class AddressServiceImpl implements AddressService {
         return new DataResponse<>(addressDTOs);
     }
 
-    private AddressDTO mapToAddressDTO(Address address){
+    public static AddressDTO mapToAddressDTO(Address address){
         AddressDTO addressDTO = new AddressDTO();
 
         addressDTO.setAddressId(address.getId());
         addressDTO.setHomeNumber(address.getHomeNumber());
-        addressDTO.setCityName(address.getCity().getName());
-        addressDTO.setDistrictName(address.getDistrict().getName());
-        addressDTO.setWardName(address.getWard().getName());
+        addressDTO.setCity(address.getCity());
+        addressDTO.setDistrict(address.getDistrict());
+        addressDTO.setWard(address.getWard());
 
         return addressDTO;
     }
