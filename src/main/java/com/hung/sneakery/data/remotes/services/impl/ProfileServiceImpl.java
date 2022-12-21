@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -37,7 +38,12 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public DataResponse<UserDTO> getOne(Long userId) {
-        return null;
+        Optional<User> userOpt = userRepository.findById(userId);
+        if(!userOpt.isPresent())
+            throw new RuntimeException("User not found");
+
+        User user = userOpt.get();
+        return new DataResponse<>(mapToUserDTO(user));
     }
 
     private UserDTO mapToUserDTO(User user){
@@ -51,9 +57,10 @@ public class ProfileServiceImpl implements ProfileService {
         Address address = addressRepository.findAddressByUser(user);
         if (address == null)
             userDTO.setAddress(null);
-        AddressDTO addressDTO = AddressServiceImpl.mapToAddressDTO(address);
-        userDTO.setAddress(addressDTO);
-
+        else {
+            AddressDTO addressDTO = AddressServiceImpl.mapToAddressDTO(address);
+            userDTO.setAddress(addressDTO);
+        }
         return userDTO;
     }
 }

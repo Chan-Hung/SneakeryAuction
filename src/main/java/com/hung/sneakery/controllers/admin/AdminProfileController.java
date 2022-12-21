@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"} )
@@ -26,7 +23,20 @@ public class AdminProfileController {
                     .ok(profileService.getAll());
         }catch (RuntimeException e){
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new BaseResponse(false, e.getMessage()));
+        }
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/get/{userId}")
+    public ResponseEntity<BaseResponse> getOne(@PathVariable Long userId){
+        try{
+            return ResponseEntity
+                    .ok(profileService.getOne(userId));
+        }catch (RuntimeException e){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
                     .body(new BaseResponse(false, e.getMessage()));
         }
     }
