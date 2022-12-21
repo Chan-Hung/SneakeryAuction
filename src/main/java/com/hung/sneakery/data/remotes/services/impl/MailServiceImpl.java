@@ -236,7 +236,7 @@ public class MailServiceImpl implements MailService {
         helper.setSubject(subject);
 
         content = content.replace("[[name]]", user.getUsername());
-        String verifyURL = "http://localhost:3000" + "/verify?code=" + verificationCode;
+        String verifyURL = "https://sneakery.vercel.app/verify?code=" + verificationCode;
 
         content = content.replace("[[URL]]", verifyURL);
 
