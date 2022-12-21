@@ -1,7 +1,7 @@
 package com.hung.sneakery.utils.enums;
 
-public enum EStatus {
+public enum EPaymentStatus {
     DEPOSIT,
     WITHDRAW,
-    PENDING
+    PAID
 }
