@@ -73,14 +73,10 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         Payer payer = new Payer();
         payer.setPaymentMethod("paypal");
 
-//        Payee payee = new Payee();
-//        payee.setEmail("sb-bmjkl23382454@personal.example.com");
-
         Payment payment = new Payment();
         payment.setIntent("sale");
         payment.setPayer(payer);
         payment.setTransactions(transactions);
-//        payment.setPayee(payee);
 
         RedirectUrls redirectUrls = new RedirectUrls();
         redirectUrls.setReturnUrl("https://sneakery.vercel.app/success");

@@ -3,6 +3,7 @@ package com.hung.sneakery.data.remotes.services.impl;
 import com.hung.sneakery.data.models.entities.*;
 import com.hung.sneakery.data.remotes.repositories.*;
 import com.hung.sneakery.data.remotes.services.CountdownService;
+import com.hung.sneakery.utils.enums.EPaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,8 @@ public class CountdownServiceImpl implements CountdownService {
     @Autowired
     WalletRepository walletRepository;
 
+    @Autowired
+    TransactionHistoryRepository transactionHistoryRepository;
 
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Timer timer = new Timer();
@@ -47,13 +50,14 @@ public class CountdownServiceImpl implements CountdownService {
         System.out.println("Current Time Execute: " + df.format( new Date()));
         //DateTime when executing
         Date date = Date.from(bid.getBidClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
-        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository,shippingFeeRepository, userRepository, addressRepository, orderRepository, walletRepository), date);
+        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository,shippingFeeRepository, userRepository, addressRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
         System.out.println("Current Time Schedule: " + df.format( new Date()));
 
     }
 
     private static class CountdownTask extends TimerTask {
         BidHistoryRepository bidHistoryRepository;
+
         BidRepository bidRepository;
 
         ShippingFeeRepository shippingFeeRepository;
@@ -65,6 +69,9 @@ public class CountdownServiceImpl implements CountdownService {
         OrderRepository orderRepository;
 
         WalletRepository walletRepository;
+
+        TransactionHistoryRepository transactionHistoryRepository;
+
         Bid bid;
         @Override
         public void run() {
@@ -93,12 +100,13 @@ public class CountdownServiceImpl implements CountdownService {
                 User seller = bid.getProduct().getUser();
                 order.setSeller(seller);
                 order.setCreatedAt(LocalDateTime.now());
+
                 //Set order's winner
                 Long userIdWin = userId.longValue();
                 User winner = userRepository.findById(userIdWin).get();
                 order.setWinner(winner);
 
-                //set order's shipping fee
+                //Set order's shipping fee
                 Address sellerAddress = addressRepository.findAddressByUser(seller);
                 Address winnerAddress = addressRepository.findAddressByUser(winner);
                 ShippingFee shippingFee = shippingFeeRepository.findShippingFeeByOriginAndDestination(sellerAddress.getDistrict().getName(),winnerAddress.getDistrict().getName());
@@ -109,13 +117,19 @@ public class CountdownServiceImpl implements CountdownService {
                 wallet.setBalance(wallet.getBalance() - priceWin.longValue());
                 walletRepository.save(wallet);
 
+                //Add transaction PAID
+                TransactionHistory transactionHistory = new TransactionHistory();
+                transactionHistory.setStatus(EPaymentStatus.PAID);
+                transactionHistory.setWallet(wallet);
+                transactionHistoryRepository.save(transactionHistory);
+
                 orderRepository.save(order);
                 System.out.println("Created order successfully");
             }
         }
 
         //Constructor
-        public CountdownTask(Bid bid, BidHistoryRepository bidHistoryRepository, BidRepository bidRepository, ShippingFeeRepository shippingFeeRepository, UserRepository userRepository, AddressRepository addressRepository, OrderRepository orderRepository, WalletRepository walletRepository) {
+        public CountdownTask(Bid bid, BidHistoryRepository bidHistoryRepository, BidRepository bidRepository, ShippingFeeRepository shippingFeeRepository, UserRepository userRepository, AddressRepository addressRepository, OrderRepository orderRepository, WalletRepository walletRepository, TransactionHistoryRepository transactionHistoryRepository) {
             this.bid = bid;
             this.bidHistoryRepository = bidHistoryRepository;
             this.bidRepository = bidRepository;
@@ -124,6 +138,7 @@ public class CountdownServiceImpl implements CountdownService {
             this.addressRepository = addressRepository;
             this.orderRepository = orderRepository;
             this.walletRepository = walletRepository;
+            this.transactionHistoryRepository = transactionHistoryRepository;
         }
     }
 }
