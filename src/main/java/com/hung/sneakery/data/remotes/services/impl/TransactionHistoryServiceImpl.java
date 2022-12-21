@@ -11,7 +11,7 @@ import com.hung.sneakery.data.remotes.repositories.TransactionHistoryRepository;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.repositories.WalletRepository;
 import com.hung.sneakery.data.remotes.services.TransactionHistoryService;
-import com.hung.sneakery.utils.enums.EStatus;
+import com.hung.sneakery.utils.enums.EPaymentStatus;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
@@ -109,7 +109,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
             Wallet wallet = walletRepository.findByUser_Id(user.getId());
             TransactionHistory transactionHistory = new TransactionHistory();
-            transactionHistory.setStatus(EStatus.DEPOSIT);
+            transactionHistory.setStatus(EPaymentStatus.DEPOSIT);
             transactionHistory.setWallet(wallet);
             String amount = StringUtils.removeEnd(payment.getTransactions().get(0).getAmount().getTotal(),".00");
             transactionHistory.setAmount(Long.valueOf(amount));

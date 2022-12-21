@@ -1,7 +1,7 @@
 package com.hung.sneakery.data.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hung.sneakery.utils.enums.EStatus;
+import com.hung.sneakery.utils.enums.EPaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ public class TransactionHistory implements Serializable {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private EStatus status;
+    private EPaymentStatus status;
 
     @Column(name = "transacted_at")
     @CreationTimestamp
