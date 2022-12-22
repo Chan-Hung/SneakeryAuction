@@ -134,7 +134,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     }
 
     @Override
-    public BaseResponse paidByWinner(Long orderId) {
+    public BaseResponse paidByWinner(Long orderId, Long shippingFee, Long subtotal) {
         String usernameWinner = SecurityContextHolder.getContext().getAuthentication().getName();
         User winner = userRepository.findByUsername(usernameWinner);
 
@@ -180,6 +180,10 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         adminTransactionHistory.setAmount(adminReceivedAmount);
         transactionHistoryRepository.save(adminTransactionHistory);
 
+        order.setShippingFee(shippingFee);
+        order.setSubtotal(subtotal);
+        orderRepository.save(order);
+        System.out.println("Created order successfully");
         return new BaseResponse(true, "Transaction successfully");
     }
 }
