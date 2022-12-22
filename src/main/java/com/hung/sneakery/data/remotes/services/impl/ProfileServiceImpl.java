@@ -49,7 +49,7 @@ public class ProfileServiceImpl implements ProfileService {
     private UserDTO mapToUserDTO(User user){
         UserDTO userDTO = new UserDTO();
 
-        userDTO.setUserId(user.getId());
+        userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
         userDTO.setEmail(user.getEmail());
         userDTO.setIsActive(user.getIsActive());

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class UserDTO {
     @NotNull
-    private Long userId;
+    private Long id;
 
     @NotNull
     private String username;
