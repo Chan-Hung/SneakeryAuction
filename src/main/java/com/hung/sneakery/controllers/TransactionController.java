@@ -82,7 +82,7 @@ public class TransactionController {
     public ResponseEntity<BaseResponse> paidByWinner(
             @RequestParam(name = "orderId") Long orderId,
             @RequestParam(name = "shippingFee") Long shippingFee,
-            @RequestParam(name = "shippingFee") Long subtotal){
+            @RequestParam(name = "subtotal") Long subtotal){
         try{
             return ResponseEntity
                     .ok(transactionHistoryService.paidByWinner(orderId, shippingFee, subtotal));
