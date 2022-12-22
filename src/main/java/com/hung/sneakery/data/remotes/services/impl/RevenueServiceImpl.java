@@ -40,14 +40,12 @@ public class RevenueServiceImpl implements RevenueService {
             OrderDTO orderDTO = OrderServiceImpl.mapToOrderDTO(order);
             orderDTOs.add(orderDTO);
         }
-
+        Long allRevenue = bidRepository.getRevenueByAllOrders();
         GetRevenue getRevenue = new GetRevenue();
         getRevenue.setOrders(orderDTOs);
-        getRevenue.setRevenueByAllOrders(bidRepository.getRevenueByAllOrders());
-//        getRevenue.setRevenueByAuctionFee();
-//        return new DataResponse<>(orderDTOs);
+        getRevenue.setRevenueByAllOrders(allRevenue);
+        getRevenue.setRevenueByAuctionFee(allRevenue*10/100);
 
-        return null;
-
+        return new DataResponse<>(getRevenue);
     }
 }

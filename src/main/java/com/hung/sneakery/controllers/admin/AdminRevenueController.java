@@ -19,11 +19,11 @@ public class AdminRevenueController {
     RevenueService revenueService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/get_all")
+    @GetMapping("/get")
     public ResponseEntity<BaseResponse> getAllByAdmin(){
         try{
             return ResponseEntity
-                    .ok(revenueService.getAllByAdmin());
+                    .ok(revenueService.getRevenue());
         }catch (RuntimeException e){
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
