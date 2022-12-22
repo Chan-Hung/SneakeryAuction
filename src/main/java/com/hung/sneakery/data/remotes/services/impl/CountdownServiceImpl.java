@@ -107,10 +107,10 @@ public class CountdownServiceImpl implements CountdownService {
                 order.setWinner(winner);
 
                 //Set order's shipping fee
-                Address sellerAddress = addressRepository.findAddressByUser(seller);
-                Address winnerAddress = addressRepository.findAddressByUser(winner);
-                ShippingFee shippingFee = shippingFeeRepository.findShippingFeeByOriginAndDestination(sellerAddress.getDistrict().getName(), winnerAddress.getDistrict().getName());
-                order.setShippingFee(100L);
+//                Address sellerAddress = addressRepository.findAddressByUser(seller);
+//                Address winnerAddress = addressRepository.findAddressByUser(winner);
+//                ShippingFee shippingFee = shippingFeeRepository.findShippingFeeByOriginAndDestination(sellerAddress.getDistrict().getName(), winnerAddress.getDistrict().getName());
+//                order.setShippingFee(100L);
 
                 //WINNER
                 //Minus winner's wallet
