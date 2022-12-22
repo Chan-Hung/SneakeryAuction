@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(originPatterns = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
+@CrossOrigin(originPatterns = {"http://localhost:3000", "https://aunction-react-js.vercel.app/"})
 @RequestMapping("/api/admin/revenue")
 public class AdminRevenueController {
     @Autowired
