@@ -78,6 +78,19 @@ public class TransactionController {
         }
     }
 
+    @GetMapping("/withdraw")
+    public ResponseEntity<BaseResponse> withdraw(@RequestParam(name = "amount") Long amount){
+        try{
+            return ResponseEntity
+                    .ok(transactionHistoryService.withdraw(amount));
+        }catch(RuntimeException e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
+        }
+    }
+
     @GetMapping("/paid")
     public ResponseEntity<BaseResponse> paidByWinner(
             @RequestParam(name = "orderId") Long orderId,

@@ -186,4 +186,23 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         System.out.println("Created order successfully");
         return new BaseResponse(true, "Transaction successfully");
     }
+
+    @Override
+    public BaseResponse withdraw(Long amount) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
+
+        Wallet userWallet = walletRepository.findByUser_Id(user.getId());
+        userWallet.setBalance(userWallet.getBalance() - amount);
+        walletRepository.save(userWallet);
+
+        //Add transaction WITHDRAW
+        TransactionHistory userTransactionHistory = new TransactionHistory();
+        userTransactionHistory.setStatus(EPaymentStatus.WITHDRAW);
+        userTransactionHistory.setWallet(userWallet);
+        userTransactionHistory.setAmount(amount);
+        transactionHistoryRepository.save(userTransactionHistory);
+
+        return new BaseResponse(true, "Withdraw successfully");
+    }
 }
