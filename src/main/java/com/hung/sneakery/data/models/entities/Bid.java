@@ -26,7 +26,7 @@ public class Bid implements Serializable {
     @Column(name="product_id")
     private Long id;
 
-//    @NotNull(message="The starting date is required")
+    //@NotNull(message="The starting date is required")
     @Column(name = "bid_starting_date")
     //Use LocalDateTime over Timestamp
     //https://stackoverflow.com/questions/41998144/java8-localdatetime-or-timestamp

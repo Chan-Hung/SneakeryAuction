@@ -23,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     UserRepository userRepository;
 
-    public DataResponse<List<OrderDTO>> getAll() {
+    public DataResponse<List<OrderDTO>> getAllByUser() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User winner = userRepository.findByUsername(userName);
 
@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
         return new DataResponse<>(orderDTOs);
     }
 
-    private OrderDTO mapToOrderDTO(Order order){
+    public static OrderDTO mapToOrderDTO(Order order){
         OrderDTO orderDTO = new OrderDTO();
 
         orderDTO.setOrderId(order.getId());

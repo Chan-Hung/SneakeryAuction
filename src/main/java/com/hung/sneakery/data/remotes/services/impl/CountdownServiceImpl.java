@@ -47,11 +47,11 @@ public class CountdownServiceImpl implements CountdownService {
 
     @Override
     public void biddingCountdown(Bid bid) {
-        System.out.println("Current Time Execute: " + df.format( new Date()));
+        System.out.println("Current Time Execute: " + df.format(new Date()));
         //DateTime when executing
         Date date = Date.from(bid.getBidClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
-        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository,shippingFeeRepository, userRepository, addressRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
-        System.out.println("Current Time Schedule: " + df.format( new Date()));
+        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, shippingFeeRepository, userRepository, addressRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
+        System.out.println("Current Time Schedule: " + df.format(new Date()));
 
     }
 
@@ -73,24 +73,24 @@ public class CountdownServiceImpl implements CountdownService {
         TransactionHistoryRepository transactionHistoryRepository;
 
         Bid bid;
+
         @Override
         public void run() {
             Tuple winnerTuple = bidHistoryRepository.getWinner(bid.getId());
-            if (winnerTuple == null){
+            if (winnerTuple == null) {
+                //Bid ends without winner
                 bid.setPriceWin(0L);
                 bidRepository.save(bid);
                 System.out.println("Time Schedule Set Price Win = 0: " + LocalDateTime.now());
-            }
-                //Bid ends without winner
-            else {
-                System.out.println("Time Schedule Set Price Win ...: " + LocalDateTime.now());
+            } else {
+                System.out.println("Time Schedule Set Price Win <> 0: " + LocalDateTime.now());
                 BigInteger priceWin = winnerTuple.get("priceWin", BigInteger.class);
                 BigInteger userId = winnerTuple.get("buyerId", BigInteger.class);
                 bid.setPriceWin(priceWin.longValue());//End bid totally
                 bidRepository.save(bid);
-                System.out.println("Update priceWin successfully");
-
-                Bid bid1  = bidRepository.findById(bid.getId()).get();
+                System.out.println("Update Price Win successfully");
+                System.out.println("Price win: " + priceWin);
+                Bid bid1 = bidRepository.findById(bid.getId()).get();
                 //Create Order
                 Order order = new Order();
                 order.setBid(bid1);
@@ -109,19 +109,47 @@ public class CountdownServiceImpl implements CountdownService {
                 //Set order's shipping fee
                 Address sellerAddress = addressRepository.findAddressByUser(seller);
                 Address winnerAddress = addressRepository.findAddressByUser(winner);
-                ShippingFee shippingFee = shippingFeeRepository.findShippingFeeByOriginAndDestination(sellerAddress.getDistrict().getName(),winnerAddress.getDistrict().getName());
+                ShippingFee shippingFee = shippingFeeRepository.findShippingFeeByOriginAndDestination(sellerAddress.getDistrict().getName(), winnerAddress.getDistrict().getName());
                 order.setShippingFee(shippingFee);
 
+                //WINNER
                 //Minus winner's wallet
-                Wallet wallet = walletRepository.findByUser_Id(userIdWin);
-                wallet.setBalance(wallet.getBalance() - priceWin.longValue());
-                walletRepository.save(wallet);
-
+                Long winnerPaidAmount = priceWin.longValue();
+                Wallet winnerWallet = walletRepository.findByUser_Id(userIdWin);
+                winnerWallet.setBalance(winnerWallet.getBalance() - winnerPaidAmount);
+                walletRepository.save(winnerWallet);
                 //Add transaction PAID
                 TransactionHistory transactionHistory = new TransactionHistory();
                 transactionHistory.setStatus(EPaymentStatus.PAID);
-                transactionHistory.setWallet(wallet);
+                transactionHistory.setWallet(winnerWallet);
+                transactionHistory.setAmount(winnerPaidAmount);
                 transactionHistoryRepository.save(transactionHistory);
+
+                //SELLER
+                //Plus seller's wallet (90%)
+                Long sellerReceivedAmount = priceWin.longValue() * 90L / 100L;
+                Wallet sellerWallet = walletRepository.findByUser_Id(bid.getProduct().getUser().getId());
+                sellerWallet.setBalance(sellerWallet.getBalance() + sellerReceivedAmount);
+                walletRepository.save(sellerWallet);
+                //Add transaction RECEIVED
+                TransactionHistory sellerTransactionHistory = new TransactionHistory();
+                sellerTransactionHistory.setStatus(EPaymentStatus.RECEIVED);
+                sellerTransactionHistory.setWallet(sellerWallet);
+                sellerTransactionHistory.setAmount(sellerReceivedAmount);
+                transactionHistoryRepository.save(sellerTransactionHistory);
+
+                //SNEAKERY
+                //Plus admin's wallet (10%)
+                Long adminReceivedAmount = priceWin.longValue() * 10L / 100L;
+                Wallet adminWallet = walletRepository.findByUser_Id(354L);
+                adminWallet.setBalance(adminWallet.getBalance() + adminReceivedAmount);
+                walletRepository.save(adminWallet);
+                //Add transaction AUCTION_FEE
+                TransactionHistory adminTransactionHistory = new TransactionHistory();
+                adminTransactionHistory.setStatus(EPaymentStatus.AUCTION_FEE);
+                adminTransactionHistory.setWallet(adminWallet);
+                adminTransactionHistory.setAmount(adminReceivedAmount);
+                transactionHistoryRepository.save(adminTransactionHistory);
 
                 orderRepository.save(order);
                 System.out.println("Created order successfully");

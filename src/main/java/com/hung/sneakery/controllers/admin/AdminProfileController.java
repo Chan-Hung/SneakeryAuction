@@ -15,7 +15,7 @@ public class AdminProfileController {
     @Autowired
     ProfileService profileService;
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get_all")
     public ResponseEntity<BaseResponse> getAll(){
         try{
@@ -28,7 +28,7 @@ public class AdminProfileController {
         }
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get/{userId}")
     public ResponseEntity<BaseResponse> getOne(@PathVariable Long userId){
         try{

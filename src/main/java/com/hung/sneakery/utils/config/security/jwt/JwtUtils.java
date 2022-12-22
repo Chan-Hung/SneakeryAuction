@@ -71,10 +71,10 @@ public class JwtUtils {
 
     //region Use Cookie - getCleanJwtCookie()
     //Cleaning the cookie after logging out
-//    public ResponseCookie getCleanJwtCookie(){
-//        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
-//                .path("/api")
-//                .build();
+    //public ResponseCookie getCleanJwtCookie(){
+    //ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
+    //.path("/api")
+    //.build();
 //        return cookie;
 //    }
     //endregion
