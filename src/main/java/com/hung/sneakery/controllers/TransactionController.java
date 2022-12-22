@@ -78,7 +78,7 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/paid}")
+    @GetMapping("/paid")
     public ResponseEntity<BaseResponse> paidByWinner(
             @RequestParam(name = "orderId") Long orderId,
             @RequestParam(name = "shippingFee") Long shippingFee,
