@@ -85,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd, ESorting sorting) {
-        int sizePage = 40;
+        int sizePage = 9;
         Pageable paging = PageRequest.of(0, sizePage);
         List<Product> pageTuts;
 
