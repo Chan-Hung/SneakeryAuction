@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
     public static OrderDTO mapToOrderDTO(Order order){
         OrderDTO orderDTO = new OrderDTO();
 
-        orderDTO.setOrderId(order.getId());
+        orderDTO.setId(order.getId());
         ProductDTO productDTO = new ProductDTO(order.getBid().getProduct());
         orderDTO.setProduct(productDTO);
         orderDTO.setPriceWin(order.getBid().getPriceWin());

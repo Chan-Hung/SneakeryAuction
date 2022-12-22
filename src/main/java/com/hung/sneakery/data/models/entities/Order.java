@@ -26,9 +26,11 @@ public class Order implements Serializable {
     @Column(name = "status")
     private String status;
 
-    @OneToOne
-    @JoinColumn(name="shipping_fee_id")
-    private ShippingFee shippingFee;
+    @Column(name = "shipping_fee")
+    private Long shippingFee;
+
+    @Column(name = "subtotal")
+    private Long subtotal;
 
     @OneToOne()
     @JoinColumn(name = "winner_id")

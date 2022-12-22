@@ -22,17 +22,6 @@ public class RevenueServiceImpl implements RevenueService {
     BidRepository bidRepository;
 
     @Override
-    public DataResponse<List<OrderDTO>> getAllByAdmin() {
-        List<Order> orders = orderRepository.findAll();
-        List<OrderDTO> orderDTOs = new ArrayList<>();
-        for(Order order: orders){
-            OrderDTO orderDTO = OrderServiceImpl.mapToOrderDTO(order);
-            orderDTOs.add(orderDTO);
-        }
-        return new DataResponse<>(orderDTOs);
-    }
-
-    @Override
     public DataResponse<GetRevenue> getRevenue() {
         List<Order> orders = orderRepository.findAll();
         List<OrderDTO> orderDTOs = new ArrayList<>();
