@@ -204,5 +204,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         transactionHistoryRepository.save(userTransactionHistory);
 
         return new BaseResponse(true, "Withdraw successfully");
+        //
     }
 }
