@@ -1,6 +1,7 @@
 package com.hung.sneakery.controllers;
 
 import com.hung.sneakery.data.models.dto.AddressDTO;
+import com.hung.sneakery.data.models.dto.request.AddressCreateRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.entities.City;
 import com.hung.sneakery.data.models.entities.District;
@@ -72,10 +73,10 @@ public class AddressController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BaseResponse> create(@RequestBody AddressDTO addressDTO) {
+    public ResponseEntity<BaseResponse> create(@RequestBody AddressCreateRequest addressCreateRequest) {
         try {
             return ResponseEntity
-                    .ok(addressService.create(addressDTO));
+                    .ok(addressService.create(addressCreateRequest));
         } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -1,6 +1,7 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
 import com.hung.sneakery.data.models.dto.AddressDTO;
+import com.hung.sneakery.data.models.dto.request.AddressCreateRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.*;
@@ -32,28 +33,30 @@ public class AddressServiceImpl implements AddressService {
     DistrictRepository districtRepository;
 
     @Override
-    public BaseResponse create(AddressDTO addressDTO) {
+    public BaseResponse create(AddressCreateRequest addressCreateRequest) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(userName);
 
         Address address = new Address();
         address.setUser(user);
-        address.setHomeNumber(addressDTO.getHomeNumber());
+        address.setHomeNumber(addressCreateRequest.getHomeNumber());
 
-//        City city = cityRepository.findByName(addressDTO.getCityName());
-//        if (city == null)
-//            throw new RuntimeException("City not found");
-//        address.setCity(city);
-//
-//        District district = districtRepository.findByNameAndCity(addressDTO.getDistrictName(), city);
-//        if(district == null)
-//            throw new RuntimeException("District not found with city's name: " + city.getName());
-//        address.setDistrict(district);
-//
-//        Ward ward = wardRepository.findByNameAndDistrict(addressDTO.getWardName(), district);
-//        if(ward == null)
-//            throw new RuntimeException("Ward not found with district's name: " + district.getName());
-//        address.setWard(ward);
+        City city = cityRepository.findById(addressCreateRequest.getCityId()).get();
+        if (city == null)
+            throw new RuntimeException("City not found");
+        address.setCity(city);
+
+        District districtName = districtRepository.findById(addressCreateRequest.getDistrictId()).get();
+        District district = districtRepository.findByNameAndCity(districtName.getName(), city);
+        if(district == null)
+            throw new RuntimeException("District not found with city's name: " + city.getName());
+        address.setDistrict(district);
+
+        Ward wardName = wardRepository.findById(addressCreateRequest.getWardId()).get();
+        Ward ward = wardRepository.findByNameAndDistrict(wardName.getName(), district);
+        if(ward == null)
+            throw new RuntimeException("Ward not found with district's name: " + district.getName());
+        address.setWard(ward);
 
         addressRepository.save(address);
 
