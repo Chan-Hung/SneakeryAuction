@@ -130,4 +130,9 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         List<TransactionHistory> transactionHistoryList = transactionHistoryRepository.findAllByWallet(wallet);
         return new DataResponse<>(transactionHistoryList);
     }
+
+    @Override
+    public BaseResponse paidByWinner(Long orderId, Long winnerId, Long userId) {
+        return null;
+    }
 }
