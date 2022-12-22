@@ -3,13 +3,12 @@ package com.hung.sneakery.data.remotes.services.impl;
 import com.hung.sneakery.data.models.dto.request.DepositRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.data.models.entities.Bid;
+import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.models.entities.TransactionHistory;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.models.entities.Wallet;
-import com.hung.sneakery.data.remotes.repositories.OrderRepository;
-import com.hung.sneakery.data.remotes.repositories.TransactionHistoryRepository;
-import com.hung.sneakery.data.remotes.repositories.UserRepository;
-import com.hung.sneakery.data.remotes.repositories.WalletRepository;
+import com.hung.sneakery.data.remotes.repositories.*;
 import com.hung.sneakery.data.remotes.services.TransactionHistoryService;
 import com.hung.sneakery.utils.enums.EPaymentStatus;
 import com.paypal.api.payments.*;
@@ -37,6 +36,9 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
     @Autowired
     WalletRepository walletRepository;
+
+    @Autowired
+    BidRepository bidRepository;
 
     @Autowired
     APIContext apiContext;
@@ -132,7 +134,52 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     }
 
     @Override
-    public BaseResponse paidByWinner(Long orderId, Long winnerId, Long userId) {
-        return null;
+    public BaseResponse paidByWinner(Long orderId) {
+        String usernameWinner = SecurityContextHolder.getContext().getAuthentication().getName();
+        User winner = userRepository.findByUsername(usernameWinner);
+
+        Order order = orderRepository.findById(orderId).get();
+        Bid bid = bidRepository.findById(order.getBid().getId()).get();
+        Long priceWin = order.getBid().getPriceWin();
+
+        //WINNER
+        //Minus winner's wallet
+        Wallet winnerWallet = walletRepository.findByUser_Id(winner.getId());
+        winnerWallet.setBalance(winnerWallet.getBalance() - priceWin);
+        walletRepository.save(winnerWallet);
+        //Add transaction PAID
+        TransactionHistory transactionHistory = new TransactionHistory();
+        transactionHistory.setStatus(EPaymentStatus.PAID);
+        transactionHistory.setWallet(winnerWallet);
+        transactionHistory.setAmount(priceWin);
+        transactionHistoryRepository.save(transactionHistory);
+
+        //SELLER
+        //Plus seller's wallet (90%)
+        Long sellerReceivedAmount = priceWin * 90L / 100L;
+        Wallet sellerWallet = walletRepository.findByUser_Id(bid.getProduct().getUser().getId());
+        sellerWallet.setBalance(sellerWallet.getBalance() + sellerReceivedAmount);
+        walletRepository.save(sellerWallet);
+        //Add transaction RECEIVED
+        TransactionHistory sellerTransactionHistory = new TransactionHistory();
+        sellerTransactionHistory.setStatus(EPaymentStatus.RECEIVED);
+        sellerTransactionHistory.setWallet(sellerWallet);
+        sellerTransactionHistory.setAmount(sellerReceivedAmount);
+        transactionHistoryRepository.save(sellerTransactionHistory);
+
+        //SNEAKERY
+        //Plus admin's wallet (10%)
+        Long adminReceivedAmount = priceWin * 10L / 100L;
+        Wallet adminWallet = walletRepository.findByUser_Id(354L);
+        adminWallet.setBalance(adminWallet.getBalance() + adminReceivedAmount);
+        walletRepository.save(adminWallet);
+        //Add transaction AUCTION_FEE
+        TransactionHistory adminTransactionHistory = new TransactionHistory();
+        adminTransactionHistory.setStatus(EPaymentStatus.AUCTION_FEE);
+        adminTransactionHistory.setWallet(adminWallet);
+        adminTransactionHistory.setAmount(adminReceivedAmount);
+        transactionHistoryRepository.save(adminTransactionHistory);
+
+        return new BaseResponse(true, "Transaction successfully");
     }
 }

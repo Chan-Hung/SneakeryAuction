@@ -1,9 +1,10 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
-import com.hung.sneakery.data.models.entities.*;
+import com.hung.sneakery.data.models.entities.Bid;
+import com.hung.sneakery.data.models.entities.Order;
+import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.*;
 import com.hung.sneakery.data.remotes.services.CountdownService;
-import com.hung.sneakery.utils.enums.EPaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -114,42 +115,42 @@ public class CountdownServiceImpl implements CountdownService {
 
                 //WINNER
                 //Minus winner's wallet
-                Long winnerPaidAmount = priceWin.longValue();
-                Wallet winnerWallet = walletRepository.findByUser_Id(userIdWin);
-                winnerWallet.setBalance(winnerWallet.getBalance() - winnerPaidAmount);
-                walletRepository.save(winnerWallet);
-                //Add transaction PAID
-                TransactionHistory transactionHistory = new TransactionHistory();
-                transactionHistory.setStatus(EPaymentStatus.PAID);
-                transactionHistory.setWallet(winnerWallet);
-                transactionHistory.setAmount(winnerPaidAmount);
-                transactionHistoryRepository.save(transactionHistory);
-
-                //SELLER
-                //Plus seller's wallet (90%)
-                Long sellerReceivedAmount = priceWin.longValue() * 90L / 100L;
-                Wallet sellerWallet = walletRepository.findByUser_Id(bid.getProduct().getUser().getId());
-                sellerWallet.setBalance(sellerWallet.getBalance() + sellerReceivedAmount);
-                walletRepository.save(sellerWallet);
-                //Add transaction RECEIVED
-                TransactionHistory sellerTransactionHistory = new TransactionHistory();
-                sellerTransactionHistory.setStatus(EPaymentStatus.RECEIVED);
-                sellerTransactionHistory.setWallet(sellerWallet);
-                sellerTransactionHistory.setAmount(sellerReceivedAmount);
-                transactionHistoryRepository.save(sellerTransactionHistory);
-
-                //SNEAKERY
-                //Plus admin's wallet (10%)
-                Long adminReceivedAmount = priceWin.longValue() * 10L / 100L;
-                Wallet adminWallet = walletRepository.findByUser_Id(354L);
-                adminWallet.setBalance(adminWallet.getBalance() + adminReceivedAmount);
-                walletRepository.save(adminWallet);
-                //Add transaction AUCTION_FEE
-                TransactionHistory adminTransactionHistory = new TransactionHistory();
-                adminTransactionHistory.setStatus(EPaymentStatus.AUCTION_FEE);
-                adminTransactionHistory.setWallet(adminWallet);
-                adminTransactionHistory.setAmount(adminReceivedAmount);
-                transactionHistoryRepository.save(adminTransactionHistory);
+//                Long winnerPaidAmount = priceWin.longValue();
+//                Wallet winnerWallet = walletRepository.findByUser_Id(userIdWin);
+//                winnerWallet.setBalance(winnerWallet.getBalance() - winnerPaidAmount);
+//                walletRepository.save(winnerWallet);
+//                //Add transaction PAID
+//                TransactionHistory transactionHistory = new TransactionHistory();
+//                transactionHistory.setStatus(EPaymentStatus.PAID);
+//                transactionHistory.setWallet(winnerWallet);
+//                transactionHistory.setAmount(winnerPaidAmount);
+//                transactionHistoryRepository.save(transactionHistory);
+//
+//                //SELLER
+//                //Plus seller's wallet (90%)
+//                Long sellerReceivedAmount = priceWin.longValue() * 90L / 100L;
+//                Wallet sellerWallet = walletRepository.findByUser_Id(bid.getProduct().getUser().getId());
+//                sellerWallet.setBalance(sellerWallet.getBalance() + sellerReceivedAmount);
+//                walletRepository.save(sellerWallet);
+//                //Add transaction RECEIVED
+//                TransactionHistory sellerTransactionHistory = new TransactionHistory();
+//                sellerTransactionHistory.setStatus(EPaymentStatus.RECEIVED);
+//                sellerTransactionHistory.setWallet(sellerWallet);
+//                sellerTransactionHistory.setAmount(sellerReceivedAmount);
+//                transactionHistoryRepository.save(sellerTransactionHistory);
+//
+//                //SNEAKERY
+//                //Plus admin's wallet (10%)
+//                Long adminReceivedAmount = priceWin.longValue() * 10L / 100L;
+//                Wallet adminWallet = walletRepository.findByUser_Id(354L);
+//                adminWallet.setBalance(adminWallet.getBalance() + adminReceivedAmount);
+//                walletRepository.save(adminWallet);
+//                //Add transaction AUCTION_FEE
+//                TransactionHistory adminTransactionHistory = new TransactionHistory();
+//                adminTransactionHistory.setStatus(EPaymentStatus.AUCTION_FEE);
+//                adminTransactionHistory.setWallet(adminWallet);
+//                adminTransactionHistory.setAmount(adminReceivedAmount);
+//                transactionHistoryRepository.save(adminTransactionHistory);
 
                 orderRepository.save(order);
                 System.out.println("Created order successfully");

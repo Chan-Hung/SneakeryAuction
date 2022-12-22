@@ -18,5 +18,5 @@ public interface TransactionHistoryService {
 
     DataResponse<List<TransactionHistory>> getAllByWallet();
 
-    BaseResponse paidByWinner(Long orderId, Long winnerId, Long userId);
+    BaseResponse paidByWinner(Long orderId);
 }

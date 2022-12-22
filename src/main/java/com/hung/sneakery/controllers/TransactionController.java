@@ -78,4 +78,16 @@ public class TransactionController {
         }
     }
 
+    @GetMapping("/paid/{orderId}")
+    public ResponseEntity<BaseResponse> paidByWinner(@PathVariable Long orderId){
+        try{
+            return ResponseEntity
+                    .ok(transactionHistoryService.paidByWinner(orderId));
+        }catch(RuntimeException e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BaseResponse(false,
+                            e.getMessage()));
+        }
+    }
 }
