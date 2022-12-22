@@ -80,9 +80,9 @@ public class TransactionController {
 
     @GetMapping("/paid}")
     public ResponseEntity<BaseResponse> paidByWinner(
-            @RequestParam Long orderId,
-            @RequestParam Long shippingFee,
-            @RequestParam Long subtotal){
+            @RequestParam(name = "orderId") Long orderId,
+            @RequestParam(name = "shippingFee") Long shippingFee,
+            @RequestParam(name = "shippingFee") Long subtotal){
         try{
             return ResponseEntity
                     .ok(transactionHistoryService.paidByWinner(orderId, shippingFee, subtotal));
