@@ -1,5 +1,6 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
+import com.hung.sneakery.data.mappers.AddressMapper;
 import com.hung.sneakery.data.models.dto.AddressDTO;
 import com.hung.sneakery.data.models.dto.UserDTO;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
@@ -23,6 +24,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    AddressMapper mapper;
     @Override
     public DataResponse<List<UserDTO>> getAll() {
         List<User> users = userRepository.findAll();
@@ -58,7 +61,7 @@ public class ProfileServiceImpl implements ProfileService {
         if (address == null)
             userDTO.setAddress(null);
         else {
-            AddressDTO addressDTO = AddressServiceImpl.mapToAddressDTO(address);
+            AddressDTO addressDTO = mapper.mapToDTO(address, AddressDTO.class);
             userDTO.setAddress(addressDTO);
         }
         return userDTO;
