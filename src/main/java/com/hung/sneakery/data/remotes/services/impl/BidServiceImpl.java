@@ -74,7 +74,7 @@ public class BidServiceImpl implements BidService {
         //Find seller
         if(!userRepository.findById(product.getUser().getId()).isPresent())
             throw new RuntimeException("Seller not found for this product");
-        User seller = userRepository.findById(product.getUser().getId()).get();
+        User seller = userRepository.findById(product.  getUser().getId()).get();
 
         Long amount = bidPlaceRequest.getAmount();
         Long stepBid = bid.getStepBid();

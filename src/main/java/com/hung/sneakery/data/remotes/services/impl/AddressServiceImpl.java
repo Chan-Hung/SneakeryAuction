@@ -1,5 +1,6 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
+import com.hung.sneakery.data.mappers.AddressMapper;
 import com.hung.sneakery.data.models.dto.AddressDTO;
 import com.hung.sneakery.data.models.dto.request.AddressCreateRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +31,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Autowired
     DistrictRepository districtRepository;
+
+    @Autowired
+    AddressMapper mapper;
 
     @Override
     public BaseResponse create(AddressCreateRequest addressCreateRequest) {
@@ -116,8 +119,8 @@ public class AddressServiceImpl implements AddressService {
             throw new RuntimeException("Address not found");
 
         Address address = optAddress.get();
-        AddressDTO addressDTO = mapToAddressDTO(address);
 
+        AddressDTO addressDTO = mapper.mapToDTO(address, AddressDTO.class);
         return new DataResponse<>(addressDTO);
     }
 
@@ -129,7 +132,8 @@ public class AddressServiceImpl implements AddressService {
        Address address = addressRepository.findAddressByUser(user);
         if(address == null)
             throw new RuntimeException("Address not found");
-        AddressDTO addressDTO = mapToAddressDTO(address);
+
+        AddressDTO addressDTO = mapper.mapToDTO(address, AddressDTO.class);
         return new DataResponse<>(addressDTO);
     }
 
@@ -140,23 +144,7 @@ public class AddressServiceImpl implements AddressService {
 
         List<Address> addresses = addressRepository.findByUser(user);
 
-        List<AddressDTO> addressDTOs = new ArrayList<>();
-        for(Address address: addresses){
-            AddressDTO addressDTO = mapToAddressDTO(address);
-            addressDTOs.add(addressDTO);
-        }
+        List<AddressDTO> addressDTOs = mapper.mapToDTOList(addresses, AddressDTO.class);
         return new DataResponse<>(addressDTOs);
-    }
-
-    public static AddressDTO mapToAddressDTO(Address address){
-        AddressDTO addressDTO = new AddressDTO();
-
-        addressDTO.setAddressId(address.getId());
-        addressDTO.setHomeNumber(address.getHomeNumber());
-        addressDTO.setCity(address.getCity());
-        addressDTO.setDistrict(address.getDistrict());
-        addressDTO.setWard(address.getWard());
-
-        return addressDTO;
     }
 }
