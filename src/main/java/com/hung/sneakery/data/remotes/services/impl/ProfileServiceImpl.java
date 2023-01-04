@@ -1,6 +1,7 @@
 package com.hung.sneakery.data.remotes.services.impl;
 
 import com.hung.sneakery.data.mappers.AddressMapper;
+import com.hung.sneakery.data.mappers.UserMapper;
 import com.hung.sneakery.data.models.dto.AddressDTO;
 import com.hung.sneakery.data.models.dto.UserDTO;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
@@ -12,7 +13,6 @@ import com.hung.sneakery.data.remotes.services.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,15 +26,14 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     AddressMapper mapper;
+
+    @Autowired
+    UserMapper userMapper;
+
     @Override
     public DataResponse<List<UserDTO>> getAll() {
         List<User> users = userRepository.findAll();
-        List<UserDTO> userDTOs = new ArrayList<>();
-
-        for (User user: users){
-            UserDTO userDTO = mapToUserDTO(user);
-            userDTOs.add(userDTO);
-        }
+        List<UserDTO> userDTOs = userMapper.mapToDTOList(users, UserDTO.class);
 
         return new DataResponse<>(userDTOs);
     }
@@ -46,7 +45,7 @@ public class ProfileServiceImpl implements ProfileService {
             throw new RuntimeException("User not found");
 
         User user = userOpt.get();
-        return new DataResponse<>(mapToUserDTO(user));
+        return new DataResponse<>(userMapper.mapToDTO(user, UserDTO.class));
     }
 
     private UserDTO mapToUserDTO(User user){
