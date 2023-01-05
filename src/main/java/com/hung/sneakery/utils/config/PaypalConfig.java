@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class PaypalConfig {
@@ -21,8 +20,8 @@ public class PaypalConfig {
     private String mode;
 
     @Bean
-    public Map paypalSdkConfig() {
-        Map configMap = new HashMap<>();
+    public HashMap<String,String> paypalSdkConfig() {
+        HashMap<String,String> configMap = new HashMap<>();
         configMap.put("mode", mode);
         return configMap;
     }
