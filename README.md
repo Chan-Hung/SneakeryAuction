@@ -11,3 +11,5 @@ Sneakery Auction is an online auction website allowing users to upload their pro
 * Spring Mail
 * MySQL
 * JUnit
+* PayPal
+* Swagger
