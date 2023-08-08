@@ -6,16 +6,18 @@ import com.hung.sneakery.data.remotes.services.TransactionHistoryService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+
 @RestController
-@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/","https://www.sandbox.paypal.com/"})
+@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/", "https://www.sandbox.paypal.com/"})
 @RequestMapping("/api/transaction")
 public class TransactionController {
-    @Autowired
+
+    @Resource
     TransactionHistoryService transactionHistoryService;
 
     @PostMapping("/deposit")
@@ -50,7 +52,7 @@ public class TransactionController {
 
     @GetMapping("/deposit/success")
     public ResponseEntity<BaseResponse> successPay(@RequestParam("paymentId") String paymentId,
-                                        @RequestParam("payerId") String payerId) {
+                                                   @RequestParam("payerId") String payerId) {
         try {
             Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
@@ -66,11 +68,11 @@ public class TransactionController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<BaseResponse> getAllByWallet(){
-        try{
+    public ResponseEntity<BaseResponse> getAllByWallet() {
+        try {
             return ResponseEntity
                     .ok(transactionHistoryService.getAllByWallet());
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,
@@ -79,11 +81,11 @@ public class TransactionController {
     }
 
     @GetMapping("/withdraw")
-    public ResponseEntity<BaseResponse> withdraw(@RequestParam(name = "amount") Long amount){
-        try{
+    public ResponseEntity<BaseResponse> withdraw(@RequestParam(name = "amount") Long amount) {
+        try {
             return ResponseEntity
                     .ok(transactionHistoryService.withdraw(amount));
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,
@@ -95,11 +97,11 @@ public class TransactionController {
     public ResponseEntity<BaseResponse> paidByWinner(
             @RequestParam(name = "orderId") Long orderId,
             @RequestParam(name = "shippingFee") Long shippingFee,
-            @RequestParam(name = "subtotal") Long subtotal){
-        try{
+            @RequestParam(name = "subtotal") Long subtotal) {
+        try {
             return ResponseEntity
                     .ok(transactionHistoryService.paidByWinner(orderId, shippingFee, subtotal));
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,

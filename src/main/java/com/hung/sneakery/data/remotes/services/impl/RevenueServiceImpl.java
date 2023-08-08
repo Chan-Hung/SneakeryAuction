@@ -10,15 +10,17 @@ import com.hung.sneakery.data.remotes.services.RevenueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class RevenueServiceImpl implements RevenueService {
-    @Autowired
+
+    @Resource
     OrderRepository orderRepository;
 
-    @Autowired
+    @Resource
     BidRepository bidRepository;
 
     @Override

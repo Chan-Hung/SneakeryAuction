@@ -19,20 +19,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    @Autowired
+
+    @Resource
     ProductRepository productRepository;
 
-    @Autowired
+    @Resource
     CategoryRepository categoryRepository;
 
-    @Autowired
+    @Resource
     UserRepository userRepository;
 
-    @Autowired
+    @Resource
     ProductImageRepository productImageRepository;
 
     @Override

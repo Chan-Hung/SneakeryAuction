@@ -13,15 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BidHistoryServiceImpl implements BidHistoryService {
-    @Autowired
+
+    @Resource
     BidHistoryRepository bidHistoryRepository;
 
-    @Autowired
+    @Resource
     UserRepository userRepository;
 
     @Override

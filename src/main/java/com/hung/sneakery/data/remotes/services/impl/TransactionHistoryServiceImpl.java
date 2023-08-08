@@ -19,28 +19,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TransactionHistoryServiceImpl implements TransactionHistoryService {
-    @Autowired
+
+    @Resource
     OrderRepository orderRepository;
 
-    @Autowired
+    @Resource
     UserRepository userRepository;
 
-    @Autowired
+    @Resource
     TransactionHistoryRepository transactionHistoryRepository;
 
-    @Autowired
+    @Resource
     WalletRepository walletRepository;
 
-    @Autowired
+    @Resource
     BidRepository bidRepository;
 
-    @Autowired
+    @Resource
     APIContext apiContext;
 
 

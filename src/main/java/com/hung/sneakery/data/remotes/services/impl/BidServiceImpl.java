@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,34 +27,34 @@ import java.util.Optional;
 @Service
 public class BidServiceImpl implements BidService {
 
-    @Autowired
+    @Resource
     UserRepository userRepository;
 
-    @Autowired
+    @Resource
     ProductRepository productRepository;
 
-    @Autowired
+    @Resource
     CategoryRepository categoryRepository;
 
-    @Autowired
+    @Resource
     ProductDescriptionRepository productDescriptionRepository;
 
-    @Autowired
+    @Resource
     BidRepository bidRepository;
 
-    @Autowired
+    @Resource
     BidHistoryRepository bidHistoryRepository;
 
-    @Autowired
+    @Resource
     ProductImageRepository productImageRepository;
 
-    @Autowired
+    @Resource
     ProductImageService productImageService;
 
-    @Autowired
+    @Resource
     WalletRepository walletRepository;
 
-    @Autowired
+    @Resource
     CountdownService countdownService;
 
     @Override

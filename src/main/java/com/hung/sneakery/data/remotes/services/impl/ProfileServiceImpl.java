@@ -13,21 +13,23 @@ import com.hung.sneakery.data.remotes.services.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
-    @Autowired
+
+    @Resource
     UserRepository userRepository;
 
-    @Autowired
+    @Resource
     AddressRepository addressRepository;
 
-    @Autowired
+    @Resource
     AddressMapper mapper;
 
-    @Autowired
+    @Resource
     UserMapper userMapper;
 
     @Override

@@ -8,10 +8,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 //implementing UserDetailsService to easily retrieve Authentication information
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
+
+    @Resource
     UserRepository userRepository;
 
     //Common approach where we only pass a String-based 'username' (or email) argument and

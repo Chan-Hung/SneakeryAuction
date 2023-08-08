@@ -11,12 +11,12 @@ import com.hung.sneakery.data.remotes.repositories.CityRepository;
 import com.hung.sneakery.data.remotes.repositories.DistrictRepository;
 import com.hung.sneakery.data.remotes.repositories.WardRepository;
 import com.hung.sneakery.data.remotes.services.AddressService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.persistence.Tuple;
 import java.math.BigInteger;
 import java.util.List;
@@ -25,19 +25,20 @@ import java.util.List;
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
 @RequestMapping("/api/address")
 public class AddressController {
-    @Autowired
+
+    @Resource
     CityRepository cityRepository;
 
-    @Autowired
+    @Resource
     DistrictRepository districtRepository;
 
-    @Autowired
+    @Resource
     WardRepository wardRepository;
 
-    @Autowired
+    @Resource
     BidHistoryRepository bidHistoryRepository;
 
-    @Autowired
+    @Resource
     AddressService addressService;
 
     @GetMapping("/test")

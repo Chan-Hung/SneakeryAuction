@@ -7,9 +7,12 @@ import com.hung.sneakery.data.remotes.services.ShippingFeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 @Service
 public class ShippingFeeServiceImpl implements ShippingFeeService {
-    @Autowired
+
+    @Resource
     ShippingFeeRepository shippingFeeRepository;
 
     @Override

@@ -9,15 +9,16 @@ import com.hung.sneakery.data.remotes.services.ProductImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 
 @Service
 public class ProductImageServiceImpl implements ProductImageService {
 
-    @Autowired
+    @Resource
     ProductImageRepository productImageRepository;
 
-    @Autowired
+    @Resource
     CloudinaryService cloudinaryService;
 
     @Override

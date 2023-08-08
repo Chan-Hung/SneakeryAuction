@@ -9,11 +9,15 @@ import com.hung.sneakery.data.remotes.services.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 @Service
 public class WalletServiceImpl implements WalletService {
-    @Autowired
+
+    @Resource
     WalletRepository walletRepository;
-    @Autowired
+
+    @Resource
     UserRepository userRepository;
 
     @Override

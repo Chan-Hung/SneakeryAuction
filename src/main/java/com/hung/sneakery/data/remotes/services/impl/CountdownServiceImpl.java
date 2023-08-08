@@ -8,6 +8,7 @@ import com.hung.sneakery.data.remotes.services.CountdownService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.persistence.Tuple;
 import java.math.BigInteger;
 import java.text.DateFormat;
@@ -20,27 +21,29 @@ import java.util.TimerTask;
 
 @Service
 public class CountdownServiceImpl implements CountdownService {
-    @Autowired
+
+    @Resource
     BidHistoryRepository bidHistoryRepository;
-    @Autowired
+
+    @Resource
     BidRepository bidRepository;
 
-    @Autowired
+    @Resource
     ShippingFeeRepository shippingFeeRepository;
 
-    @Autowired
+    @Resource
     UserRepository userRepository;
 
-    @Autowired
+    @Resource
     AddressRepository addressRepository;
 
-    @Autowired
+    @Resource
     OrderRepository orderRepository;
 
-    @Autowired
+    @Resource
     WalletRepository walletRepository;
 
-    @Autowired
+    @Resource
     TransactionHistoryRepository transactionHistoryRepository;
 
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

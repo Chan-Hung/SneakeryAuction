@@ -17,7 +17,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
     private final Cloudinary cloudinary;
 
-    public CloudinaryServiceImpl(){
+    public CloudinaryServiceImpl() {
         cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", CLOUDINARY_CLOUD_NAME,
                 "api_key", CLOUDINARY_API_KEY,

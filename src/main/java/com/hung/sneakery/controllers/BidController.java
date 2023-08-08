@@ -4,13 +4,13 @@ import com.hung.sneakery.data.models.dto.request.BidCreateRequest;
 import com.hung.sneakery.data.models.dto.request.BidPlaceRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.remotes.services.BidService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
@@ -19,7 +19,8 @@ import java.util.List;
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
 @RequestMapping("/api/bids")
 public class BidController {
-    @Autowired
+
+    @Resource
     BidService bidService;
 
     @PostMapping()

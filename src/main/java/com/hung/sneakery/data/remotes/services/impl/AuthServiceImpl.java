@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
@@ -32,22 +33,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    @Autowired
+
+    @Resource
     AuthenticationManager authenticationManager;
 
-    @Autowired
+    @Resource
     UserRepository userRepository;
 
-    @Autowired
+    @Resource
     RoleRepository roleRepository;
 
-    @Autowired
+    @Resource
     PasswordEncoder encoder;
 
-    @Autowired
+    @Resource
     JwtUtils jwtUtils;
 
-    @Autowired
+    @Resource
     MailService mailService;
 
 
