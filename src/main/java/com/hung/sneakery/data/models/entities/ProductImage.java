@@ -1,10 +1,7 @@
 package com.hung.sneakery.data.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,20 +12,21 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProductImage implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="image_path")
+    @Column(name = "image_path")
     private String path;
 
-    @Column(name="is_thumbnail")
+    @Column(name = "is_thumbnail")
     private Boolean isThumbnail;
 
     @ManyToOne
-    @JoinColumn(name="product_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     @JsonBackReference
     private Product product;
 }

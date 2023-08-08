@@ -1,9 +1,6 @@
 package com.hung.sneakery.data.models.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +39,6 @@ public class Order implements Serializable {
     private User seller;
 
     @OneToOne()
-    @JoinColumn(name="bid_id")
+    @JoinColumn(name = "bid_id")
     private Bid bid;
 }

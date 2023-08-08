@@ -1,10 +1,7 @@
 package com.hung.sneakery.data.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -12,14 +9,15 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name= "wallets")
+@Table(name = "wallets")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Wallet implements Serializable {
     @Id
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "wallet_balance")

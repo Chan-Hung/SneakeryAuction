@@ -1,9 +1,6 @@
 package com.hung.sneakery.data.models.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -20,10 +17,11 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Bid implements Serializable {
     //Using a Shared Primary Key
     @Id
-    @Column(name="product_id")
+    @Column(name = "product_id")
     private Long id;
 
     //@NotNull(message="The starting date is required")
@@ -32,17 +30,17 @@ public class Bid implements Serializable {
     //https://stackoverflow.com/questions/41998144/java8-localdatetime-or-timestamp
     private LocalDate bidStartingDate;
 
-    @Column(name="bid_closing_date")
+    @Column(name = "bid_closing_date")
     private LocalDateTime bidClosingDateTime;
 
     @NotNull(message = "The starting price is required")
-    @Column(name="price_start")
+    @Column(name = "price_start")
     private Long priceStart;
 
-    @Column(name="step_bid")
+    @Column(name = "step_bid")
     private Long stepBid;
 
-    @Column(name="price_win")
+    @Column(name = "price_win")
     @Nullable
     private Long priceWin;
 

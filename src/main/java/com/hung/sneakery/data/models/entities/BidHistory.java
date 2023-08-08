@@ -1,10 +1,7 @@
 package com.hung.sneakery.data.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -17,27 +14,27 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Builder
 //This extra tables have 2 more properties: price and createAt
 public class BidHistory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="price")
+    @Column(name = "price")
     private Long price;
 
-    @Column(name="created_at")
+    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="product_id")
+    @JoinColumn(name = "product_id")
     @JsonIgnore
     private Bid bid;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="buyer_id")
+    @JoinColumn(name = "buyer_id")
     @JsonIgnore
     private User user;
 }

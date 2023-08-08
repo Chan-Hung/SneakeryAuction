@@ -1,24 +1,22 @@
 package com.hung.sneakery.data.models.entities;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table (name= "address")
+@Table(name = "address")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Address implements Serializable {
 
     @Id
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "home_number")

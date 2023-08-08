@@ -1,9 +1,6 @@
 package com.hung.sneakery.data.models.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -14,15 +11,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name ="users",
-uniqueConstraints = {
-@UniqueConstraint(columnNames = "username"),
-@UniqueConstraint(columnNames = "email")
-})
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User implements Serializable {
 
     @Id
@@ -34,8 +32,8 @@ public class User implements Serializable {
     private String username;
 
     @NotBlank
-    @Size (max = 50)
-    @Email (message = "Email is not valid")
+    @Size(max = 50)
+    @Email(message = "Email is not valid")
     private String email;
 
     @NotBlank
@@ -50,8 +48,8 @@ public class User implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
-                joinColumns = @JoinColumn(name="user_id"),
-                inverseJoinColumns = @JoinColumn(name="role_id"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
