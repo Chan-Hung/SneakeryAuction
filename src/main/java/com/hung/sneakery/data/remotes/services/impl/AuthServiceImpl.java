@@ -15,10 +15,10 @@ import com.hung.sneakery.utils.config.security.impl.UserDetailsImpl;
 import com.hung.sneakery.utils.config.security.jwt.JwtUtils;
 import com.hung.sneakery.utils.enums.ERole;
 import net.bytebuddy.utility.RandomString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +28,7 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,30 +36,29 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements AuthService {
 
     @Resource
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Resource
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Resource
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     @Resource
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
 
     @Resource
-    MailService mailService;
-
+    private MailService mailService;
 
     @Override
     public DataResponse<JwtResponse> signIn(SignInRequest signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail());
-        if(!user.getIsActive())
+        if (!user.getIsActive()) {
             throw new RuntimeException("User hasn't been activated");
-
+        }
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -69,74 +69,75 @@ public class AuthServiceImpl implements AuthService {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities()
                 .stream()
-                .map(item -> item.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         return new DataResponse<>(new JwtResponse(jwt,
-                userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles ));
+                userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
     }
 
     @Override
     public BaseResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
-        if (userRepository.existsByUsername(signUpRequest.getUsername()))
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new RuntimeException("Username has already existed");
-
-        if (userRepository.existsByEmail(signUpRequest.getEmail()))
+        }
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new RuntimeException("Email is already in use");
-
-        //Create new user's account
-        User user = new User();
-
-        user.setUsername(signUpRequest.getUsername());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(encoder.encode(signUpRequest.getPassword()));
-
+        }
         String verificationCode = RandomString.make(30);
-        user.setVerificationCode(verificationCode);
-        user.setIsActive(false);
-
+        //Create new user's account
+        User user = User.builder()
+                .username(signUpRequest.getUsername())
+                .email(signUpRequest.getEmail())
+                .password(encoder.encode(signUpRequest.getPassword()))
+                .verificationCode(verificationCode)
+                .isActive(Boolean.FALSE)
+                .build();
         mailService.sendVerificationEmail(user, verificationCode);
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
         //If roles are null, default assigning to USER
-        if (strRoles == null) {
+        if (Objects.isNull(strRoles)) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER);
-            if (userRole == null)
+            if (userRole == null) {
                 throw new RuntimeException("Error: Role is not found");
+            }
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 if ("admin".equals(role)) {
                     Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
-                    if (adminRole == null)
+                    if (Objects.isNull(adminRole)) {
                         throw new RuntimeException("Error: Role is not found.");
+                    }
                     roles.add(adminRole);
                 } else {
                     Role userRole = roleRepository.findByName(ERole.ROLE_USER);
-                    if (userRole == null)
+                    if (Objects.isNull(userRole)) {
                         throw new RuntimeException("Error: Role is not found.");
+                    }
                     roles.add(userRole);
                 }
             });
         }
         user.setRoles(roles);
         userRepository.save(user);
-
         return new BaseResponse(true, "User registered successfully");
     }
 
     @Override
     public BaseResponse checkEmail(String email) {
-        if (userRepository.existsByEmail(email))
+        if (userRepository.existsByEmail(email)) {
             return new BaseResponse(true, "Email is already existed");
+        }
         return new BaseResponse(true, "Email can be used");
     }
 
     @Override
     public BaseResponse verify(String verificationCode) {
         User user = userRepository.findByVerificationCode(verificationCode);
-        if (user == null || user.getIsActive()) {
+        if (Objects.isNull(user) || user.getIsActive()) {
             return new BaseResponse(false, "User has already been active");
         } else {
             user.setVerificationCode(null);

@@ -20,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 public class AuthController {
 
     @Resource
-    AuthService authService;
+    private AuthService authService;
 
     @PostMapping("/signin")
     public ResponseEntity<BaseResponse> signIn(@Valid @RequestBody SignInRequest signinRequest) {
@@ -46,7 +46,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/checkemail")
+    @GetMapping("/check-email")
     public ResponseEntity<BaseResponse> checkEmail(@RequestParam String email) {
         return ResponseEntity
                 .ok(authService.checkEmail(email));
