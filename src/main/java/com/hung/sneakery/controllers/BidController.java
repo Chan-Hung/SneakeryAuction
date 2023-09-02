@@ -21,7 +21,7 @@ import java.util.List;
 public class BidController {
 
     @Resource
-    BidService bidService;
+    private BidService bidService;
 
     @PostMapping("/place")
     @PreAuthorize("hasRole('USER')")

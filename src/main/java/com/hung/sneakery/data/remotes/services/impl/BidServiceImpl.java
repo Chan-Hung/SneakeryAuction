@@ -11,7 +11,6 @@ import com.hung.sneakery.data.remotes.repositories.*;
 import com.hung.sneakery.data.remotes.services.BidService;
 import com.hung.sneakery.data.remotes.services.CountdownService;
 import com.hung.sneakery.data.remotes.services.ProductImageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,34 +27,34 @@ import java.util.Optional;
 public class BidServiceImpl implements BidService {
 
     @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Resource
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Resource
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Resource
-    ProductDescriptionRepository productDescriptionRepository;
+    private ProductDescriptionRepository productDescriptionRepository;
 
     @Resource
-    BidRepository bidRepository;
+    private BidRepository bidRepository;
 
     @Resource
-    BidHistoryRepository bidHistoryRepository;
+    private BidHistoryRepository bidHistoryRepository;
 
     @Resource
-    ProductImageRepository productImageRepository;
+    private ProductImageRepository productImageRepository;
 
     @Resource
-    ProductImageService productImageService;
+    private ProductImageService productImageService;
 
     @Resource
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @Resource
-    CountdownService countdownService;
+    private CountdownService countdownService;
 
     @Override
     public BaseResponse placeBid(BidPlaceRequest bidPlaceRequest) {
@@ -64,47 +63,56 @@ public class BidServiceImpl implements BidService {
 
         Long bidProductId = bidPlaceRequest.getProductId();
 
-        if (!productRepository.findById(bidProductId).isPresent())
+        if (!productRepository.findById(bidProductId).isPresent()) {
             throw new RuntimeException("Product not found");
+        }
         Product product = productRepository.findById(bidProductId).get();
 
-        if(!bidRepository.findById(bidProductId).isPresent())
+        if (!bidRepository.findById(bidProductId).isPresent()) {
             throw new RuntimeException("Bid not found");
+        }
         Bid bid = bidRepository.findById(bidProductId).get();
 
         //Find seller
-        if(!userRepository.findById(product.getUser().getId()).isPresent())
+        if (!userRepository.findById(product.getUser().getId()).isPresent()) {
             throw new RuntimeException("Seller not found for this product");
-        User seller = userRepository.findById(product.  getUser().getId()).get();
+        }
+        User seller = userRepository.findById(product.getUser().getId()).get();
 
         Long amount = bidPlaceRequest.getAmount();
         Long stepBid = bid.getStepBid();
 
         Optional<BidHistory> currentBidHistory = bidHistoryRepository.findFirstByBidIdOrderByPriceDesc(bidProductId);
         Long currentAmount;
-        if(!currentBidHistory.isPresent())
-             currentAmount = bid.getPriceStart();
-        else currentAmount = currentBidHistory.get().getPrice();
+        if (!currentBidHistory.isPresent()) {
+            currentAmount = bid.getPriceStart();
+        } else {
+            currentAmount = currentBidHistory.get().getPrice();
+        }
         Long bidIncrement = bid.getStepBid();
 
-        if (amount <= currentAmount )
+        if (amount <= currentAmount) {
             throw new IllegalArgumentException("Your bid must have higher amount than current amount");
-        if (buyer == seller)
+        }
+        if (buyer == seller) {
             throw new RuntimeException("Seller can not place a bid on this product");
-        if(currentAmount + stepBid > amount)
+        }
+        if (currentAmount + stepBid > amount) {
             throw new RuntimeException("The bid increment for this product is " + bidIncrement + " $. Your bid amount should be higher");
-        if(!compareWalletBalanceToCurrentBidPrice(currentAmount))
+        }
+        if (!compareWalletBalanceToCurrentBidPrice(currentAmount)) {
             throw new RuntimeException("Your wallet's balance is lower than the current price");
-        if(!compareWalletBalanceToCurrentBidPrice(amount))
+        }
+        if (!compareWalletBalanceToCurrentBidPrice(amount)) {
             throw new RuntimeException("Your wallet's balance is lower than the amount you wanna place a bid");
-
-        BidHistory bidHistory = new BidHistory();
-        bidHistory.setPrice(amount);
-        bidHistory.setUser(buyer);
-        bidHistory.setCreatedAt(LocalDateTime.now());
-        bidHistory.setBid(bid);
+        }
+        BidHistory bidHistory = BidHistory.builder()
+                .price(amount)
+                .user(buyer)
+                .createdAt(LocalDateTime.now())
+                .bid(bid)
+                .build();
         bidHistoryRepository.save(bidHistory);
-
         return new BaseResponse(true, "Place bid successfully");
     }
 
@@ -125,31 +133,27 @@ public class BidServiceImpl implements BidService {
     public DataResponse<List<BidDTO>> getAllUploadedProduct() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User seller = userRepository.findByUsername(userName);
-
         List<Product> uploadedProducts = productRepository.findByUser(seller);
         List<BidDTO> bidDTOList = new ArrayList<>();
-
-        for (Product product: uploadedProducts){
-            Bid bid = bidRepository.findById(product.getId()).get();
-
-            BidDTO bidDTO = new BidDTO();
-            bidDTO.setBidId(bid.getId());
-            bidDTO.setPriceWin(bid.getPriceWin());
-            bidDTO.setStepBid(bid.getStepBid());
-            bidDTO.setPriceStart(bid.getPriceStart());
-            bidDTO.setBidStartingDate(bid.getBidStartingDate());
-            bidDTO.setProduct(new ProductDTO(product));
-
+        for (Product product : uploadedProducts) {
+            Bid bid = bidRepository.findById(product.getId())
+                    .orElseThrow(() -> new RuntimeException("Bid not found"));
+            BidDTO bidDTO = BidDTO.builder()
+                    .bidId(bid.getId())
+                    .priceWin(bid.getPriceWin())
+                    .stepBid(bid.getStepBid())
+                    .priceStart(bid.getPriceStart())
+                    .bidStartingDate(bid.getBidStartingDate())
+                    .product(new ProductDTO(product))
+                    .build();
             bidDTOList.add(bidDTO);
         }
-
         return new DataResponse<>(bidDTOList);
     }
 
-    private Boolean compareWalletBalanceToCurrentBidPrice(Long currentPrice){
+    private Boolean compareWalletBalanceToCurrentBidPrice(Long currentPrice) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User bidder = userRepository.findByUsername(userName);
-
         Wallet wallet = walletRepository.findByUser_Id(bidder.getId());
         Long walletBalance = wallet.getBalance();
         return walletBalance >= currentPrice;
@@ -160,18 +164,19 @@ public class BidServiceImpl implements BidService {
         Category category = categoryRepository.findByCategoryName(bidCreateRequest.getCategory());
 
         //Map Product
-        Product product = new Product();
-        product.setName(bidCreateRequest.getName());
-        product.setCondition(bidCreateRequest.getCondition());
-        product.setUser(seller);
-        product.setCategory(category);
-
+        Product product = Product.builder()
+                .name(bidCreateRequest.getName())
+                .condition(bidCreateRequest.getCondition())
+                .user(seller)
+                .category(category)
+                .build();
         //Map ProductDescription
-        ProductDescription productDescription = new ProductDescription();
-        productDescription.setBrand(bidCreateRequest.getBrand());
-        productDescription.setColor(bidCreateRequest.getColor());
-        productDescription.setSize(bidCreateRequest.getSize());
-        productDescription.setProduct(product);
+        ProductDescription productDescription = ProductDescription.builder()
+                .brand(bidCreateRequest.getBrand())
+                .color(bidCreateRequest.getColor())
+                .size(bidCreateRequest.getSize())
+                .product(product)
+                .build();
         productDescriptionRepository.save(productDescription);
 
         //Save Product
@@ -182,21 +187,21 @@ public class BidServiceImpl implements BidService {
         List<ProductImage> productImages = new ArrayList<>();
         ProductImage image = productImageService.upload(thumbnail.getBytes(), product, true);
         productImages.add(image);
-        for (MultipartFile file : images){
+        for (MultipartFile file : images) {
             ProductImage productImage = productImageService.upload(file.getBytes(), product, false);
             productImages.add(productImage);
         }
         productImageRepository.saveAll(productImages);
 
         //Save Bid
-        Bid bid = new Bid();
-        bid.setPriceStart(bidCreateRequest.getPriceStart());
-        bid.setBidStartingDate(LocalDate.now());
-        bid.setStepBid(bidCreateRequest.getStepBid());
-        bid.setBidClosingDateTime(bidCreateRequest.getBidClosingDateTime());
-        bid.setProduct(product);
+        Bid bid = Bid.builder()
+                .priceStart(bidCreateRequest.getPriceStart())
+                .bidStartingDate(LocalDate.now())
+                .stepBid(bidCreateRequest.getStepBid())
+                .bidClosingDateTime(bidCreateRequest.getBidClosingDateTime())
+                .product(product)
+                .build();
         bidRepository.save(bid);
-
         return bid;
     }
 }
