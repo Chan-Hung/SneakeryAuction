@@ -5,7 +5,6 @@ import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.*;
 import com.hung.sneakery.data.remotes.services.CountdownService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,9 +34,6 @@ public class CountdownServiceImpl implements CountdownService {
     UserRepository userRepository;
 
     @Resource
-    AddressRepository addressRepository;
-
-    @Resource
     OrderRepository orderRepository;
 
     @Resource
@@ -54,7 +50,7 @@ public class CountdownServiceImpl implements CountdownService {
         System.out.println("Current Time Execute: " + df.format(new Date()));
         //DateTime when executing
         Date date = Date.from(bid.getBidClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
-        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, shippingFeeRepository, userRepository, addressRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
+        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, shippingFeeRepository, userRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
         System.out.println("Current Time Schedule: " + df.format(new Date()));
 
     }
@@ -67,8 +63,6 @@ public class CountdownServiceImpl implements CountdownService {
         ShippingFeeRepository shippingFeeRepository;
 
         UserRepository userRepository;
-
-        AddressRepository addressRepository;
 
         OrderRepository orderRepository;
 
@@ -161,13 +155,12 @@ public class CountdownServiceImpl implements CountdownService {
         }
 
         //Constructor
-        public CountdownTask(Bid bid, BidHistoryRepository bidHistoryRepository, BidRepository bidRepository, ShippingFeeRepository shippingFeeRepository, UserRepository userRepository, AddressRepository addressRepository, OrderRepository orderRepository, WalletRepository walletRepository, TransactionHistoryRepository transactionHistoryRepository) {
+        public CountdownTask(Bid bid, BidHistoryRepository bidHistoryRepository, BidRepository bidRepository, ShippingFeeRepository shippingFeeRepository, UserRepository userRepository, OrderRepository orderRepository, WalletRepository walletRepository, TransactionHistoryRepository transactionHistoryRepository) {
             this.bid = bid;
             this.bidHistoryRepository = bidHistoryRepository;
             this.bidRepository = bidRepository;
             this.shippingFeeRepository = shippingFeeRepository;
             this.userRepository = userRepository;
-            this.addressRepository = addressRepository;
             this.orderRepository = orderRepository;
             this.walletRepository = walletRepository;
             this.transactionHistoryRepository = transactionHistoryRepository;

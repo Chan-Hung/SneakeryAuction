@@ -22,17 +22,14 @@ public class Address implements Serializable {
     @Column(name = "home_number")
     private String homeNumber;
 
-    @OneToOne
-    @JoinColumn(name = "city_id")
-    private City city;
+    @Column(name = "city_id")
+    private String city;
 
-    @OneToOne
-    @JoinColumn(name = "ward_id")
-    private Ward ward;
+    @Column(name = "ward_id")
+    private String ward;
 
-    @OneToOne
-    @JoinColumn(name = "district_id")
-    private District district;
+    @Column(name = "district_id")
+    private String district;
 
     @OneToOne
     @MapsId
