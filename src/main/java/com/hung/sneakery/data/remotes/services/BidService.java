@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface BidService {
+
     BaseResponse placeBid(BidPlaceRequest bidPlaceRequest);
 
     BaseResponse createBid(BidCreateRequest bidCreateRequest, MultipartFile thumbnail, List<MultipartFile> images) throws IOException, ParseException;

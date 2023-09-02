@@ -10,9 +10,12 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
 public interface AuthService {
-    DataResponse<JwtResponse> signIn(SignInRequest signInRequest);
-    BaseResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException;
-    BaseResponse checkEmail(String email);
-    BaseResponse verify(String verificationCode);
 
+    DataResponse<JwtResponse> signIn(SignInRequest signInRequest);
+
+    BaseResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException;
+
+    BaseResponse checkEmail(String email);
+
+    BaseResponse verify(String verificationCode);
 }

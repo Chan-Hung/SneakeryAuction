@@ -7,6 +7,7 @@ import com.hung.sneakery.data.models.dto.response.DataResponse;
 import java.util.List;
 
 public interface BidHistoryService {
+
     DataResponse<List<BidHistoryDTO>> getHistoryByProduct(Long productId);
 
     DataResponse<List<GetBidHistoryByUser>> getHistoryByUser();
