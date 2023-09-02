@@ -23,7 +23,7 @@ public class BidController {
     @Resource
     BidService bidService;
 
-    @PostMapping()
+    @PostMapping("/place")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BaseResponse> placeBid(@RequestBody BidPlaceRequest bidPlaceRequest) {
         try {
