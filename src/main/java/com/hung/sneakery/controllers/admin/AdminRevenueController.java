@@ -14,14 +14,14 @@ import javax.annotation.Resource;
 
 @RestController
 @CrossOrigin(originPatterns = {"http://localhost:3000", "https://aunction-react-js.vercel.app/"})
-@RequestMapping("/api/admin/revenue")
+@RequestMapping("/admin/revenue")
 public class AdminRevenueController {
 
     @Resource
     RevenueService revenueService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/get")
+    @GetMapping()
     public ResponseEntity<BaseResponse> getAllByAdmin() {
         try {
             return ResponseEntity

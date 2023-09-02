@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/", "https://aunction-react-js.vercel.app/"})
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 public class ProductController {
 
     @Resource
@@ -95,7 +95,7 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/delete/{productId}")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<BaseResponse> delete(@PathVariable Long productId) {
         try {
             return ResponseEntity

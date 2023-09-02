@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
-@RequestMapping("/api/bids")
+@RequestMapping("/bids")
 public class BidController {
 
     @Resource
@@ -37,7 +37,7 @@ public class BidController {
         }
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<BaseResponse> createBidProduct(
             @RequestPart BidCreateRequest bidCreateRequest,

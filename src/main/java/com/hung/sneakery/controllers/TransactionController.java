@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/", "https://www.sandbox.paypal.com/"})
-@RequestMapping("/api/transaction")
+@RequestMapping("/transaction")
 public class TransactionController {
 
     @Resource
@@ -67,7 +67,7 @@ public class TransactionController {
                         "Paypal is not available now, please contact to our customer service"));//
     }
 
-    @GetMapping("/get")
+    @GetMapping()
     public ResponseEntity<BaseResponse> getAllByWallet() {
         try {
             return ResponseEntity

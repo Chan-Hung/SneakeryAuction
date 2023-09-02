@@ -11,14 +11,14 @@ import javax.annotation.Resource;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "https://aunction-react-js.vercel.app/"})
-@RequestMapping("/api/admin/profile")
+@RequestMapping("/admin/profile")
 public class AdminProfileController {
 
     @Resource
     ProfileService profileService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/get_all")
+    @GetMapping()
     public ResponseEntity<BaseResponse> getAll() {
         try {
             return ResponseEntity
@@ -31,7 +31,7 @@ public class AdminProfileController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/get/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<BaseResponse> getOne(@PathVariable Long userId) {
         try {
             return ResponseEntity

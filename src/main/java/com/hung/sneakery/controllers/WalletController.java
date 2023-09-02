@@ -11,13 +11,13 @@ import javax.annotation.Resource;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
-@RequestMapping("/api/wallet")
+@RequestMapping("/wallet")
 public class WalletController {
 
     @Resource
     WalletService walletService;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<BaseResponse> create(@RequestBody EmailRequest email) {
         try {
             return ResponseEntity
@@ -30,7 +30,7 @@ public class WalletController {
         }
     }
 
-    @GetMapping("/get/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<BaseResponse> getOne(@PathVariable Long userId) {
         try {
             return ResponseEntity

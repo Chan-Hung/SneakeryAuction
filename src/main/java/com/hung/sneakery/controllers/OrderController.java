@@ -13,13 +13,13 @@ import javax.annotation.Resource;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 public class OrderController {
 
     @Resource
     OrderService orderService;
 
-    @GetMapping("/get_all")
+    @GetMapping()
     public ResponseEntity<BaseResponse> getAllByUser() {
         try {
             return ResponseEntity

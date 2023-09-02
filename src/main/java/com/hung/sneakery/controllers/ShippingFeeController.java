@@ -10,13 +10,13 @@ import javax.annotation.Resource;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
-@RequestMapping("/api/shipping_fee")
+@RequestMapping("/shipping_fee")
 public class ShippingFeeController {
 
     @Resource
     ShippingFeeService shippingFeeService;
 
-    @GetMapping("/get")
+    @GetMapping()
     public ResponseEntity<BaseResponse> getOne(
             @RequestParam(name = "originDistrict") String originDistrict,
             @RequestParam(name = "destinationDistrict") String destinationDistrict) {
