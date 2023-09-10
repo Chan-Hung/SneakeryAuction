@@ -22,25 +22,25 @@ import java.util.TimerTask;
 public class CountdownServiceImpl implements CountdownService {
 
     @Resource
-    BidHistoryRepository bidHistoryRepository;
+    private BidHistoryRepository bidHistoryRepository;
 
     @Resource
-    BidRepository bidRepository;
+    private BidRepository bidRepository;
 
     @Resource
-    ShippingFeeRepository shippingFeeRepository;
+    private ShippingFeeRepository shippingFeeRepository;
 
     @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Resource
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     @Resource
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @Resource
-    TransactionHistoryRepository transactionHistoryRepository;
+    private TransactionHistoryRepository transactionHistoryRepository;
 
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Timer timer = new Timer();

@@ -7,7 +7,6 @@ import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.remotes.repositories.BidRepository;
 import com.hung.sneakery.data.remotes.repositories.OrderRepository;
 import com.hung.sneakery.data.remotes.services.RevenueService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,10 +17,10 @@ import java.util.List;
 public class RevenueServiceImpl implements RevenueService {
 
     @Resource
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     @Resource
-    BidRepository bidRepository;
+    private BidRepository bidRepository;
 
     @Override
     public DataResponse<GetRevenue> getRevenue() {

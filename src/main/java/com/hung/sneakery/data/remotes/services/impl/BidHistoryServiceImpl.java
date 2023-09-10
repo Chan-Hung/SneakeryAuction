@@ -9,7 +9,6 @@ import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.BidHistoryRepository;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.services.BidHistoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +20,10 @@ import java.util.List;
 public class BidHistoryServiceImpl implements BidHistoryService {
 
     @Resource
-    BidHistoryRepository bidHistoryRepository;
+    private BidHistoryRepository bidHistoryRepository;
 
     @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public DataResponse<List<BidHistoryDTO>> getHistoryByProduct(Long productId) {

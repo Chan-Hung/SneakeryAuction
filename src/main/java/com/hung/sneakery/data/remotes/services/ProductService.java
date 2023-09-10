@@ -12,7 +12,7 @@ import java.util.Map;
 
 public interface ProductService {
 
-    DataResponse<ProductDetailedDTO> getProductDetailed(Long id);
+    DataResponse<ProductDetailedDTO> getOne(Long id);
 
     DataResponse<?> getAllProductsId();
 

@@ -8,7 +8,6 @@ import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.OrderRepository;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.services.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +19,10 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     @Resource
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     public DataResponse<List<OrderDTO>> getAllByUser() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();

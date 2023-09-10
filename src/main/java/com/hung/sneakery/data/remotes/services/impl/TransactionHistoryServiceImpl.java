@@ -3,11 +3,8 @@ package com.hung.sneakery.data.remotes.services.impl;
 import com.hung.sneakery.data.models.dto.request.DepositRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
-import com.hung.sneakery.data.models.entities.Bid;
 import com.hung.sneakery.data.models.entities.Order;
-import com.hung.sneakery.data.models.entities.TransactionHistory;
-import com.hung.sneakery.data.models.entities.User;
-import com.hung.sneakery.data.models.entities.Wallet;
+import com.hung.sneakery.data.models.entities.*;
 import com.hung.sneakery.data.remotes.repositories.*;
 import com.hung.sneakery.data.remotes.services.TransactionHistoryService;
 import com.hung.sneakery.utils.enums.EPaymentStatus;
@@ -15,43 +12,39 @@ import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TransactionHistoryServiceImpl implements TransactionHistoryService {
 
     @Resource
-    OrderRepository orderRepository;
+    private OrderRepository orderRepository;
 
     @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Resource
-    TransactionHistoryRepository transactionHistoryRepository;
+    private TransactionHistoryRepository transactionHistoryRepository;
 
     @Resource
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @Resource
-    BidRepository bidRepository;
+    private BidRepository bidRepository;
 
     @Resource
-    APIContext apiContext;
+    private APIContext apiContext;
 
 
     @Override
     public Payment createPayment(DepositRequest depositRequest) throws PayPalRESTException {
         if (depositRequest.getUserId() == null)
             throw new RuntimeException("User not found");
-        Optional<User> user = userRepository.findById(depositRequest.getUserId());
-
         ItemList itemList = new ItemList();
         List<Item> items = new ArrayList<>();
 
@@ -111,11 +104,11 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
             TransactionHistory transactionHistory = new TransactionHistory();
             transactionHistory.setStatus(EPaymentStatus.DEPOSIT);
             transactionHistory.setWallet(wallet);
-            String amount = StringUtils.removeEnd(payment.getTransactions().get(0).getAmount().getTotal(),".00");
+            String amount = StringUtils.removeEnd(payment.getTransactions().get(0).getAmount().getTotal(), ".00");
             transactionHistory.setAmount(Long.valueOf(amount));
 
             Long currentBalance = wallet.getBalance();
-            wallet.setBalance(currentBalance+Long.parseLong(amount));
+            wallet.setBalance(currentBalance + Long.parseLong(amount));
             walletRepository.save(wallet);
 
             transactionHistoryRepository.save(transactionHistory);

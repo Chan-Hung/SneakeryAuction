@@ -6,20 +6,20 @@ import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.services.ProfileService;
+import com.hung.sneakery.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
 
     @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Resource
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Override
     public DataResponse<List<UserDTO>> getAll() {
@@ -31,11 +31,8 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public DataResponse<UserDTO> getOne(Long userId) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if(!userOpt.isPresent())
-            throw new RuntimeException("User not found");
-
-        User user = userOpt.get();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
         return new DataResponse<>(userMapper.mapToDTO(user, UserDTO.class));
     }
 

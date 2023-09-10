@@ -7,13 +7,11 @@ import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Category;
 import com.hung.sneakery.data.models.entities.Product;
 import com.hung.sneakery.data.remotes.repositories.CategoryRepository;
-import com.hung.sneakery.data.remotes.repositories.ProductImageRepository;
 import com.hung.sneakery.data.remotes.repositories.ProductRepository;
-import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.services.ProductService;
+import com.hung.sneakery.exceptions.NotFoundException;
 import com.hung.sneakery.utils.enums.ECondition;
 import com.hung.sneakery.utils.enums.ESorting;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,23 +24,16 @@ import java.util.*;
 public class ProductServiceImpl implements ProductService {
 
     @Resource
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Resource
-    CategoryRepository categoryRepository;
-
-    @Resource
-    UserRepository userRepository;
-
-    @Resource
-    ProductImageRepository productImageRepository;
+    private CategoryRepository categoryRepository;
 
     @Override
-    public DataResponse<ProductDetailedDTO> getProductDetailed(Long productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        if (!optionalProduct.isPresent())
-            throw new RuntimeException("Product not found with ID: " + productId);
-        ProductDetailedDTO productDetailedDto = new ProductDetailedDTO(optionalProduct.get());
+    public DataResponse<ProductDetailedDTO> getOne(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException(String.format("Product not found with id: %s", productId)));
+        ProductDetailedDTO productDetailedDto = new ProductDetailedDTO(product);
         return new DataResponse<>(productDetailedDto);
     }
 
@@ -63,12 +54,12 @@ public class ProductServiceImpl implements ProductService {
         //Find Category by categoryName first
         Category category = categoryRepository.findByCategoryName(categoryName);
 
-        if(category == null)
-            throw new RuntimeException("Category name: "+ categoryName + " is invalid");
+        if (category == null)
+            throw new RuntimeException("Category name: " + categoryName + " is invalid");
 
         //then pass that product category into findByProductCategory() method
         pageTuts = productRepository.findByCategory(category, paging);
-        if(pageTuts.isEmpty()) {
+        if (pageTuts.isEmpty()) {
             throw new RuntimeException("Products not found");
         }
 
@@ -93,13 +84,11 @@ public class ProductServiceImpl implements ProductService {
 
         pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting, paging);
         List<ProductDTO> productDTOs = new ArrayList<>();
-        for(Product product : pageTuts)
-        {
+        for (Product product : pageTuts) {
             ProductDTO productHomepageDto = new ProductDTO(product);
             productDTOs.add(productHomepageDto);
         }
-        if(productDTOs.isEmpty())
-        {
+        if (productDTOs.isEmpty()) {
             throw new RuntimeException("Products not found");
         }
         Map<String, Object> response = new HashMap<>();
@@ -120,8 +109,7 @@ public class ProductServiceImpl implements ProductService {
     //GetMapResponseEntity
     private Map<String, Object> getMapResponseEntity(Page<Product> pageTuts) {
         List<ProductDTO> productDTOs = new ArrayList<>();
-        for(Product product : pageTuts.getContent())
-        {
+        for (Product product : pageTuts.getContent()) {
             ProductDTO productHomepageDto = new ProductDTO(product);
             productDTOs.add(productHomepageDto);
         }

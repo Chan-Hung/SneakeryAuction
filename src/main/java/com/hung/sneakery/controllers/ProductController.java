@@ -47,10 +47,10 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<BaseResponse> getProductDetailed(@PathVariable Long productId) {
+    public ResponseEntity<BaseResponse> getOne(@PathVariable Long productId) {
         try {
             return ResponseEntity
-                    .ok(productService.getProductDetailed(productId));
+                    .ok(productService.getOne(productId));
         } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)

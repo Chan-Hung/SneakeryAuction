@@ -6,7 +6,6 @@ import com.hung.sneakery.data.models.entities.Wallet;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.repositories.WalletRepository;
 import com.hung.sneakery.data.remotes.services.WalletService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,10 +14,10 @@ import javax.annotation.Resource;
 public class WalletServiceImpl implements WalletService {
 
     @Resource
-    WalletRepository walletRepository;
+    private WalletRepository walletRepository;
 
     @Resource
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public BaseResponse createWallet(String userEmail) {
