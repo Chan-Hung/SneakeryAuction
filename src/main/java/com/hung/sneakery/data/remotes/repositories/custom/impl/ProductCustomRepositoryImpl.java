@@ -14,7 +14,7 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+@Repository//test-build
 public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     @PersistenceContext
     EntityManager em;
