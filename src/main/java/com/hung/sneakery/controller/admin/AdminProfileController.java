@@ -1,7 +1,7 @@
 package com.hung.sneakery.controller.admin;
 
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.remotes.services.ProfileService;
+import com.hung.sneakery.service.ProfileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

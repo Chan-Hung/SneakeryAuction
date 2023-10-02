@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.OrderDTO;
 import com.hung.sneakery.data.models.dto.request.GetRevenue;
@@ -6,7 +6,7 @@ import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.remotes.repositories.BidRepository;
 import com.hung.sneakery.data.remotes.repositories.OrderRepository;
-import com.hung.sneakery.data.remotes.services.RevenueService;
+import com.hung.sneakery.service.RevenueService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

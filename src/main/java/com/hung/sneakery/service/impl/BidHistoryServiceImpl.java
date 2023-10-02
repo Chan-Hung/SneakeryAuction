@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.BidHistoryDTO;
 import com.hung.sneakery.data.models.dto.ProductDTO;
@@ -8,7 +8,7 @@ import com.hung.sneakery.data.models.entities.BidHistory;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.BidHistoryRepository;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
-import com.hung.sneakery.data.remotes.services.BidHistoryService;
+import com.hung.sneakery.service.BidHistoryService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

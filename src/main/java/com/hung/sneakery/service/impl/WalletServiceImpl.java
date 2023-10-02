@@ -1,11 +1,11 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Wallet;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
 import com.hung.sneakery.data.remotes.repositories.WalletRepository;
-import com.hung.sneakery.data.remotes.services.WalletService;
+import com.hung.sneakery.service.WalletService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

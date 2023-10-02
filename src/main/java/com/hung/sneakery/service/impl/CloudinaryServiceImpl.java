@@ -1,9 +1,9 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.hung.sneakery.data.models.dto.response.CloudinaryUploadResponse;
-import com.hung.sneakery.data.remotes.services.CloudinaryService;
+import com.hung.sneakery.service.CloudinaryService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

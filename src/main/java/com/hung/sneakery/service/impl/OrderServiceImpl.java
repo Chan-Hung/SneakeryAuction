@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.OrderDTO;
 import com.hung.sneakery.data.models.dto.ProductDTO;
@@ -7,7 +7,7 @@ import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.OrderRepository;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
-import com.hung.sneakery.data.remotes.services.OrderService;
+import com.hung.sneakery.service.OrderService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

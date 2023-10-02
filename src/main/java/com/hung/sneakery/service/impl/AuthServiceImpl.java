@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.request.SignInRequest;
 import com.hung.sneakery.data.models.dto.request.SignUpRequest;
@@ -9,8 +9,8 @@ import com.hung.sneakery.data.models.entities.Role;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.RoleRepository;
 import com.hung.sneakery.data.remotes.repositories.UserRepository;
-import com.hung.sneakery.data.remotes.services.AuthService;
-import com.hung.sneakery.data.remotes.services.MailService;
+import com.hung.sneakery.service.AuthService;
+import com.hung.sneakery.service.MailService;
 import com.hung.sneakery.utils.config.security.impl.UserDetailsImpl;
 import com.hung.sneakery.utils.config.security.jwt.JwtUtils;
 import com.hung.sneakery.utils.enums.ERole;

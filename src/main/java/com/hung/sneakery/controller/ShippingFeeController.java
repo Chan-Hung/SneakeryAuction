@@ -1,7 +1,7 @@
 package com.hung.sneakery.controller;
 
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.remotes.services.ShippingFeeService;
+import com.hung.sneakery.service.ShippingFeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

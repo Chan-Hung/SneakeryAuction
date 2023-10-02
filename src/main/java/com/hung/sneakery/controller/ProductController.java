@@ -1,7 +1,7 @@
 package com.hung.sneakery.controller;
 
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.remotes.services.ProductService;
+import com.hung.sneakery.service.ProductService;
 import com.hung.sneakery.utils.enums.ECondition;
 import com.hung.sneakery.utils.enums.ESorting;
 import org.springframework.http.HttpStatus;

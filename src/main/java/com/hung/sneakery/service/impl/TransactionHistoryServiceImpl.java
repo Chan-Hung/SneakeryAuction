@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.request.DepositRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
@@ -6,7 +6,7 @@ import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.models.entities.*;
 import com.hung.sneakery.data.remotes.repositories.*;
-import com.hung.sneakery.data.remotes.services.TransactionHistoryService;
+import com.hung.sneakery.service.TransactionHistoryService;
 import com.hung.sneakery.utils.enums.EPaymentStatus;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;

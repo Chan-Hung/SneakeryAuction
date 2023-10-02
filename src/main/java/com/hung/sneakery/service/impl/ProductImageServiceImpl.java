@@ -1,10 +1,10 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.response.CloudinaryUploadResponse;
 import com.hung.sneakery.data.models.entities.Product;
 import com.hung.sneakery.data.models.entities.ProductImage;
-import com.hung.sneakery.data.remotes.services.CloudinaryService;
-import com.hung.sneakery.data.remotes.services.ProductImageService;
+import com.hung.sneakery.service.CloudinaryService;
+import com.hung.sneakery.service.ProductImageService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

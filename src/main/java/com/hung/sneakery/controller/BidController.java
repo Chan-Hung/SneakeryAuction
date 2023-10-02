@@ -3,7 +3,7 @@ package com.hung.sneakery.controller;
 import com.hung.sneakery.data.models.dto.request.BidCreateRequest;
 import com.hung.sneakery.data.models.dto.request.BidPlaceRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.remotes.services.BidService;
+import com.hung.sneakery.service.BidService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

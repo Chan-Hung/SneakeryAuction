@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.BidDTO;
 import com.hung.sneakery.data.models.dto.ProductDTO;
@@ -8,9 +8,9 @@ import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.*;
 import com.hung.sneakery.data.remotes.repositories.*;
-import com.hung.sneakery.data.remotes.services.BidService;
-import com.hung.sneakery.data.remotes.services.CountdownService;
-import com.hung.sneakery.data.remotes.services.ProductImageService;
+import com.hung.sneakery.service.BidService;
+import com.hung.sneakery.service.CountdownService;
+import com.hung.sneakery.service.ProductImageService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

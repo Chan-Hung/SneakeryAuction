@@ -1,10 +1,10 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.entities.Bid;
 import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.data.remotes.repositories.*;
-import com.hung.sneakery.data.remotes.services.CountdownService;
+import com.hung.sneakery.service.CountdownService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.services;
+package com.hung.sneakery.service;
 
 import com.hung.sneakery.data.models.dto.BidHistoryDTO;
 import com.hung.sneakery.data.models.dto.request.GetBidHistoryByUser;

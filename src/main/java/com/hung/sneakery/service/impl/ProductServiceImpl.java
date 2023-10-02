@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.ProductDTO;
 import com.hung.sneakery.data.models.dto.ProductDetailedDTO;
@@ -8,7 +8,7 @@ import com.hung.sneakery.data.models.entities.Category;
 import com.hung.sneakery.data.models.entities.Product;
 import com.hung.sneakery.data.remotes.repositories.CategoryRepository;
 import com.hung.sneakery.data.remotes.repositories.ProductRepository;
-import com.hung.sneakery.data.remotes.services.ProductService;
+import com.hung.sneakery.service.ProductService;
 import com.hung.sneakery.exceptions.NotFoundException;
 import com.hung.sneakery.utils.enums.ECondition;
 import com.hung.sneakery.utils.enums.ESorting;

@@ -1,8 +1,7 @@
-package com.hung.sneakery.data.remotes.services.impl;
+package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.entities.User;
-import com.hung.sneakery.data.remotes.services.MailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hung.sneakery.service.MailService;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
