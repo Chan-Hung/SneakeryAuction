@@ -1,43 +1,44 @@
-package com.hung.sneakery.controllers;
+package com.hung.sneakery.controller;
 
-import com.hung.sneakery.data.models.dto.request.EmailRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.remotes.services.WalletService;
+import com.hung.sneakery.data.remotes.services.BidHistoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
-@RequestMapping("/wallet")
-public class WalletController {
+@RequestMapping("/bid_history")
+public class BidHistoryController {
 
     @Resource
-    WalletService walletService;
+    BidHistoryService bidHistoryService;
 
-    @PostMapping()
-    public ResponseEntity<BaseResponse> create(@RequestBody EmailRequest email) {
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<BaseResponse> getOneByProduct(@PathVariable Long productId) {
         try {
             return ResponseEntity
-                    .ok(walletService.createWallet(email.getEmail()));
+                    .ok(bidHistoryService.getHistoryByProduct(productId));
         } catch (RuntimeException e) {
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.NOT_FOUND)
                     .body(new BaseResponse(false,
                             e.getMessage()));
         }
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<BaseResponse> getOne(@PathVariable Long userId) {
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<BaseResponse> getOneByUser() {
         try {
             return ResponseEntity
-                    .ok(walletService.getOne(userId));
+                    .ok(bidHistoryService.getHistoryByUser());
         } catch (RuntimeException e) {
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.NOT_FOUND)
                     .body(new BaseResponse(false,
                             e.getMessage()));
         }

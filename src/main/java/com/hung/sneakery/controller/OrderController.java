@@ -1,10 +1,9 @@
-package com.hung.sneakery.controllers.admin;
+package com.hung.sneakery.controller;
 
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.remotes.services.RevenueService;
+import com.hung.sneakery.data.remotes.services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,23 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@CrossOrigin(originPatterns = {"http://localhost:3000", "https://aunction-react-js.vercel.app/"})
-@RequestMapping("/admin/revenue")
-public class AdminRevenueController {
+@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
+@RequestMapping("/orders")
+public class OrderController {
 
     @Resource
-    RevenueService revenueService;
+    OrderService orderService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
-    public ResponseEntity<BaseResponse> getAllByAdmin() {
+    public ResponseEntity<BaseResponse> getAllByUser() {
         try {
             return ResponseEntity
-                    .ok(revenueService.getRevenue());
+                    .ok(orderService.getAllByUser());
         } catch (RuntimeException e) {
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false, e.getMessage()));
         }
     }
+
 }

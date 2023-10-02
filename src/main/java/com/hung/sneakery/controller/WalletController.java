@@ -1,44 +1,43 @@
-package com.hung.sneakery.controllers;
+package com.hung.sneakery.controller;
 
+import com.hung.sneakery.data.models.dto.request.EmailRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.remotes.services.BidHistoryService;
+import com.hung.sneakery.data.remotes.services.WalletService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
-@RequestMapping("/bid_history")
-public class BidHistoryController {
+@RequestMapping("/wallet")
+public class WalletController {
 
     @Resource
-    BidHistoryService bidHistoryService;
+    WalletService walletService;
 
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<BaseResponse> getOneByProduct(@PathVariable Long productId) {
+    @PostMapping()
+    public ResponseEntity<BaseResponse> create(@RequestBody EmailRequest email) {
         try {
             return ResponseEntity
-                    .ok(bidHistoryService.getHistoryByProduct(productId));
+                    .ok(walletService.createWallet(email.getEmail()));
         } catch (RuntimeException e) {
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,
                             e.getMessage()));
         }
     }
 
-    @GetMapping("/user")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BaseResponse> getOneByUser() {
+    @GetMapping("/{userId}")
+    public ResponseEntity<BaseResponse> getOne(@PathVariable Long userId) {
         try {
             return ResponseEntity
-                    .ok(bidHistoryService.getHistoryByUser());
+                    .ok(walletService.getOne(userId));
         } catch (RuntimeException e) {
             return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BaseResponse(false,
                             e.getMessage()));
         }

@@ -1,4 +1,4 @@
-package com.hung.sneakery.controllers.admin;
+package com.hung.sneakery.controller.admin;
 
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.remotes.services.ProfileService;

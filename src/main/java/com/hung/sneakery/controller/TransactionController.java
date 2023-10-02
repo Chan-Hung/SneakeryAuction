@@ -1,4 +1,4 @@
-package com.hung.sneakery.controllers;
+package com.hung.sneakery.controller;
 
 import com.hung.sneakery.data.models.dto.request.DepositRequest;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
