@@ -1,10 +1,10 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.data.models.dto.request.SignInRequest;
-import com.hung.sneakery.data.models.dto.request.SignUpRequest;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
-import com.hung.sneakery.data.models.dto.response.JwtResponse;
+import com.hung.sneakery.dto.request.SignInRequest;
+import com.hung.sneakery.dto.request.SignUpRequest;
+import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.response.DataResponse;
+import com.hung.sneakery.dto.response.JwtResponse;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;

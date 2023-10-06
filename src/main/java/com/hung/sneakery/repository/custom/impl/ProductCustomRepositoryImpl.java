@@ -2,8 +2,8 @@ package com.hung.sneakery.repository.custom.impl;
 
 import com.hung.sneakery.data.models.entities.*;
 import com.hung.sneakery.repository.custom.ProductCustomRepository;
-import com.hung.sneakery.utils.enums.ECondition;
-import com.hung.sneakery.utils.enums.ESorting;
+import com.hung.sneakery.enums.ECondition;
+import com.hung.sneakery.enums.ESorting;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 

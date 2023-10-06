@@ -1,7 +1,7 @@
 package com.hung.sneakery.controller;
 
-import com.hung.sneakery.data.models.dto.request.DepositRequest;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
+import com.hung.sneakery.dto.request.DepositRequest;
+import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.service.TransactionHistoryService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;

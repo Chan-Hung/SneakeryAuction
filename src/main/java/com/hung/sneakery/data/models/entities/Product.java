@@ -2,7 +2,7 @@ package com.hung.sneakery.data.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hung.sneakery.utils.enums.ECondition;
+import com.hung.sneakery.enums.ECondition;
 import lombok.*;
 
 import javax.persistence.*;

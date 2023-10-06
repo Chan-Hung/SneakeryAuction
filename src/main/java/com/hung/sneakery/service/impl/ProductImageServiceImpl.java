@@ -1,6 +1,6 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.dto.response.CloudinaryUploadResponse;
+import com.hung.sneakery.dto.response.CloudinaryUploadResponse;
 import com.hung.sneakery.data.models.entities.Product;
 import com.hung.sneakery.data.models.entities.ProductImage;
 import com.hung.sneakery.service.CloudinaryService;

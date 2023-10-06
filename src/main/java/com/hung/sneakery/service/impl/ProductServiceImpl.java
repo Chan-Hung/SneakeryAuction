@@ -1,17 +1,17 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.dto.ProductDTO;
-import com.hung.sneakery.data.models.dto.ProductDetailedDTO;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.ProductDTO;
+import com.hung.sneakery.dto.ProductDetailedDTO;
+import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Category;
 import com.hung.sneakery.data.models.entities.Product;
 import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.ProductService;
-import com.hung.sneakery.exceptions.NotFoundException;
-import com.hung.sneakery.utils.enums.ECondition;
-import com.hung.sneakery.utils.enums.ESorting;
+import com.hung.sneakery.exception.NotFoundException;
+import com.hung.sneakery.enums.ECondition;
+import com.hung.sneakery.enums.ESorting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

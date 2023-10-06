@@ -1,9 +1,9 @@
 package com.hung.sneakery.controller;
 
 
-import com.hung.sneakery.data.models.dto.request.SignInRequest;
-import com.hung.sneakery.data.models.dto.request.SignUpRequest;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
+import com.hung.sneakery.dto.request.SignInRequest;
+import com.hung.sneakery.dto.request.SignUpRequest;
+import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

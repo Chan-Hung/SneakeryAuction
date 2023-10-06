@@ -1,6 +1,6 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.ShippingFee;
 import com.hung.sneakery.repository.ShippingFeeRepository;
 import com.hung.sneakery.service.ShippingFeeService;

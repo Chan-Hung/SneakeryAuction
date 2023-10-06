@@ -1,10 +1,10 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.data.models.dto.ProductDetailedDTO;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.utils.enums.ECondition;
-import com.hung.sneakery.utils.enums.ESorting;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.ProductDetailedDTO;
+import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.enums.ECondition;
+import com.hung.sneakery.enums.ESorting;
+import com.hung.sneakery.dto.response.DataResponse;
 
 import java.util.List;
 import java.util.Map;

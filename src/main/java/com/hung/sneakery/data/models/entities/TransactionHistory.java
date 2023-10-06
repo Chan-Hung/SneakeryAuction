@@ -1,7 +1,7 @@
 package com.hung.sneakery.data.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hung.sneakery.utils.enums.EPaymentStatus;
+import com.hung.sneakery.enums.EPaymentStatus;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 

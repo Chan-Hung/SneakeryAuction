@@ -1,8 +1,8 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.data.models.dto.request.DepositRequest;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.request.DepositRequest;
+import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.TransactionHistory;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;

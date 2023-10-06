@@ -1,19 +1,19 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.dto.request.SignInRequest;
-import com.hung.sneakery.data.models.dto.request.SignUpRequest;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
-import com.hung.sneakery.data.models.dto.response.JwtResponse;
+import com.hung.sneakery.dto.request.SignInRequest;
+import com.hung.sneakery.dto.request.SignUpRequest;
+import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.response.DataResponse;
+import com.hung.sneakery.dto.response.JwtResponse;
 import com.hung.sneakery.data.models.entities.Role;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.repository.RoleRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.AuthService;
 import com.hung.sneakery.service.MailService;
-import com.hung.sneakery.utils.config.security.impl.UserDetailsImpl;
-import com.hung.sneakery.utils.config.security.jwt.JwtUtils;
-import com.hung.sneakery.utils.enums.ERole;
+import com.hung.sneakery.config.security.impl.UserDetailsImpl;
+import com.hung.sneakery.config.security.jwt.JwtUtils;
+import com.hung.sneakery.enums.ERole;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

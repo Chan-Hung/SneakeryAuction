@@ -1,7 +1,7 @@
 package com.hung.sneakery.repository;
 
 import com.hung.sneakery.data.models.entities.Role;
-import com.hung.sneakery.utils.enums.ERole;
+import com.hung.sneakery.enums.ERole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.data.models.dto.UserDTO;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.UserDTO;
+import com.hung.sneakery.dto.response.DataResponse;
 
 import java.util.List;
 

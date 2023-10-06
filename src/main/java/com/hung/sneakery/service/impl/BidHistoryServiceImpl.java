@@ -1,9 +1,9 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.dto.BidHistoryDTO;
-import com.hung.sneakery.data.models.dto.ProductDTO;
-import com.hung.sneakery.data.models.dto.request.GetBidHistoryByUser;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.BidHistoryDTO;
+import com.hung.sneakery.dto.ProductDTO;
+import com.hung.sneakery.dto.request.GetBidHistoryByUser;
+import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.BidHistory;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.repository.BidHistoryRepository;

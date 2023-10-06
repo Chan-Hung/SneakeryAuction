@@ -1,7 +1,7 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Wallet;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.repository.WalletRepository;

@@ -1,10 +1,10 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.data.models.dto.BidDTO;
-import com.hung.sneakery.data.models.dto.request.BidCreateRequest;
-import com.hung.sneakery.data.models.dto.request.BidPlaceRequest;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.BidDTO;
+import com.hung.sneakery.dto.request.BidCreateRequest;
+import com.hung.sneakery.dto.request.BidPlaceRequest;
+import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.response.DataResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

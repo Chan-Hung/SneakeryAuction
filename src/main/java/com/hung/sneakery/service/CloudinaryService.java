@@ -1,6 +1,6 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.data.models.dto.response.CloudinaryUploadResponse;
+import com.hung.sneakery.dto.response.CloudinaryUploadResponse;
 
 import java.io.IOException;
 

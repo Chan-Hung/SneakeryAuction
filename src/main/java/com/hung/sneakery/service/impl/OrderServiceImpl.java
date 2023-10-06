@@ -1,8 +1,8 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.dto.OrderDTO;
-import com.hung.sneakery.data.models.dto.ProductDTO;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.OrderDTO;
+import com.hung.sneakery.dto.ProductDTO;
+import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.models.entities.User;
 import com.hung.sneakery.repository.OrderRepository;

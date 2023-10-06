@@ -1,6 +1,6 @@
 package com.hung.sneakery.data.models.entities;
 
-import com.hung.sneakery.utils.enums.ERole;
+import com.hung.sneakery.enums.ERole;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,7 +1,7 @@
 package com.hung.sneakery.controller;
 
-import com.hung.sneakery.data.models.dto.request.EmailRequest;
-import com.hung.sneakery.data.models.dto.response.BaseResponse;
+import com.hung.sneakery.dto.request.EmailRequest;
+import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.service.WalletService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

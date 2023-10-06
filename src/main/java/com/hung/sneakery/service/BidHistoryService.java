@@ -1,8 +1,8 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.data.models.dto.BidHistoryDTO;
-import com.hung.sneakery.data.models.dto.request.GetBidHistoryByUser;
-import com.hung.sneakery.data.models.dto.response.DataResponse;
+import com.hung.sneakery.dto.BidHistoryDTO;
+import com.hung.sneakery.dto.request.GetBidHistoryByUser;
+import com.hung.sneakery.dto.response.DataResponse;
 
 import java.util.List;
 
