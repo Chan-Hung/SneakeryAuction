@@ -4,7 +4,7 @@ import com.hung.sneakery.data.mappers.UserMapper;
 import com.hung.sneakery.data.models.dto.UserDTO;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.User;
-import com.hung.sneakery.data.remotes.repositories.UserRepository;
+import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.ProfileService;
 import com.hung.sneakery.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;

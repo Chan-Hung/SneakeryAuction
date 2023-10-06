@@ -3,8 +3,8 @@ package com.hung.sneakery.service.impl;
 import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Wallet;
-import com.hung.sneakery.data.remotes.repositories.UserRepository;
-import com.hung.sneakery.data.remotes.repositories.WalletRepository;
+import com.hung.sneakery.repository.UserRepository;
+import com.hung.sneakery.repository.WalletRepository;
 import com.hung.sneakery.service.WalletService;
 import org.springframework.stereotype.Service;
 

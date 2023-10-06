@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.repositories;
+package com.hung.sneakery.repository;
 
 import com.hung.sneakery.data.models.entities.Bid;
 import org.springframework.data.jpa.repository.JpaRepository;

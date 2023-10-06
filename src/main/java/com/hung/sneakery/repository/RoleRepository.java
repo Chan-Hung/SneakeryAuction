@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.repositories;
+package com.hung.sneakery.repository;
 
 import com.hung.sneakery.data.models.entities.Role;
 import com.hung.sneakery.utils.enums.ERole;

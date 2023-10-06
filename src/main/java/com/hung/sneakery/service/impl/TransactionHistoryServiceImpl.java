@@ -5,7 +5,7 @@ import com.hung.sneakery.data.models.dto.response.BaseResponse;
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.Order;
 import com.hung.sneakery.data.models.entities.*;
-import com.hung.sneakery.data.remotes.repositories.*;
+import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.TransactionHistoryService;
 import com.hung.sneakery.utils.enums.EPaymentStatus;
 import com.paypal.api.payments.*;

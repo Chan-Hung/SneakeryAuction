@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.repositories;
+package com.hung.sneakery.repository;
 
 import com.hung.sneakery.data.models.entities.TransactionHistory;
 import com.hung.sneakery.data.models.entities.Wallet;

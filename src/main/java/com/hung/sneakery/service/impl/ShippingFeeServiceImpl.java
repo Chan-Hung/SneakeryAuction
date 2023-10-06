@@ -2,7 +2,7 @@ package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.data.models.dto.response.DataResponse;
 import com.hung.sneakery.data.models.entities.ShippingFee;
-import com.hung.sneakery.data.remotes.repositories.ShippingFeeRepository;
+import com.hung.sneakery.repository.ShippingFeeRepository;
 import com.hung.sneakery.service.ShippingFeeService;
 import org.springframework.stereotype.Service;
 

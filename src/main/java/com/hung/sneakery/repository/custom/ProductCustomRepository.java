@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.remotes.repositories.custom;
+package com.hung.sneakery.repository.custom;
 
 import com.hung.sneakery.data.models.entities.Product;
 import com.hung.sneakery.utils.enums.ECondition;

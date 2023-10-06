@@ -1,7 +1,7 @@
-package com.hung.sneakery.data.remotes.repositories.custom.impl;
+package com.hung.sneakery.repository.custom.impl;
 
 import com.hung.sneakery.data.models.entities.*;
-import com.hung.sneakery.data.remotes.repositories.custom.ProductCustomRepository;
+import com.hung.sneakery.repository.custom.ProductCustomRepository;
 import com.hung.sneakery.utils.enums.ECondition;
 import com.hung.sneakery.utils.enums.ESorting;
 import org.springframework.data.domain.Pageable;
