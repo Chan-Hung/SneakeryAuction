@@ -1,7 +1,7 @@
 package com.hung.sneakery.config.security.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hung.sneakery.entities.User;
+import com.hung.sneakery.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

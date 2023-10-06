@@ -1,8 +1,8 @@
 package com.hung.sneakery.dto;
 
-import com.hung.sneakery.entities.BidHistory;
-import com.hung.sneakery.entities.Product;
-import com.hung.sneakery.entities.ProductImage;
+import com.hung.sneakery.entity.BidHistory;
+import com.hung.sneakery.entity.Product;
+import com.hung.sneakery.entity.ProductImage;
 import com.hung.sneakery.enums.ECondition;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

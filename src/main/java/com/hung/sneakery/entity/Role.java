@@ -1,4 +1,4 @@
-package com.hung.sneakery.entities;
+package com.hung.sneakery.entity;
 
 import com.hung.sneakery.enums.ERole;
 import lombok.*;

@@ -3,7 +3,7 @@ package com.hung.sneakery.service.impl;
 import com.hung.sneakery.dto.OrderDTO;
 import com.hung.sneakery.dto.request.GetRevenue;
 import com.hung.sneakery.dto.response.DataResponse;
-import com.hung.sneakery.entities.Order;
+import com.hung.sneakery.entity.Order;
 import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.repository.OrderRepository;
 import com.hung.sneakery.service.RevenueService;

@@ -1,6 +1,6 @@
 package com.hung.sneakery.repository.custom.impl;
 
-import com.hung.sneakery.entities.*;
+import com.hung.sneakery.entity.*;
 import com.hung.sneakery.enums.ECondition;
 import com.hung.sneakery.enums.ESorting;
 import com.hung.sneakery.repository.custom.ProductCustomRepository;

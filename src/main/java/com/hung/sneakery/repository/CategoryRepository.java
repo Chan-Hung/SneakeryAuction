@@ -1,6 +1,6 @@
 package com.hung.sneakery.repository;
 
-import com.hung.sneakery.entities.Category;
+import com.hung.sneakery.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

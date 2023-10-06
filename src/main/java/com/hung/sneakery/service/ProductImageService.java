@@ -1,7 +1,7 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.entities.Product;
-import com.hung.sneakery.entities.ProductImage;
+import com.hung.sneakery.entity.Product;
+import com.hung.sneakery.entity.ProductImage;
 
 public interface ProductImageService {
 

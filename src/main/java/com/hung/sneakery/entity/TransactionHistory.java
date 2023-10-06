@@ -1,4 +1,4 @@
-package com.hung.sneakery.entities;
+package com.hung.sneakery.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hung.sneakery.enums.EPaymentStatus;

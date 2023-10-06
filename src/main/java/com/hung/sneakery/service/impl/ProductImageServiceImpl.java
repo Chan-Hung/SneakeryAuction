@@ -1,8 +1,8 @@
 package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.dto.response.CloudinaryUploadResponse;
-import com.hung.sneakery.entities.Product;
-import com.hung.sneakery.entities.ProductImage;
+import com.hung.sneakery.entity.Product;
+import com.hung.sneakery.entity.ProductImage;
 import com.hung.sneakery.service.CloudinaryService;
 import com.hung.sneakery.service.ProductImageService;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.hung.sneakery.entities;
+package com.hung.sneakery.entity;
 
 import lombok.*;
 import org.springframework.lang.Nullable;

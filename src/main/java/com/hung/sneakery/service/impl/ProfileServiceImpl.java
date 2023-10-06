@@ -3,7 +3,7 @@ package com.hung.sneakery.service.impl;
 import com.hung.sneakery.mapper.UserMapper;
 import com.hung.sneakery.dto.UserDTO;
 import com.hung.sneakery.dto.response.DataResponse;
-import com.hung.sneakery.entities.User;
+import com.hung.sneakery.entity.User;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.ProfileService;
 import com.hung.sneakery.exception.NotFoundException;

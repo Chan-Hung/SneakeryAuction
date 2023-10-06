@@ -1,6 +1,6 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.entities.User;
+import com.hung.sneakery.entity.User;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
