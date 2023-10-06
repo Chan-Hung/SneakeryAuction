@@ -1,8 +1,8 @@
 package com.hung.sneakery.repository;
 
-import com.hung.sneakery.data.models.entities.Category;
-import com.hung.sneakery.data.models.entities.Product;
-import com.hung.sneakery.data.models.entities.User;
+import com.hung.sneakery.entities.Category;
+import com.hung.sneakery.entities.Product;
+import com.hung.sneakery.entities.User;
 import com.hung.sneakery.repository.custom.ProductCustomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

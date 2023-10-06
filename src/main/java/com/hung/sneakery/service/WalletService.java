@@ -2,7 +2,7 @@ package com.hung.sneakery.service;
 
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.dto.response.DataResponse;
-import com.hung.sneakery.data.models.entities.Wallet;
+import com.hung.sneakery.entities.Wallet;
 
 public interface WalletService {
 

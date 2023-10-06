@@ -1,6 +1,6 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.entities.User;
+import com.hung.sneakery.entities.User;
 import com.hung.sneakery.service.MailService;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

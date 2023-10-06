@@ -1,4 +1,4 @@
-package com.hung.sneakery.data.mappers.base;
+package com.hung.sneakery.mapper.base;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

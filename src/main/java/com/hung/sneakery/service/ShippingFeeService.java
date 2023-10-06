@@ -1,7 +1,7 @@
 package com.hung.sneakery.service;
 
 import com.hung.sneakery.dto.response.DataResponse;
-import com.hung.sneakery.data.models.entities.ShippingFee;
+import com.hung.sneakery.entities.ShippingFee;
 
 public interface ShippingFeeService {
 

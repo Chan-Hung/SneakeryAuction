@@ -6,7 +6,7 @@ import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.dto.response.DataResponse;
-import com.hung.sneakery.data.models.entities.*;
+import com.hung.sneakery.entities.*;
 import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.BidService;
 import com.hung.sneakery.service.CountdownService;

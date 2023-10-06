@@ -1,6 +1,6 @@
 package com.hung.sneakery.config.security.impl;
 
-import com.hung.sneakery.data.models.entities.User;
+import com.hung.sneakery.entities.User;
 import com.hung.sneakery.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,8 +1,8 @@
-package com.hung.sneakery.data.mappers;
+package com.hung.sneakery.mapper;
 
-import com.hung.sneakery.data.mappers.base.AbstractModelMapper;
+import com.hung.sneakery.mapper.base.AbstractModelMapper;
 import com.hung.sneakery.dto.BidDTO;
-import com.hung.sneakery.data.models.entities.Bid;
+import com.hung.sneakery.entities.Bid;
 import org.springframework.stereotype.Component;
 
 @Component

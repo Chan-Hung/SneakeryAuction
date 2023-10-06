@@ -1,7 +1,7 @@
 package com.hung.sneakery.dto;
 
-import com.hung.sneakery.data.models.entities.Product;
-import com.hung.sneakery.data.models.entities.ProductImage;
+import com.hung.sneakery.entities.Product;
+import com.hung.sneakery.entities.ProductImage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

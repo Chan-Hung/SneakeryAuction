@@ -1,6 +1,6 @@
 package com.hung.sneakery.repository;
 
-import com.hung.sneakery.data.models.entities.Bid;
+import com.hung.sneakery.entities.Bid;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

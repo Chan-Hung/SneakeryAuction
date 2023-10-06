@@ -1,6 +1,6 @@
 package com.hung.sneakery.repository;
 
-import com.hung.sneakery.data.models.entities.ShippingFee;
+import com.hung.sneakery.entities.ShippingFee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

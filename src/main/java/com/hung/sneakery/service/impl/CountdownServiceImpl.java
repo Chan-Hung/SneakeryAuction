@@ -1,8 +1,8 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.data.models.entities.Bid;
-import com.hung.sneakery.data.models.entities.Order;
-import com.hung.sneakery.data.models.entities.User;
+import com.hung.sneakery.entities.Bid;
+import com.hung.sneakery.entities.Order;
+import com.hung.sneakery.entities.User;
 import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.CountdownService;
 import org.springframework.stereotype.Service;
