@@ -23,7 +23,7 @@ public class BidDTO {
     @NotNull
     private Long stepBid;
 
-    @NotNull
+    //@NotNull
     private Long priceWin;
 
     @NotNull

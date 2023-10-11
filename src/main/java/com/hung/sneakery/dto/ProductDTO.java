@@ -1,11 +1,6 @@
 package com.hung.sneakery.dto;
 
-import com.hung.sneakery.entity.Product;
-import com.hung.sneakery.entity.ProductImage;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +8,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProductDTO {
     private Long id;
     private String name;
@@ -24,14 +20,4 @@ public class ProductDTO {
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
     private LocalDateTime bidClosingDate;
 
-    public ProductDTO(Product product){
-        this.setId(product.getId());
-        this.setName(product.getName());
-        for (ProductImage productImage: product.getProductImage())
-            if(productImage.getIsThumbnail())
-                this.setImagePath(productImage.getPath());
-        this.setStartPrice(product.getBid().getPriceStart());
-        this.setUsername(product.getUser().getUsername());
-        this.setBidClosingDate(product.getBid().getBidClosingDateTime());
-    }
 }

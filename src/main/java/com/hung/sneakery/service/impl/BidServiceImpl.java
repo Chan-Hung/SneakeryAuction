@@ -1,5 +1,6 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.BidDTO;
 import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.request.BidCreateRequest;
@@ -55,6 +56,9 @@ public class BidServiceImpl implements BidService {
 
     @Resource
     private CountdownService countdownService;
+
+    @Resource
+    private ProductConverter productConverter;
 
     @Override
     public BaseResponse placeBid(BidPlaceRequest bidPlaceRequest) {
@@ -144,7 +148,7 @@ public class BidServiceImpl implements BidService {
                     .stepBid(bid.getStepBid())
                     .priceStart(bid.getPriceStart())
                     .bidStartingDate(bid.getBidStartingDate())
-                    .product(new ProductDTO(product))
+                    .product(productConverter.convertToProductDTO(product))
                     .build();
             bidDTOList.add(bidDTO);
         }

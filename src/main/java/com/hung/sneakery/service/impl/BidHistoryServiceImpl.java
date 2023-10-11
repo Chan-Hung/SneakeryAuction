@@ -1,5 +1,6 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.BidHistoryDTO;
 import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.request.GetBidHistoryByUser;
@@ -24,6 +25,9 @@ public class BidHistoryServiceImpl implements BidHistoryService {
 
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private ProductConverter productConverter;
 
     @Override
     public DataResponse<List<BidHistoryDTO>> getHistoryByProduct(Long productId) {
@@ -76,7 +80,7 @@ public class BidHistoryServiceImpl implements BidHistoryService {
 
         getBidHistoryByUser.setCreatedAt(bidHistory.getCreatedAt());
         getBidHistoryByUser.setAmount(bidHistory.getPrice());
-        getBidHistoryByUser.setProduct(new ProductDTO(bidHistory.getBid().getProduct()));
+        getBidHistoryByUser.setProduct(productConverter.convertToProductDTO(bidHistory.getBid().getProduct()));
 
         return getBidHistoryByUser;
     }

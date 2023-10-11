@@ -1,5 +1,6 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
@@ -28,6 +29,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Resource
     private CategoryRepository categoryRepository;
+
+    @Resource
+    private ProductConverter productConverter;
 
     @Override
     public DataResponse<ProductDetailedDTO> getOne(Long productId) {
@@ -80,14 +84,8 @@ public class ProductServiceImpl implements ProductService {
     public DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd, ESorting sorting) {
         int sizePage = 9;
         Pageable paging = PageRequest.of(0, sizePage);
-        List<Product> pageTuts;
-
-        pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting, paging);
-        List<ProductDTO> productDTOs = new ArrayList<>();
-        for (Product product : pageTuts) {
-            ProductDTO productHomepageDto = new ProductDTO(product);
-            productDTOs.add(productHomepageDto);
-        }
+        List<Product> pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting, paging);
+        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(pageTuts);
         if (productDTOs.isEmpty()) {
             throw new RuntimeException("Products not found");
         }
@@ -108,11 +106,7 @@ public class ProductServiceImpl implements ProductService {
 
     //GetMapResponseEntity
     private Map<String, Object> getMapResponseEntity(Page<Product> pageTuts) {
-        List<ProductDTO> productDTOs = new ArrayList<>();
-        for (Product product : pageTuts.getContent()) {
-            ProductDTO productHomepageDto = new ProductDTO(product);
-            productDTOs.add(productHomepageDto);
-        }
+        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(pageTuts.getContent());
         Map<String, Object> response = new HashMap<>();
         response.put("products", productDTOs);
         response.put("currentPage", pageTuts.getNumber());

@@ -1,5 +1,6 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.converter.OrderConverter;
 import com.hung.sneakery.dto.OrderDTO;
 import com.hung.sneakery.dto.request.GetRevenue;
 import com.hung.sneakery.dto.response.DataResponse;
@@ -22,14 +23,14 @@ public class RevenueServiceImpl implements RevenueService {
     @Resource
     private BidRepository bidRepository;
 
+    @Resource
+    private OrderConverter orderConverter;
+
     @Override
     public DataResponse<GetRevenue> getRevenue() {
         List<Order> orders = orderRepository.findAll();
-        List<OrderDTO> orderDTOs = new ArrayList<>();
-        for(Order order: orders){
-            OrderDTO orderDTO = OrderServiceImpl.mapToOrderDTO(order);
-            orderDTOs.add(orderDTO);
-        }
+        List<OrderDTO> orderDTOs = orderConverter.convertToOrderDTOList(orders);
+
         Long allRevenue = bidRepository.getRevenueByAllOrders();
         GetRevenue getRevenue = new GetRevenue();
         getRevenue.setOrders(orderDTOs);
