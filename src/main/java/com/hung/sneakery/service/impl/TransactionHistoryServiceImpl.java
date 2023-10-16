@@ -119,13 +119,12 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     }
 
     @Override
-    public DataResponse<List<TransactionHistory>> getAllByWallet() {
+    public List<TransactionHistory> getAllByWallet() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
 
         Wallet wallet = walletRepository.findByUser_Id(user.getId());
-        List<TransactionHistory> transactionHistoryList = transactionHistoryRepository.findAllByWallet(wallet);
-        return new DataResponse<>(transactionHistoryList);
+        return transactionHistoryRepository.findAllByWallet(wallet);
     }
 
     @Override

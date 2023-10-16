@@ -1,13 +1,13 @@
 package com.hung.sneakery.controller;
 
-import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.BidHistoryDTO;
+import com.hung.sneakery.dto.request.GetBidHistoryByUser;
 import com.hung.sneakery.service.BidHistoryService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
@@ -15,32 +15,16 @@ import javax.annotation.Resource;
 public class BidHistoryController {
 
     @Resource
-    BidHistoryService bidHistoryService;
+    private BidHistoryService bidHistoryService;
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<BaseResponse> getOneByProduct(@PathVariable Long productId) {
-        try {
-            return ResponseEntity
-                    .ok(bidHistoryService.getHistoryByProduct(productId));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public List<BidHistoryDTO> getOneByProduct(@PathVariable final Long productId) {
+        return bidHistoryService.getHistoryByProduct(productId);
     }
 
     @GetMapping("/user")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BaseResponse> getOneByUser() {
-        try {
-            return ResponseEntity
-                    .ok(bidHistoryService.getHistoryByUser());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public List<GetBidHistoryByUser> getOneByUser() {
+        return bidHistoryService.getHistoryByUser();
     }
 }

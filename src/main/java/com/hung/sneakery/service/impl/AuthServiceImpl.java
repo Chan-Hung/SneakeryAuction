@@ -1,19 +1,20 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.config.security.impl.UserDetailsImpl;
+import com.hung.sneakery.config.security.jwt.JwtUtils;
 import com.hung.sneakery.dto.request.SignInRequest;
 import com.hung.sneakery.dto.request.SignUpRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.dto.response.JwtResponse;
 import com.hung.sneakery.entity.Role;
 import com.hung.sneakery.entity.User;
+import com.hung.sneakery.enums.ERole;
+import com.hung.sneakery.exception.AuthenticationException;
+import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.RoleRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.AuthService;
 import com.hung.sneakery.service.MailService;
-import com.hung.sneakery.config.security.impl.UserDetailsImpl;
-import com.hung.sneakery.config.security.jwt.JwtUtils;
-import com.hung.sneakery.enums.ERole;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,10 +55,10 @@ public class AuthServiceImpl implements AuthService {
     private MailService mailService;
 
     @Override
-    public DataResponse<JwtResponse> signIn(SignInRequest signInRequest) {
+    public JwtResponse signIn(SignInRequest signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail());
-        if (!user.getIsActive()) {
-            throw new RuntimeException("User hasn't been activated");
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new AuthenticationException("User hasn't been activated");
         }
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
 
@@ -71,17 +72,17 @@ public class AuthServiceImpl implements AuthService {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        return new DataResponse<>(new JwtResponse(jwt,
-                userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+        return new JwtResponse(jwt,
+                userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
     }
 
     @Override
     public BaseResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            throw new RuntimeException("Username has already existed");
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(signUpRequest.getUsername()))) {
+            throw new AuthenticationException("Username has already existed");
         }
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new RuntimeException("Email is already in use");
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(signUpRequest.getEmail()))) {
+            throw new AuthenticationException("Email is already in use");
         }
         String verificationCode = RandomString.make(30);
         //Create new user's account
@@ -101,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
         if (Objects.isNull(strRoles)) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER);
             if (userRole == null) {
-                throw new RuntimeException("Error: Role is not found");
+                throw new NotFoundException("Error: Role is not found");
             }
             roles.add(userRole);
         } else {
@@ -109,13 +110,13 @@ public class AuthServiceImpl implements AuthService {
                 if ("admin".equals(role)) {
                     Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN);
                     if (Objects.isNull(adminRole)) {
-                        throw new RuntimeException("Error: Role is not found.");
+                        throw new NotFoundException("Error: Role is not found.");
                     }
                     roles.add(adminRole);
                 } else {
                     Role userRole = roleRepository.findByName(ERole.ROLE_USER);
                     if (Objects.isNull(userRole)) {
-                        throw new RuntimeException("Error: Role is not found.");
+                        throw new NotFoundException("Error: Role is not found.");
                     }
                     roles.add(userRole);
                 }
@@ -128,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse checkEmail(String email) {
-        if (userRepository.existsByEmail(email)) {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(email))) {
             return new BaseResponse(true, "Email is already existed");
         }
         return new BaseResponse(true, "Email can be used");
@@ -137,7 +138,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public BaseResponse verify(String verificationCode) {
         User user = userRepository.findByVerificationCode(verificationCode);
-        if (Objects.isNull(user) || user.getIsActive()) {
+        if (Objects.isNull(user) || Boolean.TRUE.equals(user.getIsActive())) {
             return new BaseResponse(false, "User has already been active");
         } else {
             user.setVerificationCode(null);

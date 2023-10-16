@@ -1,9 +1,7 @@
 package com.hung.sneakery.controller;
 
-import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.entity.ShippingFee;
 import com.hung.sneakery.service.ShippingFeeService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,19 +12,12 @@ import javax.annotation.Resource;
 public class ShippingFeeController {
 
     @Resource
-    ShippingFeeService shippingFeeService;
+    private ShippingFeeService shippingFeeService;
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> getOne(
-            @RequestParam(name = "originDistrict") String originDistrict,
-            @RequestParam(name = "destinationDistrict") String destinationDistrict) {
-        try {
-            return ResponseEntity
-                    .ok(shippingFeeService.getOne(originDistrict, destinationDistrict));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false, e.getMessage()));
-        }
+    public ShippingFee getOne(
+            @RequestParam(name = "originDistrict") final String originDistrict,
+            @RequestParam(name = "destinationDistrict") final String destinationDistrict) {
+        return shippingFeeService.getOne(originDistrict, destinationDistrict);
     }
 }

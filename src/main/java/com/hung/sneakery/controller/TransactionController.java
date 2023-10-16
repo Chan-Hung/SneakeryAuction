@@ -2,15 +2,16 @@ package com.hung.sneakery.controller;
 
 import com.hung.sneakery.dto.request.DepositRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.entity.TransactionHistory;
+import com.hung.sneakery.exception.TransactionException;
 import com.hung.sneakery.service.TransactionHistoryService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/", "https://www.sandbox.paypal.com/"})
@@ -18,94 +19,57 @@ import javax.annotation.Resource;
 public class TransactionController {
 
     @Resource
-    TransactionHistoryService transactionHistoryService;
+    private TransactionHistoryService transactionHistoryService;
 
     @PostMapping("/deposit")
-    public ResponseEntity<BaseResponse> payment(@RequestBody DepositRequest depositRequest) {
+    public BaseResponse payment(@RequestBody final DepositRequest depositRequest) {
         try {
             Payment payment = transactionHistoryService.createPayment(depositRequest);
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
-                    return ResponseEntity
-                            .ok(new BaseResponse(true,
-                                    link.getHref()));
+                    return new BaseResponse(true, link.getHref());
                 }
             }
-
         } catch (PayPalRESTException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
+            throw new TransactionException(e.getMessage());
         }
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new BaseResponse(false,
-                        "Paypal is not available now, please contact to our customer service"));
+        return new BaseResponse(false, "Paypal is not available now, please contact to our customer service");
     }
 
     @GetMapping("/deposit/cancel")
-    public ResponseEntity<BaseResponse> cancelPay() {
-        return ResponseEntity
-                .ok(new BaseResponse(false, "cancel"));
+    public BaseResponse cancelPay() {
+        return new BaseResponse(false, "cancel");
     }
 
     @GetMapping("/deposit/success")
-    public ResponseEntity<BaseResponse> successPay(@RequestParam("paymentId") String paymentId,
-                                                   @RequestParam("payerId") String payerId) {
+    public BaseResponse successPay(@RequestParam("paymentId") final String paymentId,
+                                   @RequestParam("payerId") final String payerId) {
         try {
             Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-                return ResponseEntity
-                        .ok(transactionHistoryService.handleSuccess(payment));
+                return transactionHistoryService.handleSuccess(payment);
             }
         } catch (PayPalRESTException e) {
-            System.out.println(e.getMessage());
+            throw new TransactionException(e.getMessage());
         }
-        return ResponseEntity
-                .ok(new BaseResponse(false,
-                        "Paypal is not available now, please contact to our customer service"));//
+        return new BaseResponse(false, "Paypal is not available now, please contact to our customer service");
     }
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> getAllByWallet() {
-        try {
-            return ResponseEntity
-                    .ok(transactionHistoryService.getAllByWallet());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public List<TransactionHistory> getAllByWallet() {
+        return transactionHistoryService.getAllByWallet();
     }
 
     @GetMapping("/withdraw")
-    public ResponseEntity<BaseResponse> withdraw(@RequestParam(name = "amount") Long amount) {
-        try {
-            return ResponseEntity
-                    .ok(transactionHistoryService.withdraw(amount));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public BaseResponse withdraw(@RequestParam(name = "amount") final Long amount) {
+        return transactionHistoryService.withdraw(amount);
     }
 
     @GetMapping("/paid")
-    public ResponseEntity<BaseResponse> paidByWinner(
-            @RequestParam(name = "orderId") Long orderId,
-            @RequestParam(name = "shippingFee") Long shippingFee,
-            @RequestParam(name = "subtotal") Long subtotal) {
-        try {
-            return ResponseEntity
-                    .ok(transactionHistoryService.paidByWinner(orderId, shippingFee, subtotal));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public BaseResponse paidByWinner(
+            @RequestParam(name = "orderId") final Long orderId,
+            @RequestParam(name = "shippingFee") final Long shippingFee,
+            @RequestParam(name = "subtotal") final Long subtotal) {
+        return transactionHistoryService.paidByWinner(orderId, shippingFee, subtotal);
     }
 }

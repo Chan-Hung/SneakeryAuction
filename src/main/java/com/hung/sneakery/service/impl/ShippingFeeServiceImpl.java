@@ -1,6 +1,5 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.entity.ShippingFee;
 import com.hung.sneakery.repository.ShippingFeeRepository;
 import com.hung.sneakery.service.ShippingFeeService;
@@ -15,9 +14,7 @@ public class ShippingFeeServiceImpl implements ShippingFeeService {
     private ShippingFeeRepository shippingFeeRepository;
 
     @Override
-    public DataResponse<ShippingFee> getOne(String originDistrict, String destinationDistrict) {
-        ShippingFee shippingFee = shippingFeeRepository.findShippingFeeByOriginAndDestination(originDistrict, destinationDistrict);
-
-        return new DataResponse<>(shippingFee);
+    public ShippingFee getOne(String originDistrict, String destinationDistrict) {
+        return shippingFeeRepository.findShippingFeeByOriginAndDestination(originDistrict, destinationDistrict);
     }
 }

@@ -1,7 +1,6 @@
 package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.entity.Wallet;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.repository.WalletRepository;
@@ -20,7 +19,7 @@ public class WalletServiceImpl implements WalletService {
     private UserRepository userRepository;
 
     @Override
-    public BaseResponse createWallet(String userEmail) {
+    public BaseResponse create(String userEmail) {
         Wallet wallet = new Wallet();
         wallet.setBalance(0L);
         wallet.setUser(userRepository.findByEmail(userEmail));
@@ -31,7 +30,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public DataResponse<Wallet> getOne(Long userId) {
-        return new DataResponse<>(walletRepository.findByUser_Id(userId));
+    public Wallet getOne(Long userId) {
+        return walletRepository.findByUser_Id(userId);
     }
 }

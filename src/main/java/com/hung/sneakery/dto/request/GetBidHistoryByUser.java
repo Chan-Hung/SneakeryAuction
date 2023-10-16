@@ -1,6 +1,7 @@
 package com.hung.sneakery.dto.request;
 
 import com.hung.sneakery.dto.ProductDTO;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
 public class GetBidHistoryByUser {
-     @NotBlank
+    @NotBlank
     private Long amount;
 
     @NotBlank

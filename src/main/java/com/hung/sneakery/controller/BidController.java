@@ -1,11 +1,11 @@
 package com.hung.sneakery.controller;
 
+import com.hung.sneakery.dto.BidDTO;
 import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.exception.BidCreatingException;
 import com.hung.sneakery.service.BidService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,46 +25,26 @@ public class BidController {
 
     @PostMapping("/place")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BaseResponse> placeBid(@RequestBody BidPlaceRequest bidPlaceRequest) {
-        try {
-            return ResponseEntity
-                    .ok(bidService.placeBid(bidPlaceRequest));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public BaseResponse placeBid(@RequestBody final BidPlaceRequest bidPlaceRequest) {
+        return bidService.placeBid(bidPlaceRequest);
     }
 
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BaseResponse> createBidProduct(
-            @RequestPart BidCreateRequest bidCreateRequest,
-            @RequestPart(name = "thumbnail") MultipartFile thumbnail,
-            @RequestPart(name = "images") List<MultipartFile> images) {
+    public BaseResponse createBidProduct(
+            @RequestPart final BidCreateRequest bidCreateRequest,
+            @RequestPart(name = "thumbnail") final MultipartFile thumbnail,
+            @RequestPart(name = "images") final List<MultipartFile> images) {
         try {
-            return ResponseEntity
-                    .ok(bidService.createBid(bidCreateRequest, thumbnail, images));
+            return bidService.createBid(bidCreateRequest, thumbnail, images);
         } catch (RuntimeException | IOException | ParseException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
+            throw new BidCreatingException("Can not create Bid product");
         }
     }
 
     @GetMapping("/get_uploaded_products")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<BaseResponse> getAll() {
-        try {
-            return ResponseEntity
-                    .ok(bidService.getAllUploadedProduct());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public List<BidDTO> getAll() {
+        return bidService.getAllUploadedProduct();
     }
 }

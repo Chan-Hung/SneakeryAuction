@@ -2,11 +2,10 @@ package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.BidHistoryDTO;
-import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.request.GetBidHistoryByUser;
-import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.User;
+import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.BidHistoryRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.BidHistoryService;
@@ -30,59 +29,52 @@ public class BidHistoryServiceImpl implements BidHistoryService {
     private ProductConverter productConverter;
 
     @Override
-    public DataResponse<List<BidHistoryDTO>> getHistoryByProduct(Long productId) {
+    public List<BidHistoryDTO> getHistoryByProduct(Long productId) {
         //One-To-One relation: bid<->product
         List<BidHistory> bidHistoryList = bidHistoryRepository.findByBid_Id(productId);
-        if (bidHistoryList == null)
-            throw new RuntimeException("Bid History not found");
-        else {
-            List<BidHistoryDTO> bidHistoryDTOList = new ArrayList<>();
-            for(BidHistory bidHistory : bidHistoryList){
-                BidHistoryDTO bidHistoryDTO = mapToBidHistoryDTO(bidHistory);
-                bidHistoryDTOList.add(bidHistoryDTO);
-            }
-            return new DataResponse<>(bidHistoryDTOList) ;
+        if (bidHistoryList == null) {
+            throw new NotFoundException("Bid History not found");
         }
+        List<BidHistoryDTO> bidHistoryDTOList = new ArrayList<>();
+        for (BidHistory bidHistory : bidHistoryList) {
+            BidHistoryDTO bidHistoryDTO = mapToBidHistoryDTO(bidHistory);
+            bidHistoryDTOList.add(bidHistoryDTO);
+        }
+        return bidHistoryDTOList;
     }
 
 
     @Override
-    public DataResponse<List<GetBidHistoryByUser>> getHistoryByUser() {
+    public List<GetBidHistoryByUser> getHistoryByUser() {
         //One-To-One relation: bid<->product
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
 
         List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_Id(user.getId());
-        if (bidHistoryList == null)
-            throw new RuntimeException("User has not placed any bid");
-        else {
-            List<GetBidHistoryByUser> getBidHistoryByUsers = new ArrayList<>();
-            for(BidHistory bidHistory : bidHistoryList){
-                GetBidHistoryByUser getBidHistoryByUser = mapToGetBidHistoryByUser(bidHistory);
-                getBidHistoryByUsers.add(getBidHistoryByUser);
-            }
-            return new DataResponse<>(getBidHistoryByUsers) ;
+        if (bidHistoryList == null) {
+            throw new NotFoundException("User has not placed any bid");
         }
+        List<GetBidHistoryByUser> getBidHistoryByUsers = new ArrayList<>();
+        for (BidHistory bidHistory : bidHistoryList) {
+            GetBidHistoryByUser getBidHistoryByUser = mapToGetBidHistoryByUser(bidHistory);
+            getBidHistoryByUsers.add(getBidHistoryByUser);
+        }
+        return getBidHistoryByUsers;
     }
 
-    private BidHistoryDTO mapToBidHistoryDTO(BidHistory bidHistory){
-        BidHistoryDTO bidHistoryDTO = new BidHistoryDTO();
-
-        bidHistoryDTO.setBidAmount(bidHistory.getPrice());
-        bidHistoryDTO.setCreatedAt(bidHistory.getCreatedAt());
-        bidHistoryDTO.setUserName(bidHistory.getUser().getUsername());
-
-        return bidHistoryDTO;
+    private BidHistoryDTO mapToBidHistoryDTO(BidHistory bidHistory) {
+        return BidHistoryDTO.builder()
+                .bidAmount(bidHistory.getPrice())
+                .createdAt(bidHistory.getCreatedAt())
+                .userName(bidHistory.getUser().getUsername()).build();
     }
 
-    private GetBidHistoryByUser mapToGetBidHistoryByUser(BidHistory bidHistory){
-        GetBidHistoryByUser getBidHistoryByUser = new GetBidHistoryByUser();
-
-        getBidHistoryByUser.setCreatedAt(bidHistory.getCreatedAt());
-        getBidHistoryByUser.setAmount(bidHistory.getPrice());
-        getBidHistoryByUser.setProduct(productConverter.convertToProductDTO(bidHistory.getBid().getProduct()));
-
-        return getBidHistoryByUser;
+    private GetBidHistoryByUser mapToGetBidHistoryByUser(BidHistory bidHistory) {
+        return GetBidHistoryByUser.builder()
+                .createdAt(bidHistory.getCreatedAt())
+                .amount(bidHistory.getPrice())
+                .product(productConverter.convertToProductDTO(bidHistory.getBid().getProduct()))
+                .build();
     }
 }
 

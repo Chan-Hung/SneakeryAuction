@@ -1,15 +1,15 @@
 package com.hung.sneakery.controller;
 
+import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.service.ProductService;
 import com.hung.sneakery.enums.ECondition;
 import com.hung.sneakery.enums.ESorting;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.hung.sneakery.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/", "https://aunction-react-js.vercel.app/"})
@@ -17,96 +17,45 @@ import java.util.List;
 public class ProductController {
 
     @Resource
-    ProductService productService;
+    private ProductService productService;
 
     @GetMapping("/allid")
-    public ResponseEntity<BaseResponse> getAllProductId() {
-        try {
-            return ResponseEntity
-                    .ok(productService.getAllProductsId());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public List<Long> getAllProductId() {
+        return productService.getAllProductsId();
     }
 
-    //Pagination and Filter - rebuild
     @GetMapping("/homepage")
-    public ResponseEntity<BaseResponse> getProductsHomepage() {
-        try {
-            return ResponseEntity
-                    .ok(productService.getProductsHomepage());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public Map<String, Object> getProductsHomepage() {
+        return productService.getProductsHomepage();
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<BaseResponse> getOne(@PathVariable Long productId) {
-        try {
-            return ResponseEntity
-                    .ok(productService.getOne(productId));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public ProductDetailedDTO getOne(@PathVariable final Long productId) {
+        return productService.getOne(productId);
     }
 
     @GetMapping("/{categoryName}/{page}")
-    public ResponseEntity<BaseResponse> getProductsByCategory(@PathVariable String categoryName, @PathVariable Integer page) {
-        try {
-            return ResponseEntity
-                    .ok(productService.getProductsByCategory(categoryName, page));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public Map<String, Object> getProductsByCategory(@PathVariable final String categoryName, @PathVariable final Integer page) {
+        return productService.getProductsByCategory(categoryName, page);
     }
 
     @GetMapping()
-    public ResponseEntity<BaseResponse> getProductsByFilter(
-            @RequestParam(name = "keyword", required = false) String keyword,
-            @RequestParam(name = "category", required = false) String category,
-            @RequestParam(name = "condition", required = false) ECondition condition,
-            @RequestParam(name = "brand", required = false) List<String> brands,
-            @RequestParam(name = "color", required = false) List<String> colors,
-            @RequestParam(name = "size", required = false) List<Integer> sizes,
-            @RequestParam(name = "priceStart", required = false) Long priceStart,
-            @RequestParam(name = "priceEnd", required = false) Long priceEnd,
-            @RequestParam(name = "sorting", required = false) ESorting sorting) {
+    public Map<String, Object> getProductsByFilter(
+            @RequestParam(name = "keyword", required = false) final String keyword,
+            @RequestParam(name = "category", required = false) final String category,
+            @RequestParam(name = "condition", required = false) final ECondition condition,
+            @RequestParam(name = "brand", required = false) final List<String> brands,
+            @RequestParam(name = "color", required = false) final List<String> colors,
+            @RequestParam(name = "size", required = false) final List<Integer> sizes,
+            @RequestParam(name = "priceStart", required = false) final Long priceStart,
+            @RequestParam(name = "priceEnd", required = false) final Long priceEnd,
+            @RequestParam(name = "sorting", required = false) final ESorting sorting) {
         //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
-        try {
-            return ResponseEntity
-                    .ok(productService.getProductsByFilter(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+        return productService.getProductsByFilter(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<BaseResponse> delete(@PathVariable Long productId) {
-        try {
-            return ResponseEntity
-                    .ok(productService.deleteProduct(productId));
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false,
-                            e.getMessage()));
-        }
+    public BaseResponse delete(@PathVariable final Long productId) {
+        return productService.delete(productId);
     }
-
-
 }

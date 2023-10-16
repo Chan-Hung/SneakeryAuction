@@ -4,7 +4,6 @@ import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.entity.Category;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.repository.CategoryRepository;
@@ -34,73 +33,65 @@ public class ProductServiceImpl implements ProductService {
     private ProductConverter productConverter;
 
     @Override
-    public DataResponse<ProductDetailedDTO> getOne(Long productId) {
+    public ProductDetailedDTO getOne(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(String.format("Product not found with id: %s", productId)));
-        ProductDetailedDTO productDetailedDto = new ProductDetailedDTO(product);
-        return new DataResponse<>(productDetailedDto);
+        return new ProductDetailedDTO(product);
     }
 
     //Get ID of all products
     @Override
-    public DataResponse<?> getAllProductsId() {
-        List<Long> allId = productRepository.getAllId();
-        return new DataResponse<>(allId);
+    public List<Long> getAllProductsId() {
+        return productRepository.getAllId();
     }
 
     @Override
-    public DataResponse<Map<String, Object>> getProductsByCategory(String categoryName, Integer page) {
+    public Map<String, Object> getProductsByCategory(String categoryName, Integer page) {
         //9 products displayed per page
         int pageSize = 9;
-        Page<Product> pageTuts;
-        Pageable paging = PageRequest.of(page, pageSize);
-
         //Find Category by categoryName first
         Category category = categoryRepository.findByCategoryName(categoryName);
-
-        if (category == null)
-            throw new RuntimeException("Category name: " + categoryName + " is invalid");
-
-        //then pass that product category into findByProductCategory() method
-        pageTuts = productRepository.findByCategory(category, paging);
-        if (pageTuts.isEmpty()) {
-            throw new RuntimeException("Products not found");
+        if (category == null) {
+            throw new NotFoundException("Category name: " + categoryName + " is invalid");
         }
-
-        return new DataResponse<>(getMapResponseEntity(pageTuts));
+        //then pass that product category into findByProductCategory() method
+        Pageable paging = PageRequest.of(page, pageSize);
+        Page<Product> pageTuts = productRepository.findByCategory(category, paging);
+        if (pageTuts.isEmpty()) {
+            throw new NotFoundException("Products not found");
+        }
+        return getMapResponseEntity(pageTuts);
     }
 
     @Override
-    public DataResponse<Map<String, Object>> getProductsHomepage() {
+    public Map<String, Object> getProductsHomepage() {
         //Products displayed on homepage
         int size = 20;
         Pageable paging = PageRequest.of(0, size);
-        Page<Product> pageTuts;
-        pageTuts = productRepository.findAll(paging);
-        return new DataResponse<>(getMapResponseEntity(pageTuts));
+        Page<Product> pageTuts = productRepository.findAll(paging);
+        return getMapResponseEntity(pageTuts);
     }
 
     @Override
-    public DataResponse<Map<String, Object>> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd, ESorting sorting) {
+    public Map<String, Object> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd, ESorting sorting) {
         int sizePage = 9;
         Pageable paging = PageRequest.of(0, sizePage);
         List<Product> pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting, paging);
         List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(pageTuts);
         if (productDTOs.isEmpty()) {
-            throw new RuntimeException("Products not found");
+            throw new NotFoundException("Products not found");
         }
         Map<String, Object> response = new HashMap<>();
         response.put("products", productDTOs);
 
-        return new DataResponse<>(response);
+        return response;
     }
 
     @Override
-    public BaseResponse deleteProduct(Long productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        if (!optionalProduct.isPresent())
-            throw new RuntimeException("Product not found with ID: " + productId);
-        productRepository.delete(optionalProduct.get());
+    public BaseResponse delete(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+        productRepository.delete(product);
         return new BaseResponse(true, "Deleted product successfully");
     }
 

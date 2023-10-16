@@ -2,12 +2,12 @@ package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.BidDTO;
-import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.entity.*;
+import com.hung.sneakery.exception.BidPlacingException;
+import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.BidService;
 import com.hung.sneakery.service.CountdownService;
@@ -66,22 +66,12 @@ public class BidServiceImpl implements BidService {
         User buyer = userRepository.findByUsername(userName);
 
         Long bidProductId = bidPlaceRequest.getProductId();
-
-        if (!productRepository.findById(bidProductId).isPresent()) {
-            throw new RuntimeException("Product not found");
-        }
-        Product product = productRepository.findById(bidProductId).get();
-
-        if (!bidRepository.findById(bidProductId).isPresent()) {
-            throw new RuntimeException("Bid not found");
-        }
-        Bid bid = bidRepository.findById(bidProductId).get();
-
-        //Find seller
-        if (!userRepository.findById(product.getUser().getId()).isPresent()) {
-            throw new RuntimeException("Seller not found for this product");
-        }
-        User seller = userRepository.findById(product.getUser().getId()).get();
+        Product product = productRepository.findById(bidProductId)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
+        Bid bid = bidRepository.findById(bidProductId)
+                .orElseThrow(() -> new NotFoundException("Bid not found"));
+        User seller = userRepository.findById(product.getUser().getId())
+                .orElseThrow(() -> new NotFoundException("Seller not found for this product"));
 
         Long amount = bidPlaceRequest.getAmount();
         Long stepBid = bid.getStepBid();
@@ -99,16 +89,16 @@ public class BidServiceImpl implements BidService {
             throw new IllegalArgumentException("Your bid must have higher amount than current amount");
         }
         if (buyer == seller) {
-            throw new RuntimeException("Seller can not place a bid on this product");
+            throw new BidPlacingException("Seller can not place a bid on this product");
         }
         if (currentAmount + stepBid > amount) {
-            throw new RuntimeException("The bid increment for this product is " + bidIncrement + " $. Your bid amount should be higher");
+            throw new BidPlacingException("The bid increment for this product is " + bidIncrement + " $. Your bid amount should be higher");
         }
-        if (!compareWalletBalanceToCurrentBidPrice(currentAmount)) {
-            throw new RuntimeException("Your wallet's balance is lower than the current price");
+        if (Boolean.FALSE.equals(compareWalletBalanceToCurrentBidPrice(currentAmount))) {
+            throw new BidPlacingException("Your wallet's balance is lower than the current price");
         }
-        if (!compareWalletBalanceToCurrentBidPrice(amount)) {
-            throw new RuntimeException("Your wallet's balance is lower than the amount you wanna place a bid");
+        if (Boolean.FALSE.equals(compareWalletBalanceToCurrentBidPrice(amount))) {
+            throw new BidPlacingException("Your wallet's balance is lower than the amount you wanna place a bid");
         }
         BidHistory bidHistory = BidHistory.builder()
                 .price(amount)
@@ -134,7 +124,7 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public DataResponse<List<BidDTO>> getAllUploadedProduct() {
+    public List<BidDTO> getAllUploadedProduct() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User seller = userRepository.findByUsername(userName);
         List<Product> uploadedProducts = productRepository.findByUser(seller);
@@ -152,7 +142,7 @@ public class BidServiceImpl implements BidService {
                     .build();
             bidDTOList.add(bidDTO);
         }
-        return new DataResponse<>(bidDTOList);
+        return bidDTOList;
     }
 
     private Boolean compareWalletBalanceToCurrentBidPrice(Long currentPrice) {
