@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface BidHistoryRepository extends JpaRepository<BidHistory, Long> {
+
     @Query(value = "SELECT buyer_id as buyerId, max(price) as priceWin from bid_history where product_id = ?1 group by buyer_id order by priceWin desc limit 1", nativeQuery = true )
     Tuple getWinner(Long productId);
 

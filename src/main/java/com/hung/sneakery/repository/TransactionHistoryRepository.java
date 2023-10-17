@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, Long> {
+
     List<TransactionHistory> findAllByWallet(Wallet wallet);
 }

@@ -14,6 +14,7 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductCustomRepository {
+
     Page<Product> findByCategory(Category category, Pageable pageable);
 
     @Query(value="SELECT id from products order by id",nativeQuery = true)
