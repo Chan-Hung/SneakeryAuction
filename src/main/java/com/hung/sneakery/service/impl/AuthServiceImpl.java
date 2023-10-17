@@ -57,6 +57,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse signIn(SignInRequest signInRequest) {
         User user = userRepository.findByEmail(signInRequest.getEmail());
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("Email is not found");
+        }
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new AuthenticationException("User hasn't been activated");
         }

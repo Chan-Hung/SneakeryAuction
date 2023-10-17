@@ -1,16 +1,22 @@
 package com.hung.sneakery.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@Builder
 public class AddressCreateRequest {
-    public String homeNumber;
 
-    private Long cityId;
+    @JsonProperty("homeNumber")
+    private String homeNumber;
 
-    private Long districtId;
+    @JsonProperty("city")
+    private Long city;
 
-    private Long wardId;
+    @JsonProperty("district")
+    private Long district;
+
+    @JsonProperty("ward")
+    private Long ward;
 }

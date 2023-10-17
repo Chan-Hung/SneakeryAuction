@@ -8,7 +8,7 @@ import lombok.Setter;
 public class DataResponse<T> extends BaseResponse {
     private T data;
 
-    public DataResponse(T data){
+    public DataResponse(T data) {
         super(true, "");
         this.data = data;
     }
