@@ -8,12 +8,14 @@ import com.hung.sneakery.service.TransactionHistoryService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
+@Api(tags = "Transaction By PayPal APIs")
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/", "https://www.sandbox.paypal.com/"})
 @RequestMapping("/transaction")
 public class TransactionController {

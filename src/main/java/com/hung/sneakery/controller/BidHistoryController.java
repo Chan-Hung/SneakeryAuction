@@ -3,6 +3,7 @@ package com.hung.sneakery.controller;
 import com.hung.sneakery.dto.BidHistoryDTO;
 import com.hung.sneakery.dto.request.GetBidHistoryByUser;
 import com.hung.sneakery.service.BidHistoryService;
+import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,8 +11,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
+@Api(tags = "Bid History APIs")
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
-@RequestMapping("/bid_history")
+@RequestMapping("/bid-history")
 public class BidHistoryController {
 
     @Resource

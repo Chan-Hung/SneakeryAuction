@@ -6,6 +6,7 @@ import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.exception.BidCreatingException;
 import com.hung.sneakery.service.BidService;
+import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import java.text.ParseException;
 import java.util.List;
 
 @RestController
+@Api(tags = "Bid APIs")
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
 @RequestMapping("/bids")
 public class BidController {

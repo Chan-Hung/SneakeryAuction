@@ -4,11 +4,13 @@ import com.hung.sneakery.dto.request.EmailRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.Wallet;
 import com.hung.sneakery.service.WalletService;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @RestController
+@Api(tags = "Wallet APIs")
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
 @RequestMapping("/wallet")
 public class WalletController {
