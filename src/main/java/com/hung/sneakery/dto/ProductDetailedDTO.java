@@ -71,9 +71,9 @@ public class ProductDetailedDTO {
         }
         this.setImagePath(imageList);
         this.setCategory(product.getCategory().getCategoryName());
-        this.setBrand(product.getProductDescription().getBrand());
-        this.setColor(product.getProductDescription().getColor());
-        this.setSize(product.getProductDescription().getSize());
+        this.setBrand(product.getBrand());
+        this.setColor(product.getColor());
+        this.setSize(product.getSize());
         this.setBidIncrement(product.getBid().getStepBid());
 
         //BidId = ProductId: OneToOne Relationship

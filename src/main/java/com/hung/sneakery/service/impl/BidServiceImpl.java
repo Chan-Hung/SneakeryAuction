@@ -37,9 +37,6 @@ public class BidServiceImpl implements BidService {
     private CategoryRepository categoryRepository;
 
     @Resource
-    private ProductDescriptionRepository productDescriptionRepository;
-
-    @Resource
     private BidRepository bidRepository;
 
     @Resource
@@ -163,18 +160,12 @@ public class BidServiceImpl implements BidService {
                 .condition(bidCreateRequest.getCondition())
                 .user(seller)
                 .category(category)
-                .build();
-        //Map ProductDescription
-        ProductDescription productDescription = ProductDescription.builder()
                 .brand(bidCreateRequest.getBrand())
                 .color(bidCreateRequest.getColor())
                 .size(bidCreateRequest.getSize())
-                .product(product)
                 .build();
-        productDescriptionRepository.save(productDescription);
 
         //Save Product
-        product.setProductDescription(productDescription);
         productRepository.save(product);
 
         //Save ProductImage

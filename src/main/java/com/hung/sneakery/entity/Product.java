@@ -36,9 +36,14 @@ public class Product implements Serializable {
     @JsonIgnore
     private Category category;
 
-    @OneToOne(mappedBy = "product")
-    @PrimaryKeyJoinColumn
-    private ProductDescription productDescription;
+    @Column(name = "brand")
+    private String brand;
+
+    @Column(name = "color")
+    private String color;
+
+    @Column(name = "size")
+    private Integer size;
 
     //mappedBy must have the same name as @ManyToOne variable
     //in ProductImageRepository.java class

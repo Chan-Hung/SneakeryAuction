@@ -78,9 +78,6 @@ public class ProductServiceImpl implements ProductService {
         Pageable paging = PageRequest.of(0, sizePage);
         List<Product> pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting, paging);
         List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(pageTuts);
-        if (productDTOs.isEmpty()) {
-            throw new NotFoundException("Products not found");
-        }
         Map<String, Object> response = new HashMap<>();
         response.put("products", productDTOs);
 
