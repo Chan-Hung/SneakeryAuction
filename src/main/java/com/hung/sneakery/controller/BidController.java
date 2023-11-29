@@ -44,7 +44,7 @@ public class BidController {
         }
     }
 
-    @GetMapping("/get_uploaded_products")
+    @GetMapping("/uploaded-products")
     @PreAuthorize("hasRole('USER')")
     public List<BidDTO> getAll() {
         return bidService.getAllUploadedProduct();

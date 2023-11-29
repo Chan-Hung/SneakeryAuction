@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,8 +55,8 @@ public class ProductDetailedDTO {
     //Format date time with JsonFormat
     //https://www.baeldung.com/jackson-jsonformat
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
-    @JsonProperty("bidClosingDate")
-    private LocalDateTime bidClosingDate;
+//    @JsonProperty("bidClosingDate")
+//    private LocalDateTime bidClosingDate;
 
     public ProductDetailedDTO(Product product) {
         this.setId(product.getId());
@@ -91,6 +90,6 @@ public class ProductDetailedDTO {
                 if (Objects.equals(latestBidHistory.getId(), max))
                     this.setCurrentPrice(latestBidHistory.getPrice());
         }
-        this.setBidClosingDate(product.getBid().getBidClosingDateTime());
+//        this.setBidClosingDate(product.getBid().getBidClosingDateTime());
     }
 }

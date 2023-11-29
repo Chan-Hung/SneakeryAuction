@@ -17,12 +17,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class BidServiceImpl implements BidService {
@@ -58,6 +59,7 @@ public class BidServiceImpl implements BidService {
     private ProductConverter productConverter;
 
     @Override
+    @Transactional
     public BaseResponse placeBid(BidPlaceRequest bidPlaceRequest) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User buyer = userRepository.findByUsername(userName);
@@ -65,46 +67,48 @@ public class BidServiceImpl implements BidService {
         Long bidProductId = bidPlaceRequest.getProductId();
         Product product = productRepository.findById(bidProductId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
-        Bid bid = bidRepository.findById(bidProductId)
-                .orElseThrow(() -> new NotFoundException("Bid not found"));
-        User seller = userRepository.findById(product.getUser().getId())
-                .orElseThrow(() -> new NotFoundException("Seller not found for this product"));
-
+        Bid bid = product.getBid();
+        if (buyer.equals(product.getUser())) {
+            throw new BidPlacingException("Seller can not place a bid on this product");
+        }
         Long amount = bidPlaceRequest.getAmount();
         Long stepBid = bid.getStepBid();
-
-        Optional<BidHistory> currentBidHistory = bidHistoryRepository.findFirstByBidIdOrderByPriceDesc(bidProductId);
-        Long currentAmount;
-        if (!currentBidHistory.isPresent()) {
-            currentAmount = bid.getPriceStart();
-        } else {
-            currentAmount = currentBidHistory.get().getPrice();
-        }
+        BidHistory currentBidHistory = bidHistoryRepository
+                .findFirstByBidIdOrderByPriceDesc(bidProductId).orElse(null);
+        Long currentAmount = Objects.isNull(currentBidHistory) ?
+                bid.getPriceStart() : currentBidHistory.getPrice();
         Long bidIncrement = bid.getStepBid();
+        checkBidIsValid(currentAmount, stepBid, amount, bidIncrement);
+        BidHistory bidHistory = BidHistory.builder()
+                .price(amount)
+                .user(buyer)
+                .bid(bid)
+                .build();
+        bidHistoryRepository.save(bidHistory);
+        return new BaseResponse("Place bid successfully");
+    }
 
+    private void checkBidIsValid(Long currentAmount, Long stepBid, Long amount, Long bidIncrement) {
         if (amount <= currentAmount) {
             throw new IllegalArgumentException("Your bid must have higher amount than current amount");
-        }
-        if (buyer == seller) {
-            throw new BidPlacingException("Seller can not place a bid on this product");
         }
         if (currentAmount + stepBid > amount) {
             throw new BidPlacingException("The bid increment for this product is " + bidIncrement + " $. Your bid amount should be higher");
         }
-        if (Boolean.FALSE.equals(compareWalletBalanceToCurrentBidPrice(currentAmount))) {
+        compareWalletBalance(currentAmount, amount);
+    }
+
+    private void compareWalletBalance(Long currentPrice, Long amount) {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User bidder = userRepository.findByUsername(userName);
+        Wallet wallet = walletRepository.findByUser_Id(bidder.getId());
+        Long walletBalance = wallet.getBalance();
+        if (walletBalance < currentPrice) {
             throw new BidPlacingException("Your wallet's balance is lower than the current price");
         }
-        if (Boolean.FALSE.equals(compareWalletBalanceToCurrentBidPrice(amount))) {
+        if (walletBalance < amount) {
             throw new BidPlacingException("Your wallet's balance is lower than the amount you wanna place a bid");
         }
-        BidHistory bidHistory = BidHistory.builder()
-                .price(amount)
-                .user(buyer)
-                .createdAt(LocalDateTime.now())
-                .bid(bid)
-                .build();
-        bidHistoryRepository.save(bidHistory);
-        return new BaseResponse(true, "Place bid successfully");
     }
 
     @Override
@@ -117,7 +121,7 @@ public class BidServiceImpl implements BidService {
         //Call countdownService
         countdownService.biddingCountdown(bid);
 
-        return new BaseResponse(true, "Created bidding product successfully");
+        return new BaseResponse("Created bidding product successfully");
     }
 
     @Override
@@ -140,14 +144,6 @@ public class BidServiceImpl implements BidService {
             bidDTOList.add(bidDTO);
         }
         return bidDTOList;
-    }
-
-    private Boolean compareWalletBalanceToCurrentBidPrice(Long currentPrice) {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        User bidder = userRepository.findByUsername(userName);
-        Wallet wallet = walletRepository.findByUser_Id(bidder.getId());
-        Long walletBalance = wallet.getBalance();
-        return walletBalance >= currentPrice;
     }
 
     private Bid mapToBid(BidCreateRequest bidCreateRequest, User seller, MultipartFile thumbnail, List<MultipartFile> images) throws IOException {

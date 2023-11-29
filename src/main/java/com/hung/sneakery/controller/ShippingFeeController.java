@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 @RestController
 @Api(tags = "Shipping Fee APIs")
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
-@RequestMapping("/shipping_fee")
+@RequestMapping("/shipping-fee")
 public class ShippingFeeController {
 
     @Resource

@@ -31,7 +31,7 @@ public class Address implements Serializable {
     @Column(name = "district_id")
     private String district;
 
-    @OneToOne
+    @OneToOne (fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;

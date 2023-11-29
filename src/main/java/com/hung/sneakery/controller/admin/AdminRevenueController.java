@@ -1,10 +1,8 @@
 package com.hung.sneakery.controller.admin;
 
-import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.response.RevenueResponse;
 import com.hung.sneakery.service.RevenueService;
 import io.swagger.annotations.Api;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,18 +18,11 @@ import javax.annotation.Resource;
 public class AdminRevenueController {
 
     @Resource
-    RevenueService revenueService;
+    private RevenueService revenueService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
-    public ResponseEntity<BaseResponse> getAllByAdmin() {
-        try {
-            return ResponseEntity
-                    .ok(revenueService.getRevenue());
-        } catch (RuntimeException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new BaseResponse(false, e.getMessage()));
-        }
+    public RevenueResponse getAllByAdmin() {
+        return revenueService.getRevenue();
     }
 }

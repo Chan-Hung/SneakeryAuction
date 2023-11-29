@@ -6,17 +6,17 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AddressCreateRequest {
+public class AddressRequest {
 
     @JsonProperty("homeNumber")
     private String homeNumber;
 
     @JsonProperty("city")
-    private Long city;
+    private String city;
 
     @JsonProperty("district")
-    private Long district;
+    private String district;
 
     @JsonProperty("ward")
-    private Long ward;
+    private String ward;
 }

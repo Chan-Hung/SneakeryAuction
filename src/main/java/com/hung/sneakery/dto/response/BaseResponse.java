@@ -1,6 +1,9 @@
 package com.hung.sneakery.dto.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @Builder
@@ -12,8 +15,13 @@ public class BaseResponse {
     @NonNull
     private String message;
 
-    public BaseResponse(){
+    public BaseResponse() {
         this.success = true;
         this.message = "";
+    }
+
+    public BaseResponse(String message) {
+        this.success = true;
+        this.message = message;
     }
 }

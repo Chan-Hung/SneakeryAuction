@@ -71,12 +71,14 @@ public class AuthServiceImpl implements AuthService {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities()
-                .stream()
+        List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        return new JwtResponse(jwt,
-                userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
+        return JwtResponse.builder().token(jwt)
+                .id(userDetails.getId())
+                .username(userDetails.getUsername())
+                .email(userDetails.getEmail())
+                .roles(roles).build();
     }
 
     @Override
@@ -100,7 +102,13 @@ public class AuthServiceImpl implements AuthService {
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
+        handleRole(strRoles, roles);
+        user.setRoles(roles);
+        userRepository.save(user);
+        return new BaseResponse("User registered successfully");
+    }
 
+    private void handleRole(Set<String> strRoles, Set<Role> roles) {
         //If roles are null, default assigning to USER
         if (Objects.isNull(strRoles)) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER);
@@ -125,17 +133,14 @@ public class AuthServiceImpl implements AuthService {
                 }
             });
         }
-        user.setRoles(roles);
-        userRepository.save(user);
-        return new BaseResponse(true, "User registered successfully");
     }
 
     @Override
     public BaseResponse checkEmail(String email) {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(email))) {
-            return new BaseResponse(true, "Email is already existed");
+            return new BaseResponse("Email is already existed");
         }
-        return new BaseResponse(true, "Email can be used");
+        return new BaseResponse("Email can be used");
     }
 
     @Override
@@ -147,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
             user.setVerificationCode(null);
             user.setIsActive(true);
             userRepository.save(user);
-            return new BaseResponse(true, "Activate user successfully");
+            return new BaseResponse("Activate user successfully");
         }
     }
 }
