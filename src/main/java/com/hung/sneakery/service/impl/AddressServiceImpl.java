@@ -44,9 +44,9 @@ public class AddressServiceImpl implements AddressService {
     public AddressDTO create(AddressRequest request) {
         Address address = Address.builder()
                 .homeNumber(request.getHomeNumber())
-                .ward(request.getWard())
-                .district(request.getDistrict())
-                .city(request.getCity())
+                .wardCode(request.getWardCode())
+                .districtCode(request.getDistrictCode())
+                .cityCode(request.getCityCode())
                 .build();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
@@ -59,9 +59,9 @@ public class AddressServiceImpl implements AddressService {
     public AddressDTO update(Long id, AddressRequest request) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Address not found"));
-        address.setCity(request.getCity());
-        address.setDistrict(request.getDistrict());
-        address.setWard(request.getWard());
+        address.setCityCode(request.getCityCode());
+        address.setDistrictCode(request.getDistrictCode());
+        address.setWardCode(request.getWardCode());
         address.setHomeNumber(request.getHomeNumber());
         addressRepository.save(address);
         return addressConverter.convertToAddressDTO(address);

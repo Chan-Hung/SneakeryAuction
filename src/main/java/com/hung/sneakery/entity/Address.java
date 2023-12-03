@@ -22,14 +22,14 @@ public class Address implements Serializable {
     @Column(name = "home_number")
     private String homeNumber;
 
-    @Column(name = "city_id")
-    private String city;
+    @Column(name = "city_code")
+    private Integer cityCode;
 
-    @Column(name = "ward_id")
-    private String ward;
+    @Column(name = "ward_code")
+    private Integer wardCode;
 
-    @Column(name = "district_id")
-    private String district;
+    @Column(name = "district_code")
+    private Integer districtCode;
 
     @OneToOne (fetch = FetchType.LAZY)
     @MapsId

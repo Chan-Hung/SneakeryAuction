@@ -18,9 +18,9 @@ public class AddressConverterImpl implements AddressConverter {
         return AddressDTO.builder()
                 .addressId(address.getId())
                 .homeNumber(address.getHomeNumber())
-                .city(address.getCity())
-                .district(address.getDistrict())
-                .ward(address.getWard())
+                .cityCode(address.getCityCode())
+                .districtCode(address.getDistrictCode())
+                .wardCode(address.getWardCode())
                 .build();
     }
 

@@ -14,12 +14,12 @@ public class AddressDTO {
     @JsonProperty("homeNumber")
     private String homeNumber;
 
-    @JsonProperty("city")
-    private String city;
+    @JsonProperty("cityCode")
+    private Integer cityCode;
 
-    @JsonProperty("district")
-    private String district;
+    @JsonProperty("districtCode")
+    private Integer districtCode;
 
-    @JsonProperty("ward")
-    private String ward;
+    @JsonProperty("wardCode")
+    private Integer wardCode;
 }
