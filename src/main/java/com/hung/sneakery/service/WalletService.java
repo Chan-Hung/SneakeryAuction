@@ -11,7 +11,7 @@ public interface WalletService {
      * @param userEmail String
      * @return BaseResponse
      */
-    BaseResponse create(String userEmail);
+    BaseResponse create(Long userId);
 
     /**
      * Get Detailed Wallet

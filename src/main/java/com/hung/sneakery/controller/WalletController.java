@@ -1,6 +1,5 @@
 package com.hung.sneakery.controller;
 
-import com.hung.sneakery.dto.request.EmailRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.Wallet;
 import com.hung.sneakery.service.WalletService;
@@ -18,9 +17,9 @@ public class WalletController {
     @Resource
     private WalletService walletService;
 
-    @PostMapping()
-    public BaseResponse create(@RequestBody final EmailRequest email) {
-        return walletService.create(email.getEmail());
+    @PostMapping("/{userId}")
+    public BaseResponse create(@PathVariable final Long userId) {
+        return walletService.create(userId);
     }
 
     @GetMapping("/{userId}")
