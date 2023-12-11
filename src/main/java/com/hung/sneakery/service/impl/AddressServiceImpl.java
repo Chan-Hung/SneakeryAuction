@@ -47,6 +47,7 @@ public class AddressServiceImpl implements AddressService {
                 .wardCode(request.getWardCode())
                 .districtCode(request.getDistrictCode())
                 .cityCode(request.getCityCode())
+                .phoneNumber(request.getPhoneNumber())
                 .build();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
@@ -63,6 +64,7 @@ public class AddressServiceImpl implements AddressService {
         address.setDistrictCode(request.getDistrictCode());
         address.setWardCode(request.getWardCode());
         address.setHomeNumber(request.getHomeNumber());
+        address.setPhoneNumber(request.getPhoneNumber());
         addressRepository.save(address);
         return addressConverter.convertToAddressDTO(address);
     }

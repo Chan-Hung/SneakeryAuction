@@ -31,6 +31,9 @@ public class Address implements Serializable {
     @Column(name = "district_code")
     private Integer districtCode;
 
+    @Column
+    private String phoneNumber;
+
     @OneToOne (fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id")

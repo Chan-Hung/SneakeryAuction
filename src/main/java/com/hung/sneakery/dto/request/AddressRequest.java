@@ -19,4 +19,7 @@ public class AddressRequest {
 
     @JsonProperty("wardCode")
     private Integer wardCode;
+
+    @JsonProperty("phoneNumber")
+    private String phoneNumber;
 }

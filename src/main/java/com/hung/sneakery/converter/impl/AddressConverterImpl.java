@@ -21,6 +21,7 @@ public class AddressConverterImpl implements AddressConverter {
                 .cityCode(address.getCityCode())
                 .districtCode(address.getDistrictCode())
                 .wardCode(address.getWardCode())
+                .phoneNumber(address.getPhoneNumber())
                 .build();
     }
 
