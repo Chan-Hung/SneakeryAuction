@@ -2,7 +2,6 @@ package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.dto.request.DepositRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.entity.Order;
 import com.hung.sneakery.entity.*;
 import com.hung.sneakery.enums.EPaymentStatus;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class TransactionHistoryServiceImpl implements TransactionHistoryService {
@@ -146,6 +146,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         transactionHistory.setStatus(EPaymentStatus.PAID);
         transactionHistory.setWallet(winnerWallet);
         transactionHistory.setAmount(priceWin);
+        transactionHistory.setTransactionCode(new Random().nextLong());
         transactionHistoryRepository.save(transactionHistory);
 
         //SELLER
@@ -159,6 +160,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         sellerTransactionHistory.setStatus(EPaymentStatus.RECEIVED);
         sellerTransactionHistory.setWallet(sellerWallet);
         sellerTransactionHistory.setAmount(sellerReceivedAmount);
+        sellerTransactionHistory.setTransactionCode(new Random().nextLong());
         transactionHistoryRepository.save(sellerTransactionHistory);
 
         //SNEAKERY
@@ -172,6 +174,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         adminTransactionHistory.setStatus(EPaymentStatus.AUCTION_FEE);
         adminTransactionHistory.setWallet(adminWallet);
         adminTransactionHistory.setAmount(adminReceivedAmount);
+        adminTransactionHistory.setTransactionCode(new Random().nextLong());
         transactionHistoryRepository.save(adminTransactionHistory);
 
         order.setShippingFee(shippingFee);

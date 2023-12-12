@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Builder
 public class TransactionHistory implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long transactionCode;
 
     @Column(name = "amount")
