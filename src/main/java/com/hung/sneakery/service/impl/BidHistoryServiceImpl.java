@@ -31,7 +31,7 @@ public class BidHistoryServiceImpl implements BidHistoryService {
     @Override
     public List<BidHistoryDTO> getHistoryByProduct(Long productId) {
         //One-To-One relation: bid<->product
-        List<BidHistory> bidHistoryList = bidHistoryRepository.findByBid_Id(productId);
+        List<BidHistory> bidHistoryList = bidHistoryRepository.findByBid_IdOrderByCreatedAtDesc(productId);
         if (bidHistoryList == null) {
             throw new NotFoundException("Bid History not found");
         }

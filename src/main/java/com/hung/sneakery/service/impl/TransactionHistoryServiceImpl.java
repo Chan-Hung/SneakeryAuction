@@ -124,7 +124,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         User user = userRepository.findByUsername(username);
 
         Wallet wallet = walletRepository.findByUser_Id(user.getId());
-        return transactionHistoryRepository.findAllByWallet(wallet);
+        return transactionHistoryRepository.findTop10ByWalletOrderByTransactedAtDesc(wallet);
     }
 
     @Override

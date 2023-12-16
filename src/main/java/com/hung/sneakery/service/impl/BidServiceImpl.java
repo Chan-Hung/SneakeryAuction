@@ -90,7 +90,7 @@ public class BidServiceImpl implements BidService {
 
     private void checkBidIsValid(Long currentAmount, Long stepBid, Long amount, Long bidIncrement) {
         if (amount <= currentAmount) {
-            throw new IllegalArgumentException("Your bid must have higher amount than current amount");
+            throw new BidPlacingException("Your bid must have higher amount than current amount");
         }
         if (currentAmount + stepBid > amount) {
             throw new BidPlacingException("The bid increment for this product is " + bidIncrement + " $. Your bid amount should be higher");
@@ -118,7 +118,6 @@ public class BidServiceImpl implements BidService {
 
         Bid bid = mapToBid(bidCreateRequest, seller, thumbnail, images);
 
-        //Call countdownService
         countdownService.biddingCountdown(bid);
 
         return new BaseResponse("Created bidding product successfully");

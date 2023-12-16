@@ -17,7 +17,7 @@ public interface BidHistoryRepository extends JpaRepository<BidHistory, Long> {
 
     Optional<BidHistory> findFirstByBidIdOrderByPriceDesc(Long bidId);
 
-    List<BidHistory> findByBid_Id(Long bidId);
+    List<BidHistory> findByBid_IdOrderByCreatedAtDesc(Long bidId);
 
     List<BidHistory> findByUser_Id(Long userId);
 }

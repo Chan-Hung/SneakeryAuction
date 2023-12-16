@@ -5,21 +5,24 @@ import com.hung.sneakery.entity.Order;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.CountdownService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.persistence.Tuple;
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
 @Service
 public class CountdownServiceImpl implements CountdownService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CountdownServiceImpl.class);
 
     @Resource
     private BidHistoryRepository bidHistoryRepository;
@@ -42,17 +45,15 @@ public class CountdownServiceImpl implements CountdownService {
     @Resource
     private TransactionHistoryRepository transactionHistoryRepository;
 
-    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Timer timer = new Timer();
 
     @Override
     public void biddingCountdown(Bid bid) {
-        System.out.println("Current Time Execute: " + df.format(new Date()));
+        LOGGER.info("------------------------CURRENT TIME EXECUTE------------------------");
         //DateTime when executing
         Date date = Date.from(bid.getBidClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
         timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, shippingFeeRepository, userRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
-        System.out.println("Current Time Schedule: " + df.format(new Date()));
-
+        LOGGER.info("------------------------CURRENT TIME SCHEDULE------------------------");
     }
 
     private static class CountdownTask extends TimerTask {
@@ -75,19 +76,18 @@ public class CountdownServiceImpl implements CountdownService {
         @Override
         public void run() {
             Tuple winnerTuple = bidHistoryRepository.getWinner(bid.getId());
-            if (winnerTuple == null) {
-                //Bid ends without winner
+            //Bid ends without winner
+            if (Objects.isNull(winnerTuple)) {
                 bid.setPriceWin(0L);
                 bidRepository.save(bid);
-                System.out.println("Time Schedule Set Price Win = 0: " + LocalDateTime.now());
+                LOGGER.info("------------------------TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}------------------------", bid.getId());
             } else {
-                System.out.println("Time Schedule Set Price Win <> 0: " + LocalDateTime.now());
+                LOGGER.info("------------------------TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}------------------------", bid.getId());
                 BigInteger priceWin = winnerTuple.get("priceWin", BigInteger.class);
                 BigInteger userId = winnerTuple.get("buyerId", BigInteger.class);
                 bid.setPriceWin(priceWin.longValue());//End bid totally
                 bidRepository.save(bid);
-                System.out.println("Update Price Win successfully");
-                System.out.println("Price win: " + priceWin);
+                LOGGER.info("------------------------UPDATE PRICE WIN {} SUCCESSFULLY------------------------", priceWin);
                 Bid bid1 = bidRepository.findById(bid.getId()).get();
                 //Create Order
                 Order order = new Order();
@@ -150,7 +150,7 @@ public class CountdownServiceImpl implements CountdownService {
 //                transactionHistoryRepository.save(adminTransactionHistory);
 
                 orderRepository.save(order);
-                System.out.println("Created order successfully");
+                LOGGER.info("Created order successfully");
             }
         }
 
