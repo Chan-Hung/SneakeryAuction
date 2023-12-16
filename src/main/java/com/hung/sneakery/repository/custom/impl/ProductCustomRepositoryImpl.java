@@ -36,7 +36,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
 
         if (Objects.nonNull(category)) {
             Join<Product, Category> productCategoryJoin = root.join(Product_.CATEGORY);
-            predicateList.add(cb.equal(productCategoryJoin.get(Category_.CATEGORY_NAME), category));
+            predicateList.add(cb.equal(productCategoryJoin.get(Category_.NAME), category));
         }
 
         if (Objects.nonNull(condition)) {
