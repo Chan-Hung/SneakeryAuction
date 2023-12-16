@@ -19,7 +19,7 @@ public class ProductImage implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "image_path")
+    @Column(name = "path")
     private String path;
 
     @Column(name = "is_thumbnail")

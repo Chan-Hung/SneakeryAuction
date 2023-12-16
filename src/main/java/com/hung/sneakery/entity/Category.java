@@ -18,6 +18,6 @@ public class Category implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "category_name")
-    private String categoryName;
+    @Column(name = "name")
+    private String name;
 }

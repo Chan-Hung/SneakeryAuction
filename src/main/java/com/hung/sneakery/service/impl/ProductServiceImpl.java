@@ -6,20 +6,21 @@ import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.Category;
 import com.hung.sneakery.entity.Product;
+import com.hung.sneakery.enums.ECondition;
+import com.hung.sneakery.enums.ESorting;
+import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.ProductService;
-import com.hung.sneakery.exception.NotFoundException;
-import com.hung.sneakery.enums.ECondition;
-import com.hung.sneakery.enums.ESorting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -51,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
         //9 products displayed per page
         int pageSize = 9;
         //Find Category by categoryName first
-        Category category = categoryRepository.findByCategoryName(categoryName);
+        Category category = categoryRepository.findByName(categoryName);
         if (category == null) {
             throw new NotFoundException("Category name: " + categoryName + " is invalid");
         }

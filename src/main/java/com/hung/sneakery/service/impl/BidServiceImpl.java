@@ -147,7 +147,7 @@ public class BidServiceImpl implements BidService {
 
     private Bid mapToBid(BidCreateRequest bidCreateRequest, User seller, MultipartFile thumbnail, List<MultipartFile> images) throws IOException {
         //Map Category
-        Category category = categoryRepository.findByCategoryName(bidCreateRequest.getCategory());
+        Category category = categoryRepository.findByName(bidCreateRequest.getCategory());
 
         //Map Product
         Product product = Product.builder()

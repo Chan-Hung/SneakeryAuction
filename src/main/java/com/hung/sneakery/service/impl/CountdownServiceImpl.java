@@ -31,9 +31,6 @@ public class CountdownServiceImpl implements CountdownService {
     private BidRepository bidRepository;
 
     @Resource
-    private ShippingFeeRepository shippingFeeRepository;
-
-    @Resource
     private UserRepository userRepository;
 
     @Resource
@@ -49,19 +46,17 @@ public class CountdownServiceImpl implements CountdownService {
 
     @Override
     public void biddingCountdown(Bid bid) {
-        LOGGER.info("------------------------CURRENT TIME EXECUTE------------------------");
+        LOGGER.info("---CURRENT TIME EXECUTE---");
         //DateTime when executing
         Date date = Date.from(bid.getBidClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
-        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, shippingFeeRepository, userRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
-        LOGGER.info("------------------------CURRENT TIME SCHEDULE------------------------");
+        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, userRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
+        LOGGER.info("---CURRENT TIME SCHEDULE---");
     }
 
     private static class CountdownTask extends TimerTask {
         BidHistoryRepository bidHistoryRepository;
 
         BidRepository bidRepository;
-
-        ShippingFeeRepository shippingFeeRepository;
 
         UserRepository userRepository;
 
@@ -80,14 +75,14 @@ public class CountdownServiceImpl implements CountdownService {
             if (Objects.isNull(winnerTuple)) {
                 bid.setPriceWin(0L);
                 bidRepository.save(bid);
-                LOGGER.info("------------------------TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}------------------------", bid.getId());
+                LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getId());
             } else {
-                LOGGER.info("------------------------TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}------------------------", bid.getId());
+                LOGGER.info("---TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}---", bid.getId());
                 BigInteger priceWin = winnerTuple.get("priceWin", BigInteger.class);
                 BigInteger userId = winnerTuple.get("buyerId", BigInteger.class);
                 bid.setPriceWin(priceWin.longValue());//End bid totally
                 bidRepository.save(bid);
-                LOGGER.info("------------------------UPDATE PRICE WIN {} SUCCESSFULLY------------------------", priceWin);
+                LOGGER.info("---UPDATE PRICE WIN {} SUCCESSFULLY---", priceWin);
                 Bid bid1 = bidRepository.findById(bid.getId()).get();
                 //Create Order
                 Order order = new Order();
@@ -150,16 +145,15 @@ public class CountdownServiceImpl implements CountdownService {
 //                transactionHistoryRepository.save(adminTransactionHistory);
 
                 orderRepository.save(order);
-                LOGGER.info("Created order successfully");
+                LOGGER.info("---Created order successfully---");
             }
         }
 
         //Constructor
-        public CountdownTask(Bid bid, BidHistoryRepository bidHistoryRepository, BidRepository bidRepository, ShippingFeeRepository shippingFeeRepository, UserRepository userRepository, OrderRepository orderRepository, WalletRepository walletRepository, TransactionHistoryRepository transactionHistoryRepository) {
+        public CountdownTask(Bid bid, BidHistoryRepository bidHistoryRepository, BidRepository bidRepository, UserRepository userRepository, OrderRepository orderRepository, WalletRepository walletRepository, TransactionHistoryRepository transactionHistoryRepository) {
             this.bid = bid;
             this.bidHistoryRepository = bidHistoryRepository;
             this.bidRepository = bidRepository;
-            this.shippingFeeRepository = shippingFeeRepository;
             this.userRepository = userRepository;
             this.orderRepository = orderRepository;
             this.walletRepository = walletRepository;

@@ -21,7 +21,7 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_name")
+    @Column(name = "name")
     private String name;
 
     //'Condition' is a reserved word
@@ -32,7 +32,7 @@ public class Product implements Serializable {
     private ECondition condition;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "product_category_id", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnore
     private Category category;
 

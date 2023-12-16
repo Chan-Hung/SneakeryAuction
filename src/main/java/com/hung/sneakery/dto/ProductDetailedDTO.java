@@ -70,7 +70,7 @@ public class ProductDetailedDTO {
             imageList.add(imagePathSingle);
         }
         this.setImagePath(imageList);
-        this.setCategory(product.getCategory().getCategoryName());
+        this.setCategory(product.getCategory().getName());
         this.setBrand(product.getBrand());
         this.setColor(product.getColor());
         this.setSize(product.getSize());
