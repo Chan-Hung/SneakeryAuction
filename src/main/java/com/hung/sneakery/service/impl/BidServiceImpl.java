@@ -69,7 +69,7 @@ public class BidServiceImpl implements BidService {
                 .orElseThrow(() -> new NotFoundException("Product not found"));
         Bid bid = product.getBid();
         if (buyer.equals(product.getUser())) {
-            throw new BidPlacingException("Seller can not place a bid on this product");
+            throw new BidPlacingException("Người bán không được phép tham gia đấu giá sản phẩm này");
         }
         Long amount = bidPlaceRequest.getAmount();
         Long stepBid = bid.getStepBid();
@@ -90,10 +90,10 @@ public class BidServiceImpl implements BidService {
 
     private void checkBidIsValid(Long currentAmount, Long stepBid, Long amount, Long bidIncrement) {
         if (amount <= currentAmount) {
-            throw new BidPlacingException("Your bid must have higher amount than current amount");
+            throw new BidPlacingException("Lượt ra giá của bạn phải cao hơn số tiền hiện tại");
         }
         if (currentAmount + stepBid > amount) {
-            throw new BidPlacingException("The bid increment for this product is " + bidIncrement + " $. Your bid amount should be higher");
+            throw new BidPlacingException("Bước giá cho sản phẩm này là " + bidIncrement + " $");
         }
         compareWalletBalance(currentAmount, amount);
     }
@@ -104,10 +104,10 @@ public class BidServiceImpl implements BidService {
         Wallet wallet = walletRepository.findByUser_Id(bidder.getId());
         Long walletBalance = wallet.getBalance();
         if (walletBalance < currentPrice) {
-            throw new BidPlacingException("Your wallet's balance is lower than the current price");
+            throw new BidPlacingException("Số dư ví không đủ cho lần ra giá này");
         }
         if (walletBalance < amount) {
-            throw new BidPlacingException("Your wallet's balance is lower than the amount you wanna place a bid");
+            throw new BidPlacingException("Số dư ví không đủ cho lần ra giá này");
         }
     }
 
