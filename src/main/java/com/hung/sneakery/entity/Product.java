@@ -6,7 +6,6 @@ import com.hung.sneakery.enums.ECondition;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -16,16 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Product implements Serializable {
+public class Product extends AbstractCommonEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column
     private String name;
 
-    //'Condition' is a reserved word
-    //which mean can not set as a property name
+    //'Condition' is a reserved word -> can not set as a property name
     //=> use "condition_description" instead
     @Column(name = "condition_description")
     @Enumerated(EnumType.STRING)
@@ -36,19 +35,19 @@ public class Product implements Serializable {
     @JsonIgnore
     private Category category;
 
-    @Column(name = "brand")
+    @Column
     private String brand;
 
-    @Column(name = "color")
+    @Column
     private String color;
 
-    @Column(name = "size")
+    @Column
     private Integer size;
 
     //mappedBy must have the same name as @ManyToOne variable
     //in ProductImageRepository.java class
     //One Product have Many Images => FK is in image
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductImage> productImage;
 
     @OneToOne(mappedBy = "product")

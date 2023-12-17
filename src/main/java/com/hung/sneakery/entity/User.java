@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User implements Serializable {
+public class User extends AbstractCommonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +39,10 @@ public class User implements Serializable {
     @Size(max = 120)
     private String password;
 
-    @Column(name = "verification_code", length = 30)
+    @Column
     private String verificationCode;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(nullable = false)
     private Boolean isActive;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -51,11 +50,4 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<BidHistory> bidHistories = new HashSet<>();
-
-    @OneToOne(mappedBy = "user")
-    @PrimaryKeyJoinColumn
-    private Wallet wallet;
 }

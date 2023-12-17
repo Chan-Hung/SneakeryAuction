@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -17,7 +17,7 @@ public class BidDTO {
 
     @JsonProperty("bidStartingDate")
     @NotNull
-    private LocalDate bidStartingDate;
+    private LocalDateTime bidStartingDate;
 
     @JsonProperty("priceStart")
     @NotNull

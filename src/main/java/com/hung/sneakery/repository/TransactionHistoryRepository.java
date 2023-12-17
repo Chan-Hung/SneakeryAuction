@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, Long> {
 
-    List<TransactionHistory> findTop10ByWalletOrderByTransactedAtDesc(Wallet wallet);
+    List<TransactionHistory> findTop10ByWalletOrderByCreatedDateDesc(Wallet wallet);
 }

@@ -4,7 +4,6 @@ import com.hung.sneakery.enums.ERole;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "roles")
@@ -13,12 +12,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Role implements Serializable {
+public class Role extends AbstractCommonEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Enumerated(EnumType.STRING)
     @Column(length = 20)
+    @Enumerated(EnumType.STRING)
     private ERole name;
 }

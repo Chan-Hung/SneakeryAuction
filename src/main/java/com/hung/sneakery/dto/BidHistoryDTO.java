@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 @Builder
 public class BidHistoryDTO {
 
+    @JsonProperty("bidHistoryId")
+    private Long bidHistoryId;
+
     @JsonProperty("bidAmount")
     private Long bidAmount;
 

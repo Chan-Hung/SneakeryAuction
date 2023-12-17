@@ -1,5 +1,6 @@
 package com.hung.sneakery.controller;
 
+import com.hung.sneakery.dto.WalletDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.Wallet;
 import com.hung.sneakery.service.WalletService;
@@ -23,7 +24,7 @@ public class WalletController {
     }
 
     @GetMapping("/{userId}")
-    public Wallet getOne(@PathVariable final Long userId) {
+    public WalletDTO getOne(@PathVariable final Long userId) {
         return walletService.getOne(userId);
     }
 }

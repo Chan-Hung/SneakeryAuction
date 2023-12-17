@@ -1,10 +1,9 @@
 package com.hung.sneakery.entity;
 
+import com.hung.sneakery.enums.EOrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -13,24 +12,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Order implements Serializable {
+public class Order extends AbstractCommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private EOrderStatus status;
 
-    @Column(name = "status")
-    private String status;
-
-    @Column(name = "shipping_fee")
+    @Column
     private Long shippingFee;
 
-    @Column(name = "subtotal")
+    @Column
     private Long subtotal;
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "winner_id")
     private User winner;
 
@@ -38,7 +35,7 @@ public class Order implements Serializable {
     @JoinColumn(name = "seller_id")
     private User seller;
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "bid_id")
     private Bid bid;
 }

@@ -3,8 +3,10 @@ package com.hung.sneakery.service.impl;
 import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.BidHistoryDTO;
 import com.hung.sneakery.dto.request.GetBidHistoryByUser;
+import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.User;
+import com.hung.sneakery.enums.EBidStatus;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.BidHistoryRepository;
 import com.hung.sneakery.repository.UserRepository;
@@ -31,7 +33,7 @@ public class BidHistoryServiceImpl implements BidHistoryService {
     @Override
     public List<BidHistoryDTO> getHistoryByProduct(Long productId) {
         //One-To-One relation: bid<->product
-        List<BidHistory> bidHistoryList = bidHistoryRepository.findByBid_IdOrderByCreatedAtDesc(productId);
+        List<BidHistory> bidHistoryList = bidHistoryRepository.findByBid_IdOrderByCreatedDateDesc(productId);
         if (bidHistoryList == null) {
             throw new NotFoundException("Bid History not found");
         }
@@ -62,16 +64,26 @@ public class BidHistoryServiceImpl implements BidHistoryService {
         return getBidHistoryByUsers;
     }
 
+    @Override
+    public BaseResponse delete(Long bidHistoryId) {
+        BidHistory bidHistory = bidHistoryRepository.findById(bidHistoryId)
+                .orElseThrow(() -> new NotFoundException("Bid History not found"));
+        bidHistory.setStatus(EBidStatus.REMOVE);
+        bidHistoryRepository.save(bidHistory);
+        return new BaseResponse("Rút lại lần ra giá thành công");
+    }
+
     private BidHistoryDTO mapToBidHistoryDTO(BidHistory bidHistory) {
         return BidHistoryDTO.builder()
+                .bidHistoryId(bidHistory.getId())
                 .bidAmount(bidHistory.getPrice())
-                .createdAt(bidHistory.getCreatedAt())
+                .createdAt(bidHistory.getCreatedDate())
                 .userName(bidHistory.getUser().getUsername()).build();
     }
 
     private GetBidHistoryByUser mapToGetBidHistoryByUser(BidHistory bidHistory) {
         return GetBidHistoryByUser.builder()
-                .createdAt(bidHistory.getCreatedAt())
+                .createdAt(bidHistory.getCreatedDate())
                 .amount(bidHistory.getPrice())
                 .product(productConverter.convertToProductDTO(bidHistory.getBid().getProduct()))
                 .build();

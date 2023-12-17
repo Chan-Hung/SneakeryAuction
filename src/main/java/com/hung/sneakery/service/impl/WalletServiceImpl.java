@@ -1,5 +1,7 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.converter.WalletConverter;
+import com.hung.sneakery.dto.WalletDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.entity.Wallet;
@@ -19,12 +21,14 @@ public class WalletServiceImpl implements WalletService {
     @Resource
     private UserRepository userRepository;
 
+    @Resource
+    private WalletConverter walletConverter;
+
     @Override
     public BaseResponse create(final Long id) {
         Wallet wallet = new Wallet();
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        wallet.setBalance(0L);
         wallet.setUser(user);
         walletRepository.save(wallet);
 
@@ -32,7 +36,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet getOne(final Long userId) {
-        return walletRepository.findByUser_Id(userId);
+    public WalletDTO getOne(final Long userId) {
+        Wallet wallet = walletRepository.findByUser_Id(userId);
+        return walletConverter.convertToWalletDTO(wallet);
     }
 }

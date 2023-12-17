@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "product_image")
@@ -13,16 +12,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductImage implements Serializable {
+public class ProductImage extends AbstractCommonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "path")
+    @Column
     private String path;
 
-    @Column(name = "is_thumbnail")
+    @Column
     private Boolean isThumbnail;
 
     @ManyToOne

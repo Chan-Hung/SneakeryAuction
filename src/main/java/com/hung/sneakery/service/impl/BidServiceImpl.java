@@ -6,6 +6,7 @@ import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.*;
+import com.hung.sneakery.enums.EBidStatus;
 import com.hung.sneakery.exception.BidPlacingException;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.*;
@@ -19,8 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -74,13 +73,14 @@ public class BidServiceImpl implements BidService {
         Long amount = bidPlaceRequest.getAmount();
         Long stepBid = bid.getStepBid();
         BidHistory currentBidHistory = bidHistoryRepository
-                .findFirstByBidIdOrderByPriceDesc(bidProductId).orElse(null);
+                .findFirstByBidIdAndStatusOrderByPriceDesc(bidProductId, EBidStatus.SUCCESS).orElse(null);
         Long currentAmount = Objects.isNull(currentBidHistory) ?
                 bid.getPriceStart() : currentBidHistory.getPrice();
         Long bidIncrement = bid.getStepBid();
         checkBidIsValid(currentAmount, stepBid, amount, bidIncrement);
         BidHistory bidHistory = BidHistory.builder()
                 .price(amount)
+                .status(EBidStatus.SUCCESS)
                 .user(buyer)
                 .bid(bid)
                 .build();
@@ -137,7 +137,7 @@ public class BidServiceImpl implements BidService {
                     .priceWin(bid.getPriceWin())
                     .stepBid(bid.getStepBid())
                     .priceStart(bid.getPriceStart())
-                    .bidStartingDate(bid.getBidStartingDate())
+                    .bidStartingDate(bid.getCreatedDate())
                     .product(productConverter.convertToProductDTO(product))
                     .build();
             bidDTOList.add(bidDTO);
@@ -173,10 +173,8 @@ public class BidServiceImpl implements BidService {
         }
         productImageRepository.saveAll(productImages);
 
-        //Save Bid
         Bid bid = Bid.builder()
                 .priceStart(bidCreateRequest.getPriceStart())
-                .bidStartingDate(LocalDate.now())
                 .stepBid(bidCreateRequest.getStepBid())
                 .bidClosingDateTime(bidCreateRequest.getBidClosingDateTime())
                 .product(product)

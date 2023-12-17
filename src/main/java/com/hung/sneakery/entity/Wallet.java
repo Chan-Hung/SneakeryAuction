@@ -2,11 +2,8 @@ package com.hung.sneakery.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "wallets")
@@ -15,20 +12,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Wallet implements Serializable {
+public class Wallet extends AbstractCommonEntity {
     @Id
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "wallet_balance")
-    private Long balance;
+    @Column
+    private Long balance = 0L;
 
-    @CreationTimestamp
-    @Column(name = "created_at")
-    @JsonIgnore
-    private LocalDateTime createdAt;
-
-    @OneToOne
+    @OneToOne (fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id")
     @JsonIgnore

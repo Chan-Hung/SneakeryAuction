@@ -124,7 +124,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         User user = userRepository.findByUsername(username);
 
         Wallet wallet = walletRepository.findByUser_Id(user.getId());
-        return transactionHistoryRepository.findTop10ByWalletOrderByTransactedAtDesc(wallet);
+        return transactionHistoryRepository.findTop10ByWalletOrderByCreatedDateDesc(wallet);
     }
 
     @Override
@@ -146,7 +146,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         transactionHistory.setStatus(EPaymentStatus.PAID);
         transactionHistory.setWallet(winnerWallet);
         transactionHistory.setAmount(priceWin);
-        transactionHistory.setTransactionCode(new Random().nextLong());
         transactionHistoryRepository.save(transactionHistory);
 
         //SELLER
@@ -160,7 +159,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         sellerTransactionHistory.setStatus(EPaymentStatus.RECEIVED);
         sellerTransactionHistory.setWallet(sellerWallet);
         sellerTransactionHistory.setAmount(sellerReceivedAmount);
-        sellerTransactionHistory.setTransactionCode(new Random().nextLong());
         transactionHistoryRepository.save(sellerTransactionHistory);
 
         //SNEAKERY
@@ -174,7 +172,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         adminTransactionHistory.setStatus(EPaymentStatus.AUCTION_FEE);
         adminTransactionHistory.setWallet(adminWallet);
         adminTransactionHistory.setAmount(adminReceivedAmount);
-        adminTransactionHistory.setTransactionCode(new Random().nextLong());
         transactionHistoryRepository.save(adminTransactionHistory);
 
         order.setShippingFee(shippingFee);

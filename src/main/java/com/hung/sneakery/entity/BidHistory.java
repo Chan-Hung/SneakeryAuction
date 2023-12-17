@@ -1,12 +1,10 @@
 package com.hung.sneakery.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hung.sneakery.enums.EBidStatus;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bid_history")
@@ -15,18 +13,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-//This extra tables have 2 more properties: price and createAt
-public class BidHistory implements Serializable {
+public class BidHistory extends AbstractCommonEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "price")
+    @Column
     private Long price;
 
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private EBidStatus status;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
