@@ -92,7 +92,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
                     criteriaQuery.orderBy(cb.desc(productBidJoin.get(Bid_.PRICE_START)));
                     break;
                 case NEWEST:
-                    criteriaQuery.orderBy(cb.desc(productBidJoin.get(Bid_.BID_STARTING_DATE)));
+                    criteriaQuery.orderBy(cb.desc(productBidJoin.get(Bid_.CREATED_DATE)));
                     break;
             }
         } else {
