@@ -4,6 +4,7 @@ import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.ProductImage;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -16,12 +17,12 @@ public class ProductConverterImpl implements ProductConverter {
 
     @Override
     public ProductDTO convertToProductDTO(Product product) {
-        String imagePath = null;
-        for (ProductImage productImage : product.getProductImage()) {
-            if (Boolean.TRUE.equals(productImage.getIsThumbnail())) {
-                imagePath = productImage.getPath();
-            }
-        }
+        String imagePath = product.getProductImage().stream()
+                .filter(image -> BooleanUtils.isTrue(image.getIsThumbnail()))
+                .findFirst()
+                .map(ProductImage::getPath)
+                .orElse(null);
+
         return ProductDTO.builder()
                 .id(product.getId())
                 .name(product.getName())

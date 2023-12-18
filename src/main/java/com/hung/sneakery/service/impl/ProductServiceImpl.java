@@ -1,6 +1,7 @@
 package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.converter.ProductConverter;
+import com.hung.sneakery.converter.ProductDetailedConverter;
 import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
@@ -34,11 +35,14 @@ public class ProductServiceImpl implements ProductService {
     @Resource
     private ProductConverter productConverter;
 
+    @Resource
+    private ProductDetailedConverter productDetailedConverter;
+
     @Override
     public ProductDetailedDTO getOne(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(String.format("Product not found with id: %s", productId)));
-        return new ProductDetailedDTO(product);
+        return productDetailedConverter.convertToProductDetailedDTO(product);
     }
 
     //Get ID of all products

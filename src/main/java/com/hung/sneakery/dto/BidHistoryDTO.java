@@ -16,6 +16,9 @@ public class BidHistoryDTO {
     @JsonProperty("bidAmount")
     private Long bidAmount;
 
+    @JsonProperty("status")
+    private String status;
+
     @JsonProperty("createdAt")
     private LocalDateTime createdAt;
 

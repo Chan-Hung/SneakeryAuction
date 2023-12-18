@@ -50,12 +50,12 @@ public class Product extends AbstractCommonEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductImage> productImage;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "product")
     @PrimaryKeyJoinColumn
     @JsonManagedReference
     private Bid bid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
     private User user;
 }
