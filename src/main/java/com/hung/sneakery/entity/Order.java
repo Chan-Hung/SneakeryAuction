@@ -13,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 public class Order extends AbstractCommonEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,15 +28,15 @@ public class Order extends AbstractCommonEntity {
     @Column
     private Long subtotal;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winner_id")
     private User winner;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private User seller;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bid_id")
     private Bid bid;
 }

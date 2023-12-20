@@ -29,7 +29,7 @@ public class ProductConverterImpl implements ProductConverter {
                 .imagePath(imagePath)
                 .startPrice(product.getBid().getPriceStart())
                 .username(product.getUser().getUsername())
-                .bidClosingDate(product.getBid().getBidClosingDateTime())
+                .bidClosingDate(product.getBid().getClosingDateTime())
                 .build();
     }
 

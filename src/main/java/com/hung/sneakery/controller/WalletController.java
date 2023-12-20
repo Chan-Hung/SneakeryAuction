@@ -2,9 +2,11 @@ package com.hung.sneakery.controller;
 
 import com.hung.sneakery.dto.WalletDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.entity.Wallet;
 import com.hung.sneakery.service.WalletService;
 import io.swagger.annotations.Api;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,13 +20,19 @@ public class WalletController {
     @Resource
     private WalletService walletService;
 
-    @PostMapping("/{userId}")
-    public BaseResponse create(@PathVariable final Long userId) {
-        return walletService.create(userId);
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping()
+    public Page<WalletDTO> getAll(Pageable pageable) {
+        return walletService.getAll(pageable);
     }
 
     @GetMapping("/{userId}")
     public WalletDTO getOne(@PathVariable final Long userId) {
         return walletService.getOne(userId);
+    }
+
+    @PostMapping("/{userId}")
+    public BaseResponse create(@PathVariable final Long userId) {
+        return walletService.create(userId);
     }
 }

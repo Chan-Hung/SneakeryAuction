@@ -31,8 +31,8 @@ public class BidHistoryController {
         return bidHistoryService.getHistoryByUser();
     }
 
-    @DeleteMapping("/{bidHistoryId}")
-    public BaseResponse delete(@PathVariable final Long bidHistoryId) {
-        return bidHistoryService.delete(bidHistoryId);
+    @DeleteMapping("/{id}")
+    public BaseResponse delete(@PathVariable final Long id) {
+        return bidHistoryService.delete(id);
     }
 }

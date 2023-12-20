@@ -176,7 +176,7 @@ public class BidServiceImpl implements BidService {
         Bid bid = Bid.builder()
                 .priceStart(bidCreateRequest.getPriceStart())
                 .stepBid(bidCreateRequest.getStepBid())
-                .bidClosingDateTime(bidCreateRequest.getBidClosingDateTime())
+                .closingDateTime(bidCreateRequest.getBidClosingDateTime())
                 .product(product)
                 .build();
         bidRepository.save(bid);

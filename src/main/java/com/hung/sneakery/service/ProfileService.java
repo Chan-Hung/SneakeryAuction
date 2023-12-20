@@ -1,12 +1,31 @@
 package com.hung.sneakery.service;
 
 import com.hung.sneakery.dto.UserDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProfileService {
 
-    List<UserDTO> getAll();
+    /**
+     * Get all UserDTO
+     *
+     * @return Page<UserDTO>
+     */
+    Page<UserDTO> getAll(Pageable pageable);
 
+    /**
+     * Get User detail
+     *
+     * @param userId Long
+     * @return UserDTO
+     */
     UserDTO getOne(Long userId);
+
+    /**
+     * Update user
+     *
+     * @param userId Long
+     * @return UserDTO
+     */
+    UserDTO update(Long userId, UserDTO userDTO);
 }

@@ -23,7 +23,7 @@ public class Bid extends AbstractCommonEntity {
     private Long id;
 
     @Column(name = "bid_closing_date")
-    private LocalDateTime bidClosingDateTime;
+    private LocalDateTime closingDateTime;
 
     @NotNull(message = "The starting price is required")
     @Column
@@ -37,11 +37,11 @@ public class Bid extends AbstractCommonEntity {
     private Long priceWin;
 
     //Using a Shared Primary Key - Behaves as a foreign key
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "bid")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bid", cascade = CascadeType.ALL)
     private Set<BidHistory> bidHistories = new HashSet<>();
 }

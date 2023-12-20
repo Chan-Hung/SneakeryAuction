@@ -1,11 +1,14 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.converter.UserConverter;
 import com.hung.sneakery.dto.UserDTO;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.exception.NotFoundException;
-import com.hung.sneakery.mapper.UserMapper;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.ProfileService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,18 +21,29 @@ public class ProfileServiceImpl implements ProfileService {
     private UserRepository userRepository;
 
     @Resource
-    private UserMapper userMapper;
+    private UserConverter userConverter;
+
+    private static final String USER_NOT_FOUND = "User not found";
 
     @Override
-    public List<UserDTO> getAll() {
-        List<User> users = userRepository.findAll();
-        return userMapper.mapToDTOList(users, UserDTO.class);
+    public Page<UserDTO> getAll(final Pageable pageable) {
+        Page<User> usersPage = userRepository.findAll(pageable);
+        List<UserDTO> userDTOs = userConverter.convertToUserDTOList(usersPage.getContent());
+        return new PageImpl<>(userDTOs, pageable, usersPage.getTotalElements());
     }
 
     @Override
-    public UserDTO getOne(Long userId) {
+    public UserDTO getOne(final Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-        return userMapper.mapToDTO(user, UserDTO.class);
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        return userConverter.convertToUserDTO(user);
+    }
+
+    @Override
+    public UserDTO update(final Long userId, final UserDTO userDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        user.setIsActive(userDTO.getIsActive());
+        return userConverter.convertToUserDTO(userRepository.save(user));
     }
 }

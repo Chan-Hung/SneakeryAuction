@@ -47,10 +47,10 @@ public class Product extends AbstractCommonEntity {
     //mappedBy must have the same name as @ManyToOne variable
     //in ProductImageRepository.java class
     //One Product have Many Images => FK is in image
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
     private List<ProductImage> productImage;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "product")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
     @PrimaryKeyJoinColumn
     @JsonManagedReference
     private Bid bid;

@@ -13,6 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 public class Wallet extends AbstractCommonEntity {
+
     @Id
     @Column(name = "user_id")
     private Long id;
@@ -20,7 +21,7 @@ public class Wallet extends AbstractCommonEntity {
     @Column
     private Long balance = 0L;
 
-    @OneToOne (fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id")
     @JsonIgnore

@@ -26,12 +26,12 @@ public class BidHistory extends AbstractCommonEntity {
     @Enumerated(EnumType.STRING)
     private EBidStatus status;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     @JsonIgnore
     private Bid bid;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
     @JsonIgnore
     private User user;

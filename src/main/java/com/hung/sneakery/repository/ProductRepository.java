@@ -17,8 +17,10 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
     Page<Product> findByCategory(Category category, Pageable pageable);
 
-    @Query(value="SELECT id from products order by id",nativeQuery = true)
+    @Query(value = "SELECT id from products order by id", nativeQuery = true)
     List<Long> getAllId();
 
     List<Product> findByUser(User user);
+
+    Page<Product> findByNameIsContaining(final Pageable pageable, final String collectionName);
 }

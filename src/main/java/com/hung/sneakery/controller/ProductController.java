@@ -1,11 +1,15 @@
 package com.hung.sneakery.controller;
 
+import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.enums.ECondition;
 import com.hung.sneakery.enums.ESorting;
 import com.hung.sneakery.service.ProductService;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,6 +33,12 @@ public class ProductController {
     @GetMapping("/homepage")
     public Map<String, Object> getProductsHomepage() {
         return productService.getProductsHomepage();
+    }
+
+    @GetMapping("/search")
+    public Page<ProductDTO> getProductsBySearch(final Pageable pageable,
+                                                @RequestParam(defaultValue = StringUtils.EMPTY, name = "q") final String productName) {
+        return productService.getProductsBySearch(pageable, productName);
     }
 
     @GetMapping("/{productId}")

@@ -35,7 +35,7 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
                 .size(product.getSize())
                 .bidIncrement(product.getBid().getStepBid())
                 .currentPrice(getCurrentPrice(product))
-                .bidClosingDate(product.getBid().getBidClosingDateTime())
+                .bidClosingDate(product.getBid().getClosingDateTime())
                 .build();
     }
 

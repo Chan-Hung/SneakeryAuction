@@ -51,7 +51,7 @@ public class CountdownServiceImpl implements CountdownService {
     public void biddingCountdown(Bid bid) {
         LOGGER.info("---CURRENT TIME EXECUTE---");
         //DateTime when executing
-        Date date = Date.from(bid.getBidClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
+        Date date = Date.from(bid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
         timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, userRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
         LOGGER.info("---CURRENT TIME SCHEDULE---");
     }

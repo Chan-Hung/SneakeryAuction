@@ -8,9 +8,13 @@ import com.hung.sneakery.entity.Wallet;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.repository.WalletRepository;
 import com.hung.sneakery.service.WalletService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class WalletServiceImpl implements WalletService {
@@ -39,5 +43,12 @@ public class WalletServiceImpl implements WalletService {
     public WalletDTO getOne(final Long userId) {
         Wallet wallet = walletRepository.findByUser_Id(userId);
         return walletConverter.convertToWalletDTO(wallet);
+    }
+
+    @Override
+    public Page<WalletDTO> getAll(final Pageable pageable) {
+        Page<Wallet> walletPage = walletRepository.findAll(pageable);
+        List<WalletDTO> walletDTOs = walletConverter.convertToWalletDTOList(walletPage.getContent());
+        return new PageImpl<>(walletDTOs, pageable, walletPage.getTotalElements());
     }
 }

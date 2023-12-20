@@ -14,11 +14,13 @@ import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.ProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,11 +93,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public BaseResponse delete(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
         productRepository.delete(product);
         return new BaseResponse(true, "Deleted product successfully");
+    }
+
+    @Override
+    public Page<ProductDTO> getProductsBySearch(Pageable pageable, String productName) {
+        Page<Product> productsPage = productRepository.findByNameIsContaining(pageable, productName);
+        List<ProductDTO> productDTOs =
+                productConverter.convertToProductDTOList(productsPage.getContent());
+        return new PageImpl<>(productDTOs, pageable,
+                productsPage.getTotalElements());
     }
 
     //GetMapResponseEntity

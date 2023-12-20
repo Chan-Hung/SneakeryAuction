@@ -26,7 +26,7 @@ public class TransactionHistory extends AbstractCommonEntity {
     @Enumerated(EnumType.STRING)
     private EPaymentStatus status;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "wallet_id")
     @JsonIgnore
     private Wallet wallet;

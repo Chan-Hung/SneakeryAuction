@@ -23,6 +23,7 @@ public class OrderConverterImpl implements OrderConverter {
         return OrderDTO.builder()
                 .id(order.getId())
                 .product(productConverter.convertToProductDTO(order.getBid().getProduct()))
+                .status(order.getStatus())
                 .priceWin(order.getBid().getPriceWin())
                 .build();
     }

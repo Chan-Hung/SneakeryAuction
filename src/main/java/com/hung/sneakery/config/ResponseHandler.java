@@ -2,7 +2,9 @@ package com.hung.sneakery.config;
 
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.dto.response.DataResponse;
+import com.hung.sneakery.dto.response.PageResponse;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -24,12 +26,14 @@ public class ResponseHandler implements ResponseBodyAdvice {
         if (body instanceof BaseResponse) {
             return body;
         }
-//        if (body instanceof Page) {
-//            return commonConverter.convertResponsePaging((Page<?>) body, true, Strings.EMPTY);
-//        }
-//        if (body instanceof String) {
-//            return body;
-//        }
+        if (body instanceof Page) {
+            return new PageResponse<>(
+                    ((Page) body).getContent(),
+                    ((Page) body).getNumber() + 1,
+                    ((Page) body).getSize(),
+                    ((Page) body).getTotalElements(),
+                    ((Page) body).getTotalPages());
+        }
         return new DataResponse<>(body);
     }
 }

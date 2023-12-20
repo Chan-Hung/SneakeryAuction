@@ -1,9 +1,10 @@
 package com.hung.sneakery.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-
-import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -12,19 +13,15 @@ import javax.validation.constraints.NotNull;
 public class UserDTO {
 
     @JsonProperty("id")
-    @NotNull
     private Long id;
 
     @JsonProperty("username")
-    @NotNull
     private String username;
 
     @JsonProperty("email")
-    @NotNull
     private String email;
 
     @JsonProperty("isActive")
-    @NotNull
     private Boolean isActive;
 
     @JsonProperty("address")

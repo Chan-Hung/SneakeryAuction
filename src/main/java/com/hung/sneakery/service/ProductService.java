@@ -1,9 +1,12 @@
 package com.hung.sneakery.service;
 
+import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.enums.ECondition;
 import com.hung.sneakery.enums.ESorting;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -66,4 +69,13 @@ public interface ProductService {
      * @return BaseResponse
      */
     BaseResponse delete(Long id);
+
+    /**
+     * Get Products By Search
+     *
+     * @param pageable    Pageable
+     * @param productName String
+     * @return Page<ProductDTO>
+     */
+    Page<ProductDTO> getProductsBySearch(Pageable pageable, String productName);
 }

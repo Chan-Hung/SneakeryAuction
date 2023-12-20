@@ -9,6 +9,9 @@ import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.AddressRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.AddressService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,21 +30,24 @@ public class AddressServiceImpl implements AddressService {
     @Resource
     private AddressConverter addressConverter;
 
+    private static final String ADDRESS_NOT_FOUND = "Address not found";
+
     @Override
     public AddressDTO getOne(Long id) {
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
+                .orElseThrow(() -> new NotFoundException(ADDRESS_NOT_FOUND));
         return addressConverter.convertToAddressDTO(address);
     }
 
     @Override
-    public List<AddressDTO> getAll() {
-        List<Address> addresses = addressRepository.findAll();
-        return addressConverter.convertToAddressDTOList(addresses);
+    public Page<AddressDTO> getAll(final Pageable pageable) {
+        Page<Address> addressesPage = addressRepository.findAll(pageable);
+        List<AddressDTO> addressDTOs = addressConverter.convertToAddressDTOList(addressesPage.getContent());
+        return new PageImpl<>(addressDTOs, pageable, addressesPage.getTotalElements());
     }
 
     @Override
-    public AddressDTO create(AddressRequest request) {
+    public AddressDTO create(final AddressRequest request) {
         Address address = Address.builder()
                 .homeNumber(request.getHomeNumber())
                 .wardCode(request.getWardCode())
@@ -57,9 +63,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDTO update(Long id, AddressRequest request) {
+    public AddressDTO update(final Long id, final AddressRequest request) {
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
+                .orElseThrow(() -> new NotFoundException(ADDRESS_NOT_FOUND));
         address.setCityCode(request.getCityCode());
         address.setDistrictCode(request.getDistrictCode());
         address.setWardCode(request.getWardCode());
@@ -70,9 +76,9 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDTO delete(Long id) {
+    public AddressDTO delete(final Long id) {
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Address not found"));
+                .orElseThrow(() -> new NotFoundException(ADDRESS_NOT_FOUND));
         addressRepository.delete(address);
         return addressConverter.convertToAddressDTO(address);
     }
