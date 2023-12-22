@@ -13,11 +13,11 @@ public interface TransactionHistoryService {
     /**
      * Create Payment
      *
-     * @param depositRequest DepositRequest
+     * @param request DepositRequest
      * @return Payment
      * @throws PayPalRESTException PayPalRESTException
      */
-    Payment createPayment(DepositRequest depositRequest) throws PayPalRESTException;
+    Payment createPayment(DepositRequest request) throws PayPalRESTException;
 
     /**
      * Execute Payment

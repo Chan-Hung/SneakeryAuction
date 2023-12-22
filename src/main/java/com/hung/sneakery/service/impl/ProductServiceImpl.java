@@ -8,22 +8,19 @@ import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.Category;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.enums.ECondition;
-import com.hung.sneakery.enums.ESorting;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -41,83 +38,57 @@ public class ProductServiceImpl implements ProductService {
     private ProductDetailedConverter productDetailedConverter;
 
     @Override
-    public ProductDetailedDTO getOne(Long productId) {
+    public ProductDetailedDTO getOne(final Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(String.format("Product not found with id: %s", productId)));
         return productDetailedConverter.convertToProductDetailedDTO(product);
     }
 
-    //Get ID of all products
     @Override
     public List<Long> getAllProductsId() {
         return productRepository.getAllId();
     }
 
     @Override
-    public Map<String, Object> getProductsByCategory(String categoryName, Integer page) {
-        //9 products displayed per page
-        int pageSize = 9;
-        //Find Category by categoryName first
+    public Page<ProductDTO> getProductsByCategory(final Pageable pageable, final String categoryName) {
         Category category = categoryRepository.findByName(categoryName);
-        if (category == null) {
+        if (Objects.isNull(category)) {
             throw new NotFoundException("Category name: " + categoryName + " is invalid");
         }
-        //then pass that product category into findByProductCategory() method
-        Pageable paging = PageRequest.of(page, pageSize);
-        Page<Product> pageTuts = productRepository.findByCategory(category, paging);
-        if (pageTuts.isEmpty()) {
-            throw new NotFoundException("Products not found");
-        }
-        return getMapResponseEntity(pageTuts);
+        Page<Product> productPage = productRepository.findByCategory(pageable, category);
+        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
+        return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }
 
     @Override
-    public Map<String, Object> getProductsHomepage() {
-        //Products displayed on homepage
-        int size = 20;
-        Pageable paging = PageRequest.of(0, size);
-        Page<Product> pageTuts = productRepository.findAll(paging);
-        return getMapResponseEntity(pageTuts);
+    public Page<ProductDTO> getProductsHomepage(final Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
+        return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }
 
     @Override
-    public Map<String, Object> getProductsByFilter(String keyword, String category, ECondition condition, List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd, ESorting sorting) {
-        int sizePage = 9;
-        Pageable paging = PageRequest.of(0, sizePage);
-        List<Product> pageTuts = productRepository.productSearch(keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting, paging);
-        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(pageTuts);
-        Map<String, Object> response = new HashMap<>();
-        response.put("products", productDTOs);
+    public Page<ProductDTO> getProductsByFilter(final Pageable pageable, final String category, final ECondition condition, final List<String> brands,
+                                                final List<String> colors, final List<Integer> sizes, final Long priceStart, final Long priceEnd) {
 
-        return response;
+        Page<Product> productPage = productRepository.productSearch(pageable, category, condition, brands, colors, sizes, priceStart, priceEnd);
+        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
+        return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }
 
     @Override
     @Transactional
-    public BaseResponse delete(Long productId) {
+    public BaseResponse delete(final Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new NotFoundException("Product not found"));
         productRepository.delete(product);
         return new BaseResponse(true, "Deleted product successfully");
     }
 
     @Override
-    public Page<ProductDTO> getProductsBySearch(Pageable pageable, String productName) {
-        Page<Product> productsPage = productRepository.findByNameIsContaining(pageable, productName);
-        List<ProductDTO> productDTOs =
-                productConverter.convertToProductDTOList(productsPage.getContent());
-        return new PageImpl<>(productDTOs, pageable,
-                productsPage.getTotalElements());
-    }
-
-    //GetMapResponseEntity
-    private Map<String, Object> getMapResponseEntity(Page<Product> pageTuts) {
-        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(pageTuts.getContent());
-        Map<String, Object> response = new HashMap<>();
-        response.put("products", productDTOs);
-        response.put("currentPage", pageTuts.getNumber());
-        response.put("totalItems", pageTuts.getTotalElements());
-        response.put("totalPages", pageTuts.getTotalPages());
-        return response;
+    public Page<ProductDTO> getProductsBySearch(final Pageable pageable, final String productName) {
+        Page<Product> productPage = productRepository.findByNameIsContaining(pageable, productName);
+        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
+        return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }
 }

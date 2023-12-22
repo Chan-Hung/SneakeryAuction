@@ -26,9 +26,9 @@ public interface BidHistoryService {
     /**
      * Delete Bid History Of Product
      *
-     * @param bidHistoryId Long
+     * @param id Long
      * @return BaseResponse
      */
-    BaseResponse delete(Long bidHistoryId);
+    BaseResponse delete(Long id);
 
 }

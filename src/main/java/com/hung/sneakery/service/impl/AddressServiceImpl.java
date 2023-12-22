@@ -33,7 +33,7 @@ public class AddressServiceImpl implements AddressService {
     private static final String ADDRESS_NOT_FOUND = "Address not found";
 
     @Override
-    public AddressDTO getOne(Long id) {
+    public AddressDTO getOne(final Long id) {
         Address address = addressRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ADDRESS_NOT_FOUND));
         return addressConverter.convertToAddressDTO(address);

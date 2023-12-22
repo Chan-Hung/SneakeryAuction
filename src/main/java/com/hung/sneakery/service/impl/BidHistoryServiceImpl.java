@@ -36,7 +36,7 @@ public class BidHistoryServiceImpl implements BidHistoryService {
     private BidHistoryConverter bidHistoryConverter;
 
     @Override
-    public List<BidHistoryDTO> getHistoryByProduct(Long productId) {
+    public List<BidHistoryDTO> getHistoryByProduct(final Long productId) {
         //One-To-One relation: bid<->product
         List<BidHistory> bidHistories = bidHistoryRepository.findByBid_IdOrderByCreatedDateDesc(productId);
         if (Objects.isNull(bidHistories)) {
@@ -45,7 +45,6 @@ public class BidHistoryServiceImpl implements BidHistoryService {
         return bidHistoryConverter.convertToBidHistoryDTOList(bidHistories);
     }
 
-
     @Override
     public List<GetBidHistoryByUser> getHistoryByUser() {
         //One-To-One relation: bid<->product
@@ -53,7 +52,7 @@ public class BidHistoryServiceImpl implements BidHistoryService {
         User user = userRepository.findByUsername(username);
 
         List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_Id(user.getId());
-        if (bidHistoryList == null) {
+        if (Objects.isNull(bidHistoryList)) {
             throw new NotFoundException("User has not placed any bid");
         }
         List<GetBidHistoryByUser> getBidHistoryByUsers = new ArrayList<>();
@@ -65,15 +64,15 @@ public class BidHistoryServiceImpl implements BidHistoryService {
     }
 
     @Override
-    public BaseResponse delete(Long bidHistoryId) {
-        BidHistory bidHistory = bidHistoryRepository.findById(bidHistoryId)
+    public BaseResponse delete(final Long id) {
+        BidHistory bidHistory = bidHistoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Bid History not found"));
         bidHistory.setStatus(EBidStatus.REMOVE);
         bidHistoryRepository.save(bidHistory);
         return new BaseResponse("Rút lại lần ra giá thành công");
     }
 
-    private GetBidHistoryByUser mapToGetBidHistoryByUser(BidHistory bidHistory) {
+    private GetBidHistoryByUser mapToGetBidHistoryByUser(final BidHistory bidHistory) {
         return GetBidHistoryByUser.builder()
                 .createdAt(bidHistory.getCreatedDate())
                 .amount(bidHistory.getPrice())

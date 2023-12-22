@@ -26,13 +26,13 @@ public class WalletController {
         return walletService.getAll(pageable);
     }
 
-    @GetMapping("/{userId}")
-    public WalletDTO getOne(@PathVariable final Long userId) {
-        return walletService.getOne(userId);
+    @GetMapping("/{id}")
+    public WalletDTO getOne(@PathVariable final Long id) {
+        return walletService.getOne(id);
     }
 
-    @PostMapping("/{userId}")
-    public BaseResponse create(@PathVariable final Long userId) {
-        return walletService.create(userId);
+    @PostMapping("/{id}")
+    public BaseResponse create(@PathVariable final Long id) {
+        return walletService.create(id);
     }
 }

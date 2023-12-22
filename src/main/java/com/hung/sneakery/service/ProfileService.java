@@ -16,16 +16,16 @@ public interface ProfileService {
     /**
      * Get User detail
      *
-     * @param userId Long
+     * @param id Long
      * @return UserDTO
      */
-    UserDTO getOne(Long userId);
+    UserDTO getOne(Long id);
 
     /**
      * Update user
      *
-     * @param userId Long
+     * @param id Long
      * @return UserDTO
      */
-    UserDTO update(Long userId, UserDTO userDTO);
+    UserDTO update(Long id, UserDTO userDTO);
 }

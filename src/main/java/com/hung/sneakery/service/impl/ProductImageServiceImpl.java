@@ -17,7 +17,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     private CloudinaryService cloudinaryService;
 
     @Override
-    public ProductImage upload(byte[] data, Product product, Boolean isThumbnail) {
+    public ProductImage upload(final byte[] data, final Product product, final Boolean isThumbnail) {
         try {
             CloudinaryUploadResponse response = cloudinaryService.upload(data);
             return ProductImage.builder()

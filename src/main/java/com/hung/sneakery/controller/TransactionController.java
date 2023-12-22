@@ -3,7 +3,7 @@ package com.hung.sneakery.controller;
 import com.hung.sneakery.dto.request.DepositRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.TransactionHistory;
-import com.hung.sneakery.exception.TransactionException;
+import com.hung.sneakery.exception.PayPalTransactionException;
 import com.hung.sneakery.service.TransactionHistoryService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -33,9 +33,9 @@ public class TransactionController {
                 }
             }
         } catch (PayPalRESTException e) {
-            throw new TransactionException(e.getMessage());
+            throw new PayPalTransactionException(e.getMessage());
         }
-        return new BaseResponse(false, "Paypal is not available now, please contact to our customer service");
+        return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
     }
 
     @GetMapping("/deposit/cancel")
@@ -52,9 +52,9 @@ public class TransactionController {
                 return transactionHistoryService.handleSuccess(payment);
             }
         } catch (PayPalRESTException e) {
-            throw new TransactionException(e.getMessage());
+            throw new PayPalTransactionException(e.getMessage());
         }
-        return new BaseResponse(false, "Paypal is not available now, please contact to our customer service");
+        return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
     }
 
     @GetMapping()

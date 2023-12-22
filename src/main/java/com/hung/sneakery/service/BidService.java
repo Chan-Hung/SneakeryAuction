@@ -15,22 +15,22 @@ public interface BidService {
     /**
      * Place A Bid
      *
-     * @param bidPlaceRequest BidPlaceRequest
+     * @param request BidPlaceRequest
      * @return BaseResponse
      */
-    BaseResponse placeBid(BidPlaceRequest bidPlaceRequest);
+    BaseResponse placeBid(BidPlaceRequest request);
 
     /**
      * Create A Bid
      *
-     * @param bidCreateRequest BidCreateRequest
-     * @param thumbnail        MultipartFile
-     * @param images           List<MultipartFile>
+     * @param request   BidCreateRequest
+     * @param thumbnail MultipartFile
+     * @param images    List<MultipartFile>
      * @return BaseResponse
      * @throws IOException    IOException
      * @throws ParseException ParseException
      */
-    BaseResponse createBid(BidCreateRequest bidCreateRequest, MultipartFile thumbnail, List<MultipartFile> images) throws IOException, ParseException;
+    BaseResponse createBid(BidCreateRequest request, MultipartFile thumbnail, List<MultipartFile> images) throws IOException, ParseException;
 
     /**
      * Get All Uploaded Products

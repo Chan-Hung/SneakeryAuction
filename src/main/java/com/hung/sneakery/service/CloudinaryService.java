@@ -6,5 +6,12 @@ import java.io.IOException;
 
 public interface CloudinaryService {
 
+    /**
+     * Upload images to Cloudinary
+     *
+     * @param images byte[]
+     * @return CloudinaryUploadResponse
+     * @throws IOException IOException
+     */
     CloudinaryUploadResponse upload(byte[] images) throws IOException;
 }

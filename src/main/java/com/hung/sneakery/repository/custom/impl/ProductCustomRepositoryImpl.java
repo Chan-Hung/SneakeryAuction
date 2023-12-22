@@ -2,8 +2,9 @@ package com.hung.sneakery.repository.custom.impl;
 
 import com.hung.sneakery.entity.*;
 import com.hung.sneakery.enums.ECondition;
-import com.hung.sneakery.enums.ESorting;
 import com.hung.sneakery.repository.custom.ProductCustomRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -22,17 +23,14 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     private EntityManager em;
 
     @Override
-    public List<Product> productSearch(String keyword, String category, ECondition condition, List<String> brands,
+    public Page<Product> productSearch(Pageable pageable, String category, ECondition condition, List<String> brands,
                                        List<String> colors, List<Integer> sizes, Long priceStart,
-                                       Long priceEnd, ESorting sorting, Pageable pageable) {
+                                       Long priceEnd) {
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = cb.createQuery(Product.class);
         Root<Product> root = criteriaQuery.from(Product.class);
         List<Predicate> predicateList = new ArrayList<>();
-
-        if (Objects.nonNull(keyword)) {
-            predicateList.add(cb.like(root.get(Product_.NAME), "%" + keyword + "%"));
-        }
 
         if (Objects.nonNull(category)) {
             Join<Product, Category> productCategoryJoin = root.join(Product_.CATEGORY);
@@ -78,38 +76,16 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
             predicateList.add(cb.lessThanOrEqualTo(productBidJoin.get(Bid_.PRICE_START), priceEnd));
         }
 
-        //Main query & sorting
+        //Main query
         criteriaQuery.where(predicateList.toArray(new Predicate[0]));
-        if (Objects.nonNull(sorting)) {
-            switch (sorting) {
-                case A_TO_Z:
-                    criteriaQuery.orderBy(cb.asc(root.get(Product_.NAME)));
-                    break;
-                case LOW_TO_HIGH:
-                    criteriaQuery.orderBy(cb.asc(productBidJoin.get(Bid_.PRICE_START)));
-                    break;
-                case HIGH_TO_LOW:
-                    criteriaQuery.orderBy(cb.desc(productBidJoin.get(Bid_.PRICE_START)));
-                    break;
-                case NEWEST:
-                    criteriaQuery.orderBy(cb.desc(productBidJoin.get(Bid_.CREATED_DATE)));
-                    break;
-            }
-        } else {
-            criteriaQuery.orderBy(cb.asc(root.get(Product_.NAME)));
-        }
-
-        //Count products after filtered
-//        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-//        Root<Product> productCount = countQuery.from(Product.class);
-//        countQuery.select(cb.count(productCount)).where(predicateList.toArray(new Predicate[0]));
-//        Long count = em.createQuery(countQuery).getSingleResult();
-//        System.out.println(count);
 
         TypedQuery<Product> query = em.createQuery(criteriaQuery);
 
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
         query.setMaxResults(pageable.getPageSize());
-        return query.getResultList();
+
+        List<Product> products = query.getResultList();
+
+        return new PageImpl<>(products, pageable, products.size());
     }
 }

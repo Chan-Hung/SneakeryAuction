@@ -46,16 +46,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO update(final Long orderId, final OrderRequest request) {
-        Order order = orderRepository.findById(orderId)
+    public OrderDTO update(final Long id, final OrderRequest request) {
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
         order.setStatus(request.getStatus());
         return orderConverter.convertToOrderDTO(orderRepository.save(order));
     }
 
     @Override
-    public OrderDTO delete(final Long orderId) {
-        Order order = orderRepository.findById(orderId)
+    public OrderDTO delete(final Long id) {
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
         orderRepository.delete(order);
         return orderConverter.convertToOrderDTO(order);

@@ -33,15 +33,15 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public UserDTO getOne(final Long userId) {
-        User user = userRepository.findById(userId)
+    public UserDTO getOne(final Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         return userConverter.convertToUserDTO(user);
     }
 
     @Override
-    public UserDTO update(final Long userId, final UserDTO userDTO) {
-        User user = userRepository.findById(userId)
+    public UserDTO update(final Long id, final UserDTO userDTO) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         user.setIsActive(userDTO.getIsActive());
         return userConverter.convertToUserDTO(userRepository.save(user));

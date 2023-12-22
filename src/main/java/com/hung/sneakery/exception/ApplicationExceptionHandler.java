@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationExceptionHandler.class);
 
     @ExceptionHandler(NotFoundException.class)
@@ -22,7 +23,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler({PayPalRESTException.class, TransactionException.class})
+    @ExceptionHandler({PayPalRESTException.class, PayPalTransactionException.class})
     public ResponseEntity<Object> handlePayPalException(PayPalRESTException ex) {
         LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
         ApplicationExceptionResponse error = new ApplicationExceptionResponse();

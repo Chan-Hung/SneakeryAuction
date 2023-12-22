@@ -4,12 +4,10 @@ import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.enums.ECondition;
-import com.hung.sneakery.enums.ESorting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface ProductService {
@@ -30,25 +28,26 @@ public interface ProductService {
     List<Long> getAllProductsId();
 
     /**
-     * Get Products By Category
-     *
-     * @param categoryName String
-     * @param page         Integer
-     * @return Map<String, Object>
-     */
-    Map<String, Object> getProductsByCategory(String categoryName, Integer page);
-
-    /**
      * Get Products Showed On Homepage
      *
-     * @return Map<String, Object>
+     * @param pageable Pageable
+     * @return Page<ProductDTO>
      */
-    Map<String, Object> getProductsHomepage();
+    Page<ProductDTO> getProductsHomepage(Pageable pageable);
+
+    /**
+     * Get Products By Category
+     *
+     * @param pageable     Pageable
+     * @param categoryName String
+     * @return Page<ProductDTO>
+     */
+    Page<ProductDTO> getProductsByCategory(Pageable pageable, String categoryName);
 
     /**
      * Get Products By Filter
      *
-     * @param keyword    String
+     * @param pageable   Pageable
      * @param category   String
      * @param condition  ECondition
      * @param brands     List<String>
@@ -56,19 +55,11 @@ public interface ProductService {
      * @param sizes      List<Integer>
      * @param priceStart Long
      * @param priceEnd   Long
-     * @param sorting    ESorting
-     * @return Map<String, Object>
+     * @return Page<ProductDTO>
      */
-    Map<String, Object> getProductsByFilter(String keyword, String category, ECondition condition,
-                                            List<String> brands, List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd, ESorting sorting);
-
-    /**
-     * Delete Product
-     *
-     * @param id Long
-     * @return BaseResponse
-     */
-    BaseResponse delete(Long id);
+    Page<ProductDTO> getProductsByFilter(Pageable pageable, String category, ECondition condition,
+                                         List<String> brands, List<String> colors,
+                                         List<Integer> sizes, Long priceStart, Long priceEnd);
 
     /**
      * Get Products By Search
@@ -78,4 +69,12 @@ public interface ProductService {
      * @return Page<ProductDTO>
      */
     Page<ProductDTO> getProductsBySearch(Pageable pageable, String productName);
+
+    /**
+     * Delete Product
+     *
+     * @param id Long
+     * @return BaseResponse
+     */
+    BaseResponse delete(Long id);
 }

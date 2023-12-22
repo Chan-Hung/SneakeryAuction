@@ -59,18 +59,18 @@ public class BidServiceImpl implements BidService {
 
     @Override
     @Transactional
-    public BaseResponse placeBid(BidPlaceRequest bidPlaceRequest) {
+    public BaseResponse placeBid(final BidPlaceRequest request) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User buyer = userRepository.findByUsername(userName);
 
-        Long bidProductId = bidPlaceRequest.getProductId();
+        Long bidProductId = request.getProductId();
         Product product = productRepository.findById(bidProductId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
         Bid bid = product.getBid();
         if (buyer.equals(product.getUser())) {
             throw new BidPlacingException("Người bán không được phép tham gia đấu giá sản phẩm này");
         }
-        Long amount = bidPlaceRequest.getAmount();
+        Long amount = request.getAmount();
         Long stepBid = bid.getStepBid();
         BidHistory currentBidHistory = bidHistoryRepository
                 .findFirstByBidIdAndStatusOrderByPriceDesc(bidProductId, EBidStatus.SUCCESS).orElse(null);
@@ -88,7 +88,7 @@ public class BidServiceImpl implements BidService {
         return new BaseResponse("Place bid successfully");
     }
 
-    private void checkBidIsValid(Long currentAmount, Long stepBid, Long amount, Long bidIncrement) {
+    private void checkBidIsValid(final Long currentAmount, final Long stepBid, final Long amount, final Long bidIncrement) {
         if (amount <= currentAmount) {
             throw new BidPlacingException("Lượt ra giá của bạn phải cao hơn số tiền hiện tại");
         }
@@ -98,7 +98,7 @@ public class BidServiceImpl implements BidService {
         compareWalletBalance(currentAmount, amount);
     }
 
-    private void compareWalletBalance(Long currentPrice, Long amount) {
+    private void compareWalletBalance(final Long currentPrice, final Long amount) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User bidder = userRepository.findByUsername(userName);
         Wallet wallet = walletRepository.findByUser_Id(bidder.getId());
@@ -112,11 +112,11 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public BaseResponse createBid(BidCreateRequest bidCreateRequest, MultipartFile thumbnail, List<MultipartFile> images) throws IOException {
+    public BaseResponse createBid(final BidCreateRequest request, final MultipartFile thumbnail, final List<MultipartFile> images) throws IOException {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User seller = userRepository.findByUsername(userName);
 
-        Bid bid = mapToBid(bidCreateRequest, seller, thumbnail, images);
+        Bid bid = mapToBid(request, seller, thumbnail, images);
 
         countdownService.biddingCountdown(bid);
 
@@ -145,25 +145,21 @@ public class BidServiceImpl implements BidService {
         return bidDTOList;
     }
 
-    private Bid mapToBid(BidCreateRequest bidCreateRequest, User seller, MultipartFile thumbnail, List<MultipartFile> images) throws IOException {
-        //Map Category
-        Category category = categoryRepository.findByName(bidCreateRequest.getCategory());
+    private Bid mapToBid(final BidCreateRequest request, final User seller, final MultipartFile thumbnail, final List<MultipartFile> images) throws IOException {
+        Category category = categoryRepository.findByName(request.getCategory());
 
-        //Map Product
         Product product = Product.builder()
-                .name(bidCreateRequest.getName())
-                .condition(bidCreateRequest.getCondition())
+                .name(request.getName())
+                .condition(request.getCondition())
                 .user(seller)
                 .category(category)
-                .brand(bidCreateRequest.getBrand())
-                .color(bidCreateRequest.getColor())
-                .size(bidCreateRequest.getSize())
+                .brand(request.getBrand())
+                .color(request.getColor())
+                .size(request.getSize())
                 .build();
 
-        //Save Product
         productRepository.save(product);
 
-        //Save ProductImage
         List<ProductImage> productImages = new ArrayList<>();
         ProductImage image = productImageService.upload(thumbnail.getBytes(), product, true);
         productImages.add(image);
@@ -174,9 +170,9 @@ public class BidServiceImpl implements BidService {
         productImageRepository.saveAll(productImages);
 
         Bid bid = Bid.builder()
-                .priceStart(bidCreateRequest.getPriceStart())
-                .stepBid(bidCreateRequest.getStepBid())
-                .closingDateTime(bidCreateRequest.getBidClosingDateTime())
+                .priceStart(request.getPriceStart())
+                .stepBid(request.getStepBid())
+                .closingDateTime(request.getBidClosingDateTime())
                 .product(product)
                 .build();
         bidRepository.save(bid);

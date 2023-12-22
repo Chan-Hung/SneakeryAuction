@@ -13,20 +13,20 @@ public interface AuthService {
     /**
      * Sign In
      *
-     * @param signInRequest SignInRequest
+     * @param request SignInRequest
      * @return JwtResponse
      */
-    JwtResponse signIn(SignInRequest signInRequest);
+    JwtResponse signIn(SignInRequest request);
 
     /**
      * Sign Up
      *
-     * @param signUpRequest SignUpRequest
+     * @param request SignUpRequest
      * @return BaseResponse
      * @throws MessagingException           MessagingException
      * @throws UnsupportedEncodingException UnsupportedEncodingException
      */
-    BaseResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException;
+    BaseResponse signUp(SignUpRequest request) throws MessagingException, UnsupportedEncodingException;
 
     /**
      * Check User's Email

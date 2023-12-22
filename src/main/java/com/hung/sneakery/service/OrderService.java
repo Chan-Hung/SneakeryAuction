@@ -29,13 +29,13 @@ public interface OrderService {
      *
      * @return OrderDTO
      */
-    OrderDTO update(Long orderId, OrderRequest request);
+    OrderDTO update(Long id, OrderRequest request);
 
     /**
      * Delete order
      *
-     * @param orderId Long
+     * @param id Long
      * @return OrderDTO
      */
-    OrderDTO delete(Long orderId);
+    OrderDTO delete(Long id);
 }
