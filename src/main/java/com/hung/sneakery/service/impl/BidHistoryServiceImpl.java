@@ -37,7 +37,6 @@ public class BidHistoryServiceImpl implements BidHistoryService {
 
     @Override
     public List<BidHistoryDTO> getHistoryByProduct(final Long productId) {
-        //One-To-One relation: bid<->product
         List<BidHistory> bidHistories = bidHistoryRepository.findByBid_IdOrderByCreatedDateDesc(productId);
         if (Objects.isNull(bidHistories)) {
             throw new NotFoundException("Bid History not found");
@@ -47,14 +46,10 @@ public class BidHistoryServiceImpl implements BidHistoryService {
 
     @Override
     public List<GetBidHistoryByUser> getHistoryByUser() {
-        //One-To-One relation: bid<->product
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
 
         List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_Id(user.getId());
-        if (Objects.isNull(bidHistoryList)) {
-            throw new NotFoundException("User has not placed any bid");
-        }
         List<GetBidHistoryByUser> getBidHistoryByUsers = new ArrayList<>();
         for (BidHistory bidHistory : bidHistoryList) {
             GetBidHistoryByUser getBidHistoryByUser = mapToGetBidHistoryByUser(bidHistory);
@@ -74,6 +69,8 @@ public class BidHistoryServiceImpl implements BidHistoryService {
 
     private GetBidHistoryByUser mapToGetBidHistoryByUser(final BidHistory bidHistory) {
         return GetBidHistoryByUser.builder()
+                .bidHistoryId(bidHistory.getId())
+                .status(bidHistory.getStatus().toString())
                 .createdAt(bidHistory.getCreatedDate())
                 .amount(bidHistory.getPrice())
                 .product(productConverter.convertToProductDTO(bidHistory.getBid().getProduct()))

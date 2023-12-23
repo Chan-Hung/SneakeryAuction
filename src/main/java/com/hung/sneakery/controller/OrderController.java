@@ -2,8 +2,10 @@ package com.hung.sneakery.controller;
 
 import com.hung.sneakery.dto.OrderDTO;
 import com.hung.sneakery.dto.request.OrderRequest;
+import com.hung.sneakery.enums.EOrderStatus;
 import com.hung.sneakery.service.OrderService;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,8 +30,9 @@ public class OrderController {
     }
 
     @GetMapping("/users/{id}")
-    public Page<OrderDTO> getByUser(@PathVariable final Long id, final Pageable pageable) {
-        return orderService.getByUser(id, pageable);
+    public Page<OrderDTO> getByUser(@PathVariable final Long id, final Pageable pageable,
+                                    @RequestParam(defaultValue = StringUtils.EMPTY, name = "q") final EOrderStatus orderStatus) {
+        return orderService.getByUser(id, pageable, orderStatus);
     }
 
     @PutMapping("/{id}")

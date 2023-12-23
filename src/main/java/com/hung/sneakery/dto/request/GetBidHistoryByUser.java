@@ -5,22 +5,24 @@ import com.hung.sneakery.dto.ProductDTO;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 public class GetBidHistoryByUser {
 
+    @JsonProperty("bidHistoryId")
+    private Long bidHistoryId;
+
+    @JsonProperty("status")
+    private String status;
+
     @JsonProperty("amount")
-    @NotBlank
     private Long amount;
 
     @JsonProperty("createdAt")
-    @NotBlank
     private LocalDateTime createdAt;
 
     @JsonProperty("product")
-    @NotBlank
     private ProductDTO product;
 }

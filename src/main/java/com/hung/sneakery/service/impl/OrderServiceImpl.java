@@ -5,6 +5,7 @@ import com.hung.sneakery.dto.OrderDTO;
 import com.hung.sneakery.dto.request.OrderRequest;
 import com.hung.sneakery.entity.Order;
 import com.hung.sneakery.entity.User;
+import com.hung.sneakery.enums.EOrderStatus;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.OrderRepository;
 import com.hung.sneakery.repository.UserRepository;
@@ -37,10 +38,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Page<OrderDTO> getByUser(final Long id, final Pageable pageable) {
+    public Page<OrderDTO> getByUser(final Long id, final Pageable pageable, EOrderStatus orderStatus) {
         User winner = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
-        Page<Order> ordersPage = orderRepository.findByWinner(winner, pageable);
+        Page<Order> ordersPage = orderRepository.findByWinnerAndStatus(winner, orderStatus, pageable);
         List<OrderDTO> orderDTOs = orderConverter.convertToOrderDTOList(ordersPage.getContent());
         return new PageImpl<>(orderDTOs, pageable, ordersPage.getTotalElements());
     }
