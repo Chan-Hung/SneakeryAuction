@@ -4,9 +4,9 @@ import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.enums.ECondition;
+import com.hung.sneakery.enums.ESorting;
 import com.hung.sneakery.service.ProductService;
 import io.swagger.annotations.Api;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -33,24 +33,13 @@ public class ProductController {
         return productService.getProductsHomepage(pageable);
     }
 
-    @GetMapping("/search")
-    public Page<ProductDTO> getProductsBySearch(final Pageable pageable,
-                                                @RequestParam(defaultValue = StringUtils.EMPTY, name = "q") final String productName) {
-        return productService.getProductsBySearch(pageable, productName);
-    }
-
     @GetMapping("/{id}")
     public ProductDetailedDTO getOne(@PathVariable final Long id) {
         return productService.getOne(id);
     }
 
-    @GetMapping("/category/{categoryName}")
-    public Page<ProductDTO> getProductsByCategory(final Pageable pageable, @PathVariable final String categoryName) {
-        return productService.getProductsByCategory(pageable, categoryName);
-    }
-
-    @GetMapping()
-    public Page<ProductDTO> getProductsByFilter(
+    @GetMapping
+    public Page<ProductDTO> getAll(
             final Pageable pageable,
             @RequestParam(name = "keyword", required = false) final String keyword,
             @RequestParam(name = "category", required = false) final String category,
@@ -59,9 +48,9 @@ public class ProductController {
             @RequestParam(name = "color", required = false) final List<String> colors,
             @RequestParam(name = "sizes", required = false) final List<Integer> sizes,
             @RequestParam(name = "priceStart", required = false) final Long priceStart,
-            @RequestParam(name = "priceEnd", required = false) final Long priceEnd) {
-        //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
-        return productService.getProductsByFilter(pageable, keyword, category, condition, brands, colors, sizes, priceStart, priceEnd);
+            @RequestParam(name = "priceEnd", required = false) final Long priceEnd,
+            @RequestParam(name = "sorting", required = false) final ESorting sorting) {
+        return productService.getAll(pageable, keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting);
     }
 
     @DeleteMapping("/{id}")

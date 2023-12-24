@@ -5,9 +5,9 @@ import com.hung.sneakery.converter.ProductDetailedConverter;
 import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.entity.Category;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.enums.ECondition;
+import com.hung.sneakery.enums.ESorting;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.repository.ProductRepository;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -50,17 +49,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> getProductsByCategory(final Pageable pageable, final String categoryName) {
-        Category category = categoryRepository.findByName(categoryName);
-        if (Objects.isNull(category)) {
-            throw new NotFoundException("Category name: " + categoryName + " is invalid");
-        }
-        Page<Product> productPage = productRepository.findByCategory(pageable, category);
-        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
-        return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
-    }
-
-    @Override
     public Page<ProductDTO> getProductsHomepage(final Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
         List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
@@ -68,10 +56,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> getProductsByFilter(final Pageable pageable, final String keyword, final String category, final ECondition condition, final List<String> brands,
-                                                final List<String> colors, final List<Integer> sizes, final Long priceStart, final Long priceEnd) {
-
-        Page<Product> productPage = productRepository.productSearch(pageable, keyword, category, condition, brands, colors, sizes, priceStart, priceEnd);
+    public Page<ProductDTO> getAll(final Pageable pageable, final String keyword, final String category, final ECondition condition, final List<String> brands,
+                                   final List<String> colors, final List<Integer> sizes, final Long priceStart, final Long priceEnd, final ESorting sorting) {
+        Page<Product> productPage = productRepository.productSearch(pageable, keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting);
         List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
         return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }
@@ -83,12 +70,5 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new NotFoundException("Product not found"));
         productRepository.delete(product);
         return new BaseResponse(true, "Deleted product successfully");
-    }
-
-    @Override
-    public Page<ProductDTO> getProductsBySearch(final Pageable pageable, final String productName) {
-        Page<Product> productPage = productRepository.findByNameIsContaining(pageable, productName);
-        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
-        return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }
 }

@@ -2,6 +2,7 @@ package com.hung.sneakery.repository.custom.impl;
 
 import com.hung.sneakery.entity.*;
 import com.hung.sneakery.enums.ECondition;
+import com.hung.sneakery.enums.ESorting;
 import com.hung.sneakery.repository.custom.ProductCustomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,7 +26,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     @Override
     public Page<Product> productSearch(Pageable pageable, String keyword, String category, ECondition condition, List<String> brands,
                                        List<String> colors, List<Integer> sizes, Long priceStart,
-                                       Long priceEnd) {
+                                       Long priceEnd, ESorting sorting) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = cb.createQuery(Product.class);
@@ -82,7 +83,24 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
 
         //Main query
         criteriaQuery.where(predicateList.toArray(new Predicate[0]));
-
+        if (Objects.nonNull(sorting)) {
+            switch (sorting) {
+                case A_TO_Z:
+                    criteriaQuery.orderBy(cb.asc(root.get(Product_.NAME)));
+                    break;
+                case LOW_TO_HIGH:
+                    criteriaQuery.orderBy(cb.asc(productBidJoin.get(Bid_.PRICE_START)));
+                    break;
+                case HIGH_TO_LOW:
+                    criteriaQuery.orderBy(cb.desc(productBidJoin.get(Bid_.PRICE_START)));
+                    break;
+                case NEWEST:
+                    criteriaQuery.orderBy(cb.desc(productBidJoin.get(AbstractCommonEntity_.CREATED_DATE)));
+                    break;
+            }
+        } else {
+            criteriaQuery.orderBy(cb.desc(productBidJoin.get(AbstractCommonEntity_.CREATED_DATE)));
+        }
         TypedQuery<Product> query = em.createQuery(criteriaQuery);
 
         query.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
