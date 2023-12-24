@@ -68,10 +68,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> getProductsByFilter(final Pageable pageable, final String category, final ECondition condition, final List<String> brands,
+    public Page<ProductDTO> getProductsByFilter(final Pageable pageable, final String keyword, final String category, final ECondition condition, final List<String> brands,
                                                 final List<String> colors, final List<Integer> sizes, final Long priceStart, final Long priceEnd) {
 
-        Page<Product> productPage = productRepository.productSearch(pageable, category, condition, brands, colors, sizes, priceStart, priceEnd);
+        Page<Product> productPage = productRepository.productSearch(pageable, keyword, category, condition, brands, colors, sizes, priceStart, priceEnd);
         List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
         return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }

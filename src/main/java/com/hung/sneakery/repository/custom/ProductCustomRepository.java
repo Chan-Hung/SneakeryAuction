@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductCustomRepository {
 
-    Page<Product> productSearch(Pageable pageable, String category, ECondition condition, List<String> brands,
+    Page<Product> productSearch(Pageable pageable, String keyword, String category, ECondition condition, List<String> brands,
                                 List<String> colors, List<Integer> sizes, Long priceStart, Long priceEnd);
 }
 

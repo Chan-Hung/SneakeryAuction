@@ -52,6 +52,7 @@ public class ProductController {
     @GetMapping()
     public Page<ProductDTO> getProductsByFilter(
             final Pageable pageable,
+            @RequestParam(name = "keyword", required = false) final String keyword,
             @RequestParam(name = "category", required = false) final String category,
             @RequestParam(name = "condition", required = false) final ECondition condition,
             @RequestParam(name = "brand", required = false) final List<String> brands,
@@ -60,7 +61,7 @@ public class ProductController {
             @RequestParam(name = "priceStart", required = false) final Long priceStart,
             @RequestParam(name = "priceEnd", required = false) final Long priceEnd) {
         //https://donghohaitrieu.com/danh-muc/dong-ho-nam/?brand=citizen,fossil&pa_kieu-dang=nam&pa_nang-luong=co-automatic
-        return productService.getProductsByFilter(pageable, category, condition, brands, colors, sizes, priceStart, priceEnd);
+        return productService.getProductsByFilter(pageable, keyword, category, condition, brands, colors, sizes, priceStart, priceEnd);
     }
 
     @DeleteMapping("/{id}")

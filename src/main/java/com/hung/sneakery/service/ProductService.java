@@ -48,6 +48,7 @@ public interface ProductService {
      * Get Products By Filter
      *
      * @param pageable   Pageable
+     * @param keyword    String
      * @param category   String
      * @param condition  ECondition
      * @param brands     List<String>
@@ -57,7 +58,7 @@ public interface ProductService {
      * @param priceEnd   Long
      * @return Page<ProductDTO>
      */
-    Page<ProductDTO> getProductsByFilter(Pageable pageable, String category, ECondition condition,
+    Page<ProductDTO> getProductsByFilter(Pageable pageable, String keyword, String category, ECondition condition,
                                          List<String> brands, List<String> colors,
                                          List<Integer> sizes, Long priceStart, Long priceEnd);
 

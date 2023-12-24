@@ -23,7 +23,7 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
     private EntityManager em;
 
     @Override
-    public Page<Product> productSearch(Pageable pageable, String category, ECondition condition, List<String> brands,
+    public Page<Product> productSearch(Pageable pageable, String keyword, String category, ECondition condition, List<String> brands,
                                        List<String> colors, List<Integer> sizes, Long priceStart,
                                        Long priceEnd) {
 
@@ -31,6 +31,10 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         CriteriaQuery<Product> criteriaQuery = cb.createQuery(Product.class);
         Root<Product> root = criteriaQuery.from(Product.class);
         List<Predicate> predicateList = new ArrayList<>();
+
+        if (Objects.nonNull(keyword)) {
+            predicateList.add(cb.like(root.get(Product_.NAME), "%" + keyword + "%"));
+        }
 
         if (Objects.nonNull(category)) {
             Join<Product, Category> productCategoryJoin = root.join(Product_.CATEGORY);
