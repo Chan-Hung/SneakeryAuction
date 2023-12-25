@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -205,6 +206,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     }
 
     @Override
+    @Transactional
     public BaseResponse withdraw(final Long amount) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
@@ -213,7 +215,6 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         userWallet.setBalance(userWallet.getBalance() - amount);
         walletRepository.save(userWallet);
 
-        //Add transaction WITHDRAW
         TransactionHistory userTransactionHistory = TransactionHistory.builder()
                 .amount(amount)
                 .wallet(userWallet)

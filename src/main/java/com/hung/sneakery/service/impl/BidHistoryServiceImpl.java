@@ -49,7 +49,7 @@ public class BidHistoryServiceImpl implements BidHistoryService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
 
-        List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_Id(user.getId());
+        List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_IdOrderByCreatedDateDesc(user.getId());
         List<GetBidHistoryByUser> getBidHistoryByUsers = new ArrayList<>();
         for (BidHistory bidHistory : bidHistoryList) {
             GetBidHistoryByUser getBidHistoryByUser = mapToGetBidHistoryByUser(bidHistory);
