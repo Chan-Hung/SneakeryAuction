@@ -5,8 +5,8 @@ import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.TransactionHistory;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface TransactionHistoryService {
 
@@ -40,9 +40,11 @@ public interface TransactionHistoryService {
     /**
      * Get All Transaction History By Wallet
      *
-     * @return List<TransactionHistory>
+     * @param walletId Long
+     * @param pageable Pageable
+     * @return Page<TransactionHistory>
      */
-    List<TransactionHistory> getAllByWallet();
+    Page<TransactionHistory> getByWallet(Long walletId, Pageable pageable);
 
     /**
      * Paid By Winner

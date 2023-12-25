@@ -9,10 +9,11 @@ import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import io.swagger.annotations.Api;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController
 @Api(tags = "Transaction By PayPal APIs")
@@ -57,9 +58,9 @@ public class TransactionController {
         return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
     }
 
-    @GetMapping()
-    public List<TransactionHistory> getAllByWallet() {
-        return transactionHistoryService.getAllByWallet();
+    @GetMapping("/{walletId}")
+    public Page<TransactionHistory> getByWallet(@PathVariable final Long walletId, final Pageable pageable) {
+        return transactionHistoryService.getByWallet(walletId, pageable);
     }
 
     @GetMapping("/withdraw")

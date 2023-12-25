@@ -15,6 +15,8 @@ import com.paypal.base.rest.PayPalRESTException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -127,12 +129,10 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     }
 
     @Override
-    public List<TransactionHistory> getAllByWallet() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username);
-
-        Wallet wallet = walletRepository.findByUser_Id(user.getId());
-        return transactionHistoryRepository.findTop10ByWalletOrderByCreatedDateDesc(wallet);
+    public Page<TransactionHistory> getByWallet(final Long walletId, final Pageable pageable) {
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> new NotFoundException("Wallet not found"));
+        return transactionHistoryRepository.findAllByWallet(wallet, pageable);
     }
 
     @Override
