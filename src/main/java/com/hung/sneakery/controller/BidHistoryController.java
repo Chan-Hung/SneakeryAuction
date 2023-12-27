@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Bid History APIs")
-@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
+@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/", "https://aunction-react-js.vercel.app/"})
 @RequestMapping("/bid-history")
 public class BidHistoryController {
 

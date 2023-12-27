@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @Api(tags = "Order APIs")
-@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
+@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/", "https://aunction-react-js.vercel.app/"})
 @RequestMapping("/orders")
 public class OrderController {
 
