@@ -34,12 +34,12 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         List<Predicate> predicateList = new ArrayList<>();
 
         if (Objects.nonNull(keyword)) {
-            predicateList.add(cb.like(root.get(Product_.NAME), "%" + keyword + "%"));
+            predicateList.add(cb.like(cb.lower(root.get(Product_.NAME)), "%" + keyword.toLowerCase() + "%"));
         }
 
         if (Objects.nonNull(category)) {
             Join<Product, Category> productCategoryJoin = root.join(Product_.CATEGORY);
-            predicateList.add(cb.equal(productCategoryJoin.get(Category_.NAME), category));
+            predicateList.add(cb.equal(cb.lower(productCategoryJoin.get(Category_.NAME)), category));
         }
 
         if (Objects.nonNull(condition)) {
