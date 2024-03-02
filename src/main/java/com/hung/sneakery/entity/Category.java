@@ -1,8 +1,10 @@
 package com.hung.sneakery.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Map;
 
 @Entity
 @Table(name = "category")
@@ -19,4 +21,8 @@ public class Category extends AbstractCommonEntity {
 
     @Column
     private String name;
+
+    @Type(type = "jsonb")
+    @Column(name = "property", columnDefinition = "jsonb")
+    private Map<String, Object> property;
 }
