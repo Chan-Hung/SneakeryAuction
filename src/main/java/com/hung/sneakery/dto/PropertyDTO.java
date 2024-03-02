@@ -1,11 +1,13 @@
 package com.hung.sneakery.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class PropertyDTO {
 
     @JsonProperty("name")
@@ -13,4 +15,7 @@ public class PropertyDTO {
 
     @JsonProperty("type")
     private String type;
+
+    @JsonProperty("options")
+    private List<String> options;
 }
