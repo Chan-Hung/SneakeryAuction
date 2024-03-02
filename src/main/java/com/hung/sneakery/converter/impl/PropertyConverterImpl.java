@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-@SuppressWarnings("unchecked")
+@SuppressWarnings("all")
 public class PropertyConverterImpl implements PropertyConverter {
 
     public List<PropertyDTO> convertPropertiesToDTO(Map<String, Object> properties) {
@@ -20,13 +20,20 @@ public class PropertyConverterImpl implements PropertyConverter {
                 .map(entry -> {
                     PropertyDTO propertyDTO = new PropertyDTO();
                     propertyDTO.setName(entry.getKey());
-                    propertyDTO.setType(entry.getValue().toString());
-
                     // Check if the value is a map, indicating options are present
                     if (entry.getValue() instanceof Map) {
-                        Map<String, Object> optionsMap = (Map<String, Object>) entry.getValue();
-                        List<String> options = new ArrayList<>(optionsMap.keySet());
-                        propertyDTO.setOptions(options);
+                        Map<String, Object> valueMap = (Map<String, Object>) entry.getValue();
+                        for (Map.Entry<String, Object> entryProperty : valueMap.entrySet()) {
+                            String key = entryProperty.getKey();
+                            Object value = entryProperty.getValue();
+                            if (key.equals("type")) {
+                                propertyDTO.setType((String) value);
+                            } else {
+                                propertyDTO.setOptions((List<String>) value);
+                            }
+                        }
+                    } else {
+                        propertyDTO.setType(entry.getValue().toString());
                     }
                     return propertyDTO;
                 })
