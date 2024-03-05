@@ -43,32 +43,32 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         }
 
         if (Objects.nonNull(condition)) {
-            predicateList.add(cb.equal(root.get(Product_.CONDITION), condition));
+//            predicateList.add(cb.equal(root.get(Product_.CONDITION), condition));
         }
 
         if (Objects.nonNull(brands)) {
-            CriteriaBuilder.In<String> inClause = cb.in(root.get(Product_.BRAND));
+//            CriteriaBuilder.In<String> inClause = cb.in(root.get(Product_.BRAND));
             for (String brand : brands) {
-                inClause.value(brand);
+//                inClause.value(brand);
             }
-            predicateList.add(inClause);
+//            predicateList.add(inClause);
         }
 
         if (Objects.nonNull(colors)) {
             //TODO: Return nothing
-            CriteriaBuilder.In<String> inClause = cb.in(root.get(Product_.COLOR));
+//            CriteriaBuilder.In<String> inClause = cb.in(root.get(Product_.COLOR));
             for (String color : colors) {
-                inClause.value(color);
+//                inClause.value(color);
             }
-            predicateList.add(inClause);
+//            predicateList.add(inClause);
         }
 
         if (Objects.nonNull(sizes)) {
-            CriteriaBuilder.In<Integer> inClause = cb.in(root.get(Product_.SIZE));
+//            CriteriaBuilder.In<Integer> inClause = cb.in(root.get(Product_.SIZE));
             for (Integer size : sizes) {
-                inClause.value(size);
+//                inClause.value(size);
             }
-            predicateList.add(inClause);
+//            predicateList.add(inClause);
         }
 
         //Properties of Bid

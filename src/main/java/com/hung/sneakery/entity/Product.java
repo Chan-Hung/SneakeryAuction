@@ -2,11 +2,12 @@ package com.hung.sneakery.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.hung.sneakery.enums.ECondition;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "products")
@@ -24,25 +25,14 @@ public class Product extends AbstractCommonEntity {
     @Column
     private String name;
 
-    //'Condition' is a reserved word -> can not set as a property name
-    //=> use "condition_description" instead
-    @Column(name = "condition_description")
-    @Enumerated(EnumType.STRING)
-    private ECondition condition;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnore
     private Category category;
 
-    @Column
-    private String brand;
-
-    @Column
-    private String color;
-
-    @Column
-    private Integer size;
+    @Type(type = "jsonb")
+    @Column(name = "properties", columnDefinition = "jsonb")
+    private Map<String, String> properties;
 
     //mappedBy must have the same name as @ManyToOne variable
     //in ProductImageRepository.java class

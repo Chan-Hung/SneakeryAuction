@@ -150,12 +150,9 @@ public class BidServiceImpl implements BidService {
 
         Product product = Product.builder()
                 .name(request.getName())
-                .condition(request.getCondition())
                 .user(seller)
                 .category(category)
-                .brand(request.getBrand())
-                .color(request.getColor())
-                .size(request.getSize())
+                .properties(request.getProperties())
                 .build();
 
         productRepository.save(product);

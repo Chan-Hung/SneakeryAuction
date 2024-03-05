@@ -1,13 +1,13 @@
 package com.hung.sneakery.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.hung.sneakery.enums.ECondition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -20,8 +20,8 @@ public class ProductDetailedDTO {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("condition")
-    private ECondition condition;
+    @JsonProperty("properties")
+    private Map<String, String> properties;
 
     @JsonProperty("startPrice")
     private Long startPrice;
@@ -37,15 +37,6 @@ public class ProductDetailedDTO {
 
     @JsonProperty("category")
     private String category;
-
-    @JsonProperty("brand")
-    private String brand;
-
-    @JsonProperty("color")
-    private String color;
-
-    @JsonProperty("size")
-    private Integer size;
 
     //Format date time with JsonFormat
     //https://www.baeldung.com/jackson-jsonformat
