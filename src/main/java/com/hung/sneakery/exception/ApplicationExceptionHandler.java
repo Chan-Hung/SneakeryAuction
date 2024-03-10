@@ -41,7 +41,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler({BidPlacingException.class, BidCreatingException.class})
     public ResponseEntity<Object> handleBidException(BidPlacingException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
+        LOGGER.error("Inter server error {}", ExceptionUtils.getStackTrace(ex));
         ApplicationExceptionResponse error = new ApplicationExceptionResponse();
         error.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
@@ -49,14 +49,6 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(UploadImageException.class)
     public ResponseEntity<Object> handleUploadImageException(UploadImageException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
-    @ExceptionHandler(DataIntegrityViolation.class)
-    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolation ex) {
         LOGGER.error("Inter server error {}", ExceptionUtils.getStackTrace(ex));
         ApplicationExceptionResponse error = new ApplicationExceptionResponse();
         error.setMessage(ex.getMessage());

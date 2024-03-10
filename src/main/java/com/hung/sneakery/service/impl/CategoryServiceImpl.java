@@ -5,11 +5,9 @@ import com.hung.sneakery.converter.PropertyConverter;
 import com.hung.sneakery.dto.CategoryDTO;
 import com.hung.sneakery.dto.request.CategoryRequest;
 import com.hung.sneakery.entity.Category;
-import com.hung.sneakery.exception.DataIntegrityViolation;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.service.CategoryService;
-import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -67,9 +65,6 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO delete(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
-        if (CollectionUtils.isNotEmpty(category.getProducts())) {
-            throw new DataIntegrityViolation("Unable to delete. Category linked to products");
-        }
         categoryRepository.delete(category);
         return categoryConverter.convertToCategoryDTO(category);
     }

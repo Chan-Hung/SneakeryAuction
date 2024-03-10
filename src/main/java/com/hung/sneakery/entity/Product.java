@@ -31,7 +31,7 @@ public class Product extends AbstractCommonEntity {
     private Category category;
 
     @Type(type = "jsonb")
-    @Column
+    @Column(name = "properties", columnDefinition = "jsonb")
     private Map<String, String> properties;
 
     //mappedBy must have the same name as @ManyToOne variable
