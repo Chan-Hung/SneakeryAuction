@@ -19,7 +19,8 @@ import java.util.Map;
 public class Product extends AbstractCommonEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_seq")
+    @SequenceGenerator(name = "product_id_seq", sequenceName = "product_seq", allocationSize = 1)
     private Long id;
 
     @Column

@@ -15,7 +15,8 @@ import javax.persistence.*;
 public class ProductImage extends AbstractCommonEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_image_id_seq")
+    @SequenceGenerator(name = "product_image_id_seq", sequenceName = "product_image_seq", allocationSize = 1)
     private Long id;
 
     @Column
