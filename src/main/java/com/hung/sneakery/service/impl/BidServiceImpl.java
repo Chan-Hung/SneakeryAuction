@@ -145,8 +145,10 @@ public class BidServiceImpl implements BidService {
         return bidDTOList;
     }
 
-    private Bid mapToBid(final BidCreateRequest request, final User seller, final MultipartFile thumbnail, final List<MultipartFile> images) throws IOException {
-        Category category = categoryRepository.findByName(request.getCategory());
+    @Transactional
+    Bid mapToBid(final BidCreateRequest request, final User seller, final MultipartFile thumbnail, final List<MultipartFile> images) throws IOException {
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category not found"));
 
         Product product = Product.builder()
                 .name(request.getName())

@@ -16,9 +16,9 @@ public class BidCreateRequest {
     @NotBlank
     private String name;
 
-    @JsonProperty("category")
+    @JsonProperty("categoryId")
     @NotBlank
-    private String category;
+    private Long categoryId;
 
     @JsonProperty("properties")
     private Map<String, String> properties;
