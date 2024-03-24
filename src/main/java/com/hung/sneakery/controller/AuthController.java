@@ -10,9 +10,7 @@ import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
 
 @RestController
 @Api(tags = "Authentication APIs")
@@ -29,17 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public BaseResponse signUp(@Valid @RequestBody final SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
+    public BaseResponse signUp(@Valid @RequestBody final SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
-    }
-
-    @GetMapping("/check-email")
-    public BaseResponse checkEmail(@RequestParam final String email) {
-        return authService.checkEmail(email);
-    }
-
-    @GetMapping("/verify/{code}")
-    public BaseResponse verify(@PathVariable final String code) {
-        return authService.verify(code);
     }
 }

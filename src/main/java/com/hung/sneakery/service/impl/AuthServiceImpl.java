@@ -14,8 +14,6 @@ import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.RoleRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.AuthService;
-import com.hung.sneakery.service.MailService;
-import net.bytebuddy.utility.RandomString;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,8 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.mail.MessagingException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -50,9 +46,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Resource
     private JwtUtils jwtUtils;
-
-    @Resource
-    private MailService mailService;
 
     private static final String ROLE_NOT_FOUND = "Role not found";
 
@@ -85,23 +78,21 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public BaseResponse signUp(final SignUpRequest request) throws MessagingException, UnsupportedEncodingException {
+    public BaseResponse signUp(final SignUpRequest request) {
         if (Boolean.TRUE.equals(userRepository.existsByUsername(request.getUsername()))) {
             throw new AuthenticationException("Username has already existed");
         }
         if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
             throw new AuthenticationException("Email is already in use");
         }
-        String verificationCode = RandomString.make(30);
 
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(encoder.encode(request.getPassword()))
-                .verificationCode(verificationCode)
-                .isActive(Boolean.FALSE)
+                .phoneNumber(request.getPhoneNumber())
+                .isActive(Boolean.TRUE)
                 .build();
-        mailService.sendVerificationEmail(user, verificationCode);
 
         Set<String> strRoles = request.getRole();
         Set<Role> roles = new HashSet<>();
@@ -129,27 +120,6 @@ public class AuthServiceImpl implements AuthService {
                     roles.add(userRole);
                 }
             });
-        }
-    }
-
-    @Override
-    public BaseResponse checkEmail(final String email) {
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(email))) {
-            return new BaseResponse("Email already existed");
-        }
-        return new BaseResponse("Email can be used");
-    }
-
-    @Override
-    public BaseResponse verify(final String verificationCode) {
-        User user = userRepository.findByVerificationCode(verificationCode);
-        if (Objects.isNull(user) || Boolean.TRUE.equals(user.getIsActive())) {
-            return new BaseResponse(false, "User has already been active");
-        } else {
-            user.setVerificationCode(null);
-            user.setIsActive(true);
-            userRepository.save(user);
-            return new BaseResponse("Activate user successfully");
         }
     }
 }

@@ -24,12 +24,15 @@ public class SignUpRequest {
     @Email
     private String email;
 
+    @JsonProperty("phoneNumber")
+    @NotBlank
+    private String phoneNumber;
+
     @JsonProperty("role")
     //Can be blank
     private Set<String> role;
 
     @JsonProperty("password")
-    //Custom message exception
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;

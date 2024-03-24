@@ -40,7 +40,7 @@ public class User extends AbstractCommonEntity {
     private String password;
 
     @Column
-    private String verificationCode;
+    private String phoneNumber;
 
     @Column(nullable = false)
     private Boolean isActive;
