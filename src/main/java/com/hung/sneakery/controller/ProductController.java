@@ -4,7 +4,6 @@ import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.enums.ECondition;
-import com.hung.sneakery.enums.ESorting;
 import com.hung.sneakery.service.ProductService;
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
@@ -48,9 +47,8 @@ public class ProductController {
             @RequestParam(name = "color", required = false) final List<String> colors,
             @RequestParam(name = "sizes", required = false) final List<Integer> sizes,
             @RequestParam(name = "priceStart", required = false) final Long priceStart,
-            @RequestParam(name = "priceEnd", required = false) final Long priceEnd,
-            @RequestParam(name = "sorting", required = false) final ESorting sorting) {
-        return productService.getAll(pageable, keyword, category, condition, brands, colors, sizes, priceStart, priceEnd, sorting);
+            @RequestParam(name = "priceEnd", required = false) final Long priceEnd) {
+        return productService.getAll(pageable, keyword, category, condition, brands, colors, sizes, priceStart, priceEnd);
     }
 
     @DeleteMapping("/{id}")

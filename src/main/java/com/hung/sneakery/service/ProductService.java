@@ -4,7 +4,6 @@ import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.enums.ECondition;
-import com.hung.sneakery.enums.ESorting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -48,12 +47,11 @@ public interface ProductService {
      * @param sizes      List<Integer>
      * @param priceStart Long
      * @param priceEnd   Long
-     * @param sorting    ESorting
      * @return Page<ProductDTO>
      */
     Page<ProductDTO> getAll(Pageable pageable, String keyword, String category, ECondition condition,
                             List<String> brands, List<String> colors,
-                            List<Integer> sizes, Long priceStart, Long priceEnd, ESorting sorting);
+                            List<Integer> sizes, Long priceStart, Long priceEnd);
 
     /**
      * Delete Product
