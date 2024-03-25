@@ -22,6 +22,9 @@ public class JwtResponse {
     @JsonProperty("email")
     private String email;
 
+    @JsonProperty("phoneNumber")
+    private String phoneNumber;
+
     @JsonProperty("roles")
     private List<String> roles;
 }
