@@ -1,18 +1,17 @@
 package com.hung.sneakery.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "product_image")
+@Table(name = "medias")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductImage extends AbstractCommonEntity {
+public class Media extends AbstractCommonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_image_id_seq")
@@ -24,9 +23,4 @@ public class ProductImage extends AbstractCommonEntity {
 
     @Column
     private Boolean isThumbnail;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    @JsonBackReference
-    private Product product;
 }

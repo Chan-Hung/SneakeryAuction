@@ -3,8 +3,8 @@ package com.hung.sneakery.converter.impl;
 import com.hung.sneakery.converter.ProductDetailedConverter;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.entity.BidHistory;
+import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
-import com.hung.sneakery.entity.ProductImage;
 import com.hung.sneakery.enums.EBidStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -20,8 +20,8 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
 
     @Override
     public ProductDetailedDTO convertToProductDetailedDTO(Product product) {
-        List<String> imagePath = product.getProductImage().stream()
-                .map(ProductImage::getPath).collect(Collectors.toList());
+        List<String> imagePath = product.getImages().stream()
+                .map(Media::getPath).collect(Collectors.toList());
 
         return ProductDetailedDTO.builder()
                 .id(product.getId())

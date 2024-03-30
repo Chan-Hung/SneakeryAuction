@@ -5,7 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -17,21 +20,26 @@ public class BidCreateRequest {
     private String name;
 
     @JsonProperty("categoryId")
-    @NotBlank
+    @NotNull
     private Long categoryId;
 
+    @JsonProperty("imageIds")
+    @NotEmpty
+    private List<Long> imageIds;
+
     @JsonProperty("properties")
+    @NotEmpty
     private Map<String, String> properties;
 
     @JsonProperty("bidClosingDateTime")
-    @NotBlank
+    @NotNull
     private LocalDateTime bidClosingDateTime;
 
     @JsonProperty("priceStart")
-    @NotBlank
+    @NotNull
     private Long priceStart;
 
     @JsonProperty("stepBid")
-    @NotBlank
+    @NotNull
     private Long stepBid;
 }

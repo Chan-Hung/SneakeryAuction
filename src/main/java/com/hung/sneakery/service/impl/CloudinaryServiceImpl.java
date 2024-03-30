@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.hung.sneakery.dto.response.CloudinaryUploadResponse;
 import com.hung.sneakery.service.CloudinaryService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
@@ -27,8 +28,8 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public CloudinaryUploadResponse upload(byte[] images) throws IOException {
-        Map response = cloudinary.uploader().upload(images, ObjectUtils.asMap("resource_type", "auto"));
+    public CloudinaryUploadResponse upload(MultipartFile file) throws IOException {
+        Map response = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
         return new CloudinaryUploadResponse(
                 response.get("secure_url").toString(),
                 response.get("public_id").toString(),

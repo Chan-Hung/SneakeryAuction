@@ -35,11 +35,8 @@ public class Product extends AbstractCommonEntity {
     @Column(name = "properties", columnDefinition = "jsonb")
     private Map<String, String> properties;
 
-    //mappedBy must have the same name as @ManyToOne variable
-    //in ProductImageRepository.java class
-    //One Product have Many Images => FK is in image
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
-    private List<ProductImage> productImage;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Media> images;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
     @PrimaryKeyJoinColumn

@@ -1,8 +1,10 @@
 package com.hung.sneakery.service;
 
+import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.User;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public interface MailService {
@@ -15,6 +17,8 @@ public interface MailService {
      * @throws MessagingException           MessagingException
      * @throws UnsupportedEncodingException UnsupportedEncodingException
      */
-    void sendVerificationEmail(User user, String verificationCode) throws MessagingException, UnsupportedEncodingException;
+    void sendVerificationEmail(User user, String verificationCode) throws MessagingException, IOException;
+
+    void sendRemindBidderEmail(User user, Product product) throws MessagingException, IOException;
 }
 

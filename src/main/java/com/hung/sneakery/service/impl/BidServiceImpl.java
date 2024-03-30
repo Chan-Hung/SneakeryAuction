@@ -12,14 +12,11 @@ import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.BidService;
 import com.hung.sneakery.service.CountdownService;
-import com.hung.sneakery.service.ProductImageService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,10 +40,7 @@ public class BidServiceImpl implements BidService {
     private BidHistoryRepository bidHistoryRepository;
 
     @Resource
-    private ProductImageRepository productImageRepository;
-
-    @Resource
-    private ProductImageService productImageService;
+    private MediaRepository mediaRepository;
 
     @Resource
     private WalletRepository walletRepository;
@@ -112,11 +106,11 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public BaseResponse createBid(final BidCreateRequest request, final MultipartFile thumbnail, final List<MultipartFile> images) throws IOException {
+    public BaseResponse createBid(final BidCreateRequest request) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         User seller = userRepository.findByUsername(userName);
 
-        Bid bid = mapToBid(request, seller, thumbnail, images);
+        Bid bid = mapToBid(request, seller);
 
         countdownService.biddingCountdown(bid);
 
@@ -146,27 +140,21 @@ public class BidServiceImpl implements BidService {
     }
 
     @Transactional
-    Bid mapToBid(final BidCreateRequest request, final User seller, final MultipartFile thumbnail, final List<MultipartFile> images) throws IOException {
+    Bid mapToBid(final BidCreateRequest request, final User seller) {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("Category not found"));
+
+        List<Media> images = mediaRepository.findAllById(request.getImageIds());
 
         Product product = Product.builder()
                 .name(request.getName())
                 .user(seller)
                 .category(category)
                 .properties(request.getProperties())
+                .images(images)
                 .build();
 
         productRepository.save(product);
-
-        List<ProductImage> productImages = new ArrayList<>();
-        ProductImage image = productImageService.upload(thumbnail.getBytes(), product, true);
-        productImages.add(image);
-        for (MultipartFile file : images) {
-            ProductImage productImage = productImageService.upload(file.getBytes(), product, false);
-            productImages.add(productImage);
-        }
-        productImageRepository.saveAll(productImages);
 
         Bid bid = Bid.builder()
                 .priceStart(request.getPriceStart())
@@ -174,7 +162,7 @@ public class BidServiceImpl implements BidService {
                 .closingDateTime(request.getBidClosingDateTime())
                 .product(product)
                 .build();
-        bidRepository.save(bid);
-        return bid;
+
+        return bidRepository.save(bid);
     }
 }

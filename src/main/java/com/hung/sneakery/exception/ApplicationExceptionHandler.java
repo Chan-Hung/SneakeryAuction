@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
+
 @ControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -57,6 +59,23 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
+        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
+        error.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
+        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
+        error.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
         LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
         ApplicationExceptionResponse error = new ApplicationExceptionResponse();
         error.setMessage(ex.getMessage());

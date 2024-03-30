@@ -65,19 +65,19 @@ public class ProductServiceImpl implements ProductService {
         }
         if (Objects.nonNull(category) && !category.isEmpty()) {
             spec = spec.and((root, query, cb) -> {
-                Join<Product, Category> categoryJoin = root.join("category", JoinType.INNER);
+                Join<Product, Category> categoryJoin = root.join(Product_.CATEGORY, JoinType.INNER);
                 return cb.equal(categoryJoin.get(Category_.ID), category);
             });
         }
         if (Objects.nonNull(priceStart)) {
             spec = spec.and((root, query, cb) -> {
-                Join<Product, Bid> categoryJoin = root.join("bid", JoinType.INNER);
+                Join<Product, Bid> categoryJoin = root.join(Product_.BID, JoinType.INNER);
                 return cb.greaterThanOrEqualTo(categoryJoin.get(Bid_.PRICE_START), priceStart);
             });
         }
         if (Objects.nonNull(priceEnd)) {
             spec = spec.and((root, query, cb) -> {
-                Join<Product, Bid> categoryJoin = root.join("bid", JoinType.INNER);
+                Join<Product, Bid> categoryJoin = root.join(Product_.BID, JoinType.INNER);
                 return cb.lessThanOrEqualTo(categoryJoin.get(Bid_.PRICE_START), priceEnd);
             });
         }

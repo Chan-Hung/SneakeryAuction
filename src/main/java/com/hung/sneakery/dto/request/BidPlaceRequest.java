@@ -4,17 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
 public class BidPlaceRequest {
 
     @JsonProperty("productId")
-    @NotBlank
+    @NotNull
     private Long productId;
 
     @JsonProperty("amount")
-    @NotBlank
+    @NotNull
     private Long amount;
 }
