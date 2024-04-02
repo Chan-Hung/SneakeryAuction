@@ -36,6 +36,9 @@ public class Bid extends AbstractCommonEntity {
     @Nullable
     private Long priceWin;
 
+    @Column
+    private Boolean isBidSnipping;
+
     //Using a Shared Primary Key - Behaves as a foreign key
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId

@@ -23,26 +23,10 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender mailSender;
 
     @Override
-    public void sendVerificationEmail(User user, String verificationCode) throws MessagingException, IOException {
-        String fromAddress = "sneakeryauction@gmail.com";
-        String senderName = "Shopping-Platform";
-        String subject = "Xác nhận tài khoản của bạn trên Sneakery";
-        String templatePath = "classpath:email-templates/verification.html";
-
-        String content = readEmailTemplate(templatePath);
-        content = content.replace("[[name]]", user.getUsername());
-
-        String verifyURL = "https://sneakery.vercel.app/verify?code=" + verificationCode;
-        content = content.replace("[[URL]]", verifyURL);
-
-        sendEmail(user.getEmail(), fromAddress, senderName, subject, content);
-    }
-
-    @Override
     public void sendRemindBidderEmail(User user, Product product) throws MessagingException, IOException {
         String fromAddress = "sneakeryauction@gmail.com";
         String senderName = "Shopping-Platform";
-        String subject = "Nhắc nhở: Đấu giá của bạn đang diễn ra";
+        String subject = "[Lời nhắc] Đấu giá của bạn đang diễn ra";
         String templatePath = "classpath:email-templates/reminder.html";
 
         String content = readEmailTemplate(templatePath);

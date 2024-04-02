@@ -12,17 +12,22 @@ import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.BidService;
 import com.hung.sneakery.service.CountdownService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class BidServiceImpl implements BidService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BidServiceImpl.class);
 
     @Resource
     private UserRepository userRepository;
@@ -41,9 +46,6 @@ public class BidServiceImpl implements BidService {
 
     @Resource
     private MediaRepository mediaRepository;
-
-    @Resource
-    private WalletRepository walletRepository;
 
     @Resource
     private CountdownService countdownService;
@@ -79,7 +81,25 @@ public class BidServiceImpl implements BidService {
                 .bid(bid)
                 .build();
         bidHistoryRepository.save(bidHistory);
+
+        if (Boolean.TRUE.equals(bid.getIsBidSnipping())) {
+            handleBidSniping(bid);
+        }
         return new BaseResponse("Place bid successfully");
+    }
+
+    private void handleBidSniping(final Bid bid) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime bidEndTime = bid.getClosingDateTime();
+        LocalDateTime threeMinutesBeforeBidEnd = bidEndTime.minusMinutes(3);
+
+        if (currentTime.isAfter(threeMinutesBeforeBidEnd) && (bidHistoryRepository.countByBid_IdAndCreatedDateAfter(bid.getId(), threeMinutesBeforeBidEnd) == 1)) {
+            LOGGER.info("START EXTEND BID TIME");
+            LOGGER.info(String.format("Current time: %s", currentTime)); //NOSONAR
+            LOGGER.info(String.format("Bid end time: %s", bidEndTime)); //NOSONAR
+            bid.setClosingDateTime(bid.getClosingDateTime().plusMinutes(3));
+            countdownService.biddingCountdown(bid);
+        }
     }
 
     private void checkBidIsValid(final Long currentAmount, final Long stepBid, final Long amount, final Long bidIncrement) {
@@ -88,20 +108,6 @@ public class BidServiceImpl implements BidService {
         }
         if (currentAmount + stepBid > amount) {
             throw new BidPlacingException("Bước giá cho sản phẩm này là " + bidIncrement + " $");
-        }
-        compareWalletBalance(currentAmount, amount);
-    }
-
-    private void compareWalletBalance(final Long currentPrice, final Long amount) {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        User bidder = userRepository.findByUsername(userName);
-        Wallet wallet = walletRepository.findByUser_Id(bidder.getId());
-        Long walletBalance = wallet.getBalance();
-        if (walletBalance < currentPrice) {
-            throw new BidPlacingException("Số dư ví không đủ cho lần ra giá này");
-        }
-        if (walletBalance < amount) {
-            throw new BidPlacingException("Số dư ví không đủ cho lần ra giá này");
         }
     }
 
@@ -140,7 +146,7 @@ public class BidServiceImpl implements BidService {
     }
 
     @Transactional
-    Bid mapToBid(final BidCreateRequest request, final User seller) {
+    protected Bid mapToBid(final BidCreateRequest request, final User seller) {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("Category not found"));
 
@@ -154,13 +160,12 @@ public class BidServiceImpl implements BidService {
                 .images(images)
                 .build();
 
-        productRepository.save(product);
-
         Bid bid = Bid.builder()
                 .priceStart(request.getPriceStart())
                 .stepBid(request.getStepBid())
                 .closingDateTime(request.getBidClosingDateTime())
                 .product(product)
+                .isBidSnipping(request.getIsBidSniping())
                 .build();
 
         return bidRepository.save(bid);

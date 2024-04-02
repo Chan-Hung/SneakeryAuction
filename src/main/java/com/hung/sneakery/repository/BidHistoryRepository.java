@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Tuple;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,6 @@ public interface BidHistoryRepository extends JpaRepository<BidHistory, Long> {
     List<BidHistory> findByBid_IdOrderByCreatedDateDesc(Long bidId);
 
     List<BidHistory> findByUser_IdOrderByCreatedDateDesc(Long userId);
+
+    Integer countByBid_IdAndCreatedDateAfter(Long bidId, LocalDateTime threeMinutesBeforeBidEnd);
 }

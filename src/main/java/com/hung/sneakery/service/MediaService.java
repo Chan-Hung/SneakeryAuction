@@ -8,7 +8,7 @@ import java.util.List;
 public interface MediaService {
 
     /**
-     * Upload product images to cloudinary
+     * Upload product images
      *
      * @param thumbnail the thumbnail image
      * @param images    the images
@@ -17,7 +17,7 @@ public interface MediaService {
     List<MediaDTO> uploadImages(MultipartFile thumbnail, MultipartFile[] images);
 
     /**
-     * Upload category icon to cloudinary
+     * Upload category icon
      *
      * @param icon the icon image
      * @return the product icon

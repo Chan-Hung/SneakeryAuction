@@ -5,20 +5,17 @@ import com.hung.sneakery.entity.User;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 public interface MailService {
 
     /**
-     * Send Verification mail
+     * Send remind bidder email to user
      *
-     * @param user             User
-     * @param verificationCode String
-     * @throws MessagingException           MessagingException
-     * @throws UnsupportedEncodingException UnsupportedEncodingException
+     * @param user             the user
+     * @param product the verification code
+     * @throws MessagingException if an error occurs
+     * @throws IOException        if an error occurs
      */
-    void sendVerificationEmail(User user, String verificationCode) throws MessagingException, IOException;
-
     void sendRemindBidderEmail(User user, Product product) throws MessagingException, IOException;
 }
 

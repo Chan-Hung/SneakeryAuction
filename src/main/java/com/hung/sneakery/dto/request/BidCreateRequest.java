@@ -42,4 +42,8 @@ public class BidCreateRequest {
     @JsonProperty("stepBid")
     @NotNull
     private Long stepBid;
+
+    @JsonProperty("isBidSniping")
+    @NotNull
+    private Boolean isBidSniping;
 }
