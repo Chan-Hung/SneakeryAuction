@@ -1,8 +1,9 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.dto.request.DepositRequest;
+import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.TransactionHistory;
+import com.hung.sneakery.enums.EPaymentType;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.data.domain.Page;
@@ -13,11 +14,11 @@ public interface TransactionHistoryService {
     /**
      * Create Payment
      *
-     * @param request DepositRequest
+     * @param request PaymentRequest
      * @return Payment
      * @throws PayPalRESTException PayPalRESTException
      */
-    Payment createPayment(DepositRequest request) throws PayPalRESTException;
+    Payment createPayment(PaymentRequest request) throws PayPalRESTException;
 
     /**
      * Execute Payment
@@ -33,9 +34,10 @@ public interface TransactionHistoryService {
      * Handle Success
      *
      * @param payment Payment
+     * @param type    EPaymentType
      * @return BaseResponse
      */
-    BaseResponse handleSuccess(Payment payment);
+    BaseResponse handleSuccess(Payment payment, EPaymentType type);
 
     /**
      * Get All Transaction History By Wallet

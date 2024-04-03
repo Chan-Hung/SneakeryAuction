@@ -1,7 +1,7 @@
 package com.hung.sneakery.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hung.sneakery.enums.EPaymentStatus;
+import com.hung.sneakery.enums.EPaymentType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,7 +24,7 @@ public class TransactionHistory extends AbstractCommonEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private EPaymentStatus status;
+    private EPaymentType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wallet_id")

@@ -1,8 +1,9 @@
 package com.hung.sneakery.controller;
 
-import com.hung.sneakery.dto.request.DepositRequest;
+import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.TransactionHistory;
+import com.hung.sneakery.enums.EPaymentType;
 import com.hung.sneakery.exception.PayPalTransactionException;
 import com.hung.sneakery.service.TransactionHistoryService;
 import com.paypal.api.payments.Links;
@@ -18,16 +19,16 @@ import javax.annotation.Resource;
 @RestController
 @Api(tags = "Transaction By PayPal APIs")
 @CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/", "https://www.sandbox.paypal.com/"})
-@RequestMapping("/transaction")
+@RequestMapping("/transactions")
 public class TransactionController {
 
     @Resource
     private TransactionHistoryService transactionHistoryService;
 
-    @PostMapping("/deposit")
-    public BaseResponse payment(@RequestBody final DepositRequest depositRequest) {
+    @PostMapping("/payment")
+    public BaseResponse payment(@RequestBody final PaymentRequest paymentRequest) {
         try {
-            Payment payment = transactionHistoryService.createPayment(depositRequest);
+            Payment payment = transactionHistoryService.createPayment(paymentRequest);
             for (Links link : payment.getLinks()) {
                 if (link.getRel().equals("approval_url")) {
                     return new BaseResponse(true, link.getHref());
@@ -39,18 +40,19 @@ public class TransactionController {
         return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
     }
 
-    @GetMapping("/deposit/cancel")
+    @GetMapping("/cancel")
     public BaseResponse cancelPay() {
         return new BaseResponse(false, "cancel");
     }
 
-    @GetMapping("/deposit/success")
+    @GetMapping("/success")
     public BaseResponse successPay(@RequestParam("paymentId") final String paymentId,
-                                   @RequestParam("payerId") final String payerId) {
+                                   @RequestParam("payerId") final String payerId,
+                                   @RequestParam("paymentType") final EPaymentType type) {
         try {
             Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
             if (payment.getState().equals("approved")) {
-                return transactionHistoryService.handleSuccess(payment);
+                return transactionHistoryService.handleSuccess(payment, type);
             }
         } catch (PayPalRESTException e) {
             throw new PayPalTransactionException(e.getMessage());
