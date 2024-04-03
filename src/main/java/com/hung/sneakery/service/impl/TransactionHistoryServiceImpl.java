@@ -10,7 +10,7 @@ import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.TransactionHistoryService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
-import com.paypal.base.rest.PayPalRESTException;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,8 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionHistoryServiceImpl.class);
 
     @Override
-    public Payment createPayment(final PaymentRequest request) throws PayPalRESTException {
+    @SneakyThrows
+    public Payment createPayment(final PaymentRequest request) {
         ItemList itemList = buildItemList(request);
         Amount amount = buildAmount(request);
         Transaction transaction = buildTransaction(itemList, amount);
@@ -110,7 +111,8 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     }
 
     @Override
-    public Payment executePayment(final String paymentId, final String payerId) throws PayPalRESTException {
+    @SneakyThrows
+    public Payment executePayment(final String paymentId, final String payerId) {
         Payment payment = new Payment();
         payment.setId(paymentId);
 
@@ -121,22 +123,12 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
     @Override
     public BaseResponse handleSuccess(final Payment payment, final EPaymentType type) {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(userName);
-
-        Wallet wallet = walletRepository.findByUser_Id(user.getId());
         Long amount = Long.parseLong(StringUtils.removeEnd(payment
                 .getTransactions().get(0).getAmount().getTotal(), ".00"));
-
         TransactionHistory transactionHistory = TransactionHistory.builder()
                 .amount(amount)
-                .wallet(wallet)
                 .type(type)
                 .build();
-
-        wallet.setBalance(wallet.getBalance() + amount);
-        walletRepository.save(wallet);
-
         transactionHistoryRepository.save(transactionHistory);
         return new BaseResponse(true, "Payment successfully");
     }

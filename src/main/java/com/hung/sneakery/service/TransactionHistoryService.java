@@ -5,7 +5,6 @@ import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.TransactionHistory;
 import com.hung.sneakery.enums.EPaymentType;
 import com.paypal.api.payments.Payment;
-import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,9 +15,8 @@ public interface TransactionHistoryService {
      *
      * @param request PaymentRequest
      * @return Payment
-     * @throws PayPalRESTException PayPalRESTException
      */
-    Payment createPayment(PaymentRequest request) throws PayPalRESTException;
+    Payment createPayment(PaymentRequest request);
 
     /**
      * Execute Payment
@@ -26,9 +24,8 @@ public interface TransactionHistoryService {
      * @param paymentId String
      * @param payerId   String
      * @return Payment
-     * @throws PayPalRESTException PayPalRESTException
      */
-    Payment executePayment(String paymentId, String payerId) throws PayPalRESTException;
+    Payment executePayment(String paymentId, String payerId);
 
     /**
      * Handle Success

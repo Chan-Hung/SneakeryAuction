@@ -4,11 +4,9 @@ import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.TransactionHistory;
 import com.hung.sneakery.enums.EPaymentType;
-import com.hung.sneakery.exception.PayPalTransactionException;
 import com.hung.sneakery.service.TransactionHistoryService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
-import com.paypal.base.rest.PayPalRESTException;
 import io.swagger.annotations.Api;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,15 +25,11 @@ public class TransactionController {
 
     @PostMapping("/payment")
     public BaseResponse payment(@RequestBody final PaymentRequest paymentRequest) {
-        try {
-            Payment payment = transactionHistoryService.createPayment(paymentRequest);
-            for (Links link : payment.getLinks()) {
-                if (link.getRel().equals("approval_url")) {
-                    return new BaseResponse(true, link.getHref());
-                }
+        Payment payment = transactionHistoryService.createPayment(paymentRequest);
+        for (Links link : payment.getLinks()) {
+            if (link.getRel().equals("approval_url")) {
+                return new BaseResponse(true, link.getHref());
             }
-        } catch (PayPalRESTException e) {
-            throw new PayPalTransactionException(e.getMessage());
         }
         return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
     }
@@ -49,13 +43,9 @@ public class TransactionController {
     public BaseResponse successPay(@RequestParam("paymentId") final String paymentId,
                                    @RequestParam("payerId") final String payerId,
                                    @RequestParam("paymentType") final EPaymentType type) {
-        try {
-            Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
-            if (payment.getState().equals("approved")) {
-                return transactionHistoryService.handleSuccess(payment, type);
-            }
-        } catch (PayPalRESTException e) {
-            throw new PayPalTransactionException(e.getMessage());
+        Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
+        if (payment.getState().equals("approved")) {
+            return transactionHistoryService.handleSuccess(payment, type);
         }
         return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
     }
