@@ -2,9 +2,9 @@ package com.hung.sneakery.controller;
 
 import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.entity.TransactionHistory;
+import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.enums.EPaymentType;
-import com.hung.sneakery.service.TransactionHistoryService;
+import com.hung.sneakery.service.TransactionService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import io.swagger.annotations.Api;
@@ -21,11 +21,11 @@ import javax.annotation.Resource;
 public class TransactionController {
 
     @Resource
-    private TransactionHistoryService transactionHistoryService;
+    private TransactionService transactionService;
 
     @PostMapping("/payment")
     public BaseResponse payment(@RequestBody final PaymentRequest paymentRequest) {
-        Payment payment = transactionHistoryService.createPayment(paymentRequest);
+        Payment payment = transactionService.createPayment(paymentRequest);
         for (Links link : payment.getLinks()) {
             if (link.getRel().equals("approval_url")) {
                 return new BaseResponse(true, link.getHref());
@@ -43,21 +43,21 @@ public class TransactionController {
     public BaseResponse successPay(@RequestParam("paymentId") final String paymentId,
                                    @RequestParam("payerId") final String payerId,
                                    @RequestParam("paymentType") final EPaymentType type) {
-        Payment payment = transactionHistoryService.executePayment(paymentId, payerId);
+        Payment payment = transactionService.executePayment(paymentId, payerId);
         if (payment.getState().equals("approved")) {
-            return transactionHistoryService.handleSuccess(payment, type);
+            return transactionService.handleSuccess(payment, type);
         }
         return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
     }
 
     @GetMapping("/{walletId}")
-    public Page<TransactionHistory> getByWallet(@PathVariable final Long walletId, final Pageable pageable) {
-        return transactionHistoryService.getByWallet(walletId, pageable);
+    public Page<Transaction> getByWallet(@PathVariable final Long walletId, final Pageable pageable) {
+        return transactionService.getByWallet(walletId, pageable);
     }
 
     @GetMapping("/withdraw")
     public BaseResponse withdraw(@RequestParam(name = "amount") final Long amount) {
-        return transactionHistoryService.withdraw(amount);
+        return transactionService.withdraw(amount);
     }
 
     @GetMapping("/paid")
@@ -65,6 +65,6 @@ public class TransactionController {
             @RequestParam(name = "orderId") final Long orderId,
             @RequestParam(name = "shippingFee") final Long shippingFee,
             @RequestParam(name = "subtotal") final Long subtotal) {
-        return transactionHistoryService.paidByWinner(orderId, shippingFee, subtotal);
+        return transactionService.paidByWinner(orderId, shippingFee, subtotal);
     }
 }

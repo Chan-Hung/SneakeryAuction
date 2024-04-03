@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.persistence.Tuple;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
@@ -43,7 +42,7 @@ public class CountdownServiceImpl implements CountdownService {
     private WalletRepository walletRepository;
 
     @Resource
-    private TransactionHistoryRepository transactionHistoryRepository;
+    private TransactionRepository transactionRepository;
 
     Timer timer = new Timer();
 
@@ -52,7 +51,7 @@ public class CountdownServiceImpl implements CountdownService {
         LOGGER.info("---CURRENT TIME EXECUTE---");
         //DateTime when executing
         Date date = Date.from(bid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
-        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, userRepository, orderRepository, walletRepository, transactionHistoryRepository), date);
+        timer.schedule(new CountdownTask(bid, bidHistoryRepository, bidRepository, userRepository, orderRepository, walletRepository, transactionRepository), date);
         LOGGER.info("---CURRENT TIME SCHEDULE---");
     }
 
@@ -70,7 +69,7 @@ public class CountdownServiceImpl implements CountdownService {
 
         WalletRepository walletRepository;
 
-        TransactionHistoryRepository transactionHistoryRepository;
+        TransactionRepository transactionRepository;
 
         @Override
         public void run() {

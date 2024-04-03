@@ -2,13 +2,13 @@ package com.hung.sneakery.service;
 
 import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.entity.TransactionHistory;
+import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.enums.EPaymentType;
 import com.paypal.api.payments.Payment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface TransactionHistoryService {
+public interface TransactionService {
 
     /**
      * Create Payment
@@ -41,9 +41,9 @@ public interface TransactionHistoryService {
      *
      * @param walletId Long
      * @param pageable Pageable
-     * @return Page<TransactionHistory>
+     * @return Page<Transaction>
      */
-    Page<TransactionHistory> getByWallet(Long walletId, Pageable pageable);
+    Page<Transaction> getByWallet(Long walletId, Pageable pageable);
 
     /**
      * Paid By Winner

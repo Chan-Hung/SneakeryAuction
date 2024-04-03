@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TransactionHistory extends AbstractCommonEntity {
+public class Transaction extends AbstractCommonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

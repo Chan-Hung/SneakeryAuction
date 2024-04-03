@@ -4,10 +4,11 @@ import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.Order;
 import com.hung.sneakery.entity.*;
+import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.enums.EPaymentType;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.*;
-import com.hung.sneakery.service.TransactionHistoryService;
+import com.hung.sneakery.service.TransactionService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import lombok.SneakyThrows;
@@ -26,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class TransactionHistoryServiceImpl implements TransactionHistoryService {
+public class TransactionServiceImpl implements TransactionService {
 
     @Resource
     private OrderRepository orderRepository;
@@ -35,7 +36,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     private UserRepository userRepository;
 
     @Resource
-    private TransactionHistoryRepository transactionHistoryRepository;
+    private TransactionRepository transactionRepository;
 
     @Resource
     private WalletRepository walletRepository;
@@ -46,14 +47,14 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     @Resource
     private APIContext apiContext;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionHistoryServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
     @Override
     @SneakyThrows
     public Payment createPayment(final PaymentRequest request) {
         ItemList itemList = buildItemList(request);
         Amount amount = buildAmount(request);
-        Transaction transaction = buildTransaction(itemList, amount);
+        com.paypal.api.payments.Transaction transaction = buildTransaction(itemList, amount);
         Payment payment = buildPayment(transaction);
 
         RedirectUrls redirectUrls = buildRedirectUrls();
@@ -84,15 +85,15 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         return amount;
     }
 
-    private Transaction buildTransaction(final ItemList itemList, final Amount amount) {
-        Transaction transaction = new Transaction();
+    private com.paypal.api.payments.Transaction buildTransaction(final ItemList itemList, final Amount amount) {
+        com.paypal.api.payments.Transaction transaction = new com.paypal.api.payments.Transaction();
         transaction.setDescription("Thanh toán Sneakery");
         transaction.setAmount(amount);
         transaction.setItemList(itemList);
         return transaction;
     }
 
-    private Payment buildPayment(final Transaction transaction) {
+    private Payment buildPayment(final com.paypal.api.payments.Transaction transaction) {
         Payer payer = new Payer();
         payer.setPaymentMethod("paypal");
 
@@ -125,19 +126,19 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
     public BaseResponse handleSuccess(final Payment payment, final EPaymentType type) {
         Long amount = Long.parseLong(StringUtils.removeEnd(payment
                 .getTransactions().get(0).getAmount().getTotal(), ".00"));
-        TransactionHistory transactionHistory = TransactionHistory.builder()
+        Transaction transaction = Transaction.builder()
                 .amount(amount)
                 .type(type)
                 .build();
-        transactionHistoryRepository.save(transactionHistory);
+        transactionRepository.save(transaction);
         return new BaseResponse(true, "Payment successfully");
     }
 
     @Override
-    public Page<TransactionHistory> getByWallet(final Long walletId, final Pageable pageable) {
+    public Page<Transaction> getByWallet(final Long walletId, final Pageable pageable) {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new NotFoundException("Wallet not found"));
-        return transactionHistoryRepository.findAllByWallet(wallet, pageable);
+        return transactionRepository.findAllByWallet(wallet, pageable);
     }
 
     @Override
@@ -152,7 +153,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         Long priceWin = order.getBid().getPriceWin();
 
         List<Wallet> wallets = new ArrayList<>();
-        List<TransactionHistory> transactionHistories = new ArrayList<>();
+        List<Transaction> transactionHistories = new ArrayList<>();
 
         //WINNER
         //Minus winner's wallet
@@ -161,12 +162,12 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         wallets.add(winnerWallet);
 
         //Add transaction PAID
-        TransactionHistory transactionHistory = TransactionHistory.builder()
+        Transaction transaction = Transaction.builder()
                 .amount(priceWin)
                 .wallet(winnerWallet)
                 .type(EPaymentType.PAID)
                 .build();
-        transactionHistories.add(transactionHistory);
+        transactionHistories.add(transaction);
 
         //SELLER
         //Plus seller's wallet (90%)
@@ -176,12 +177,12 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         wallets.add(sellerWallet);
 
         //Add transaction RECEIVED
-        TransactionHistory sellerTransactionHistory = TransactionHistory.builder()
+        Transaction sellerTransaction = Transaction.builder()
                 .amount(sellerReceivedAmount)
                 .wallet(sellerWallet)
                 .type(EPaymentType.RECEIVED)
                 .build();
-        transactionHistories.add(sellerTransactionHistory);
+        transactionHistories.add(sellerTransaction);
 
         //SNEAKERY
         //Plus admin's wallet (10%)
@@ -191,19 +192,19 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         wallets.add(adminWallet);
 
         //Add transaction AUCTION_FEE
-        TransactionHistory adminTransactionHistory = TransactionHistory.builder()
+        Transaction adminTransaction = Transaction.builder()
                 .amount(adminReceivedAmount)
                 .wallet(adminWallet)
                 .type(EPaymentType.AUCTION_FEE)
                 .build();
-        transactionHistories.add(adminTransactionHistory);
+        transactionHistories.add(adminTransaction);
 
         order.setShippingFee(shippingFee);
         order.setSubtotal(subtotal);
         orderRepository.save(order);
 
         walletRepository.saveAll(wallets);
-        transactionHistoryRepository.saveAll(transactionHistories);
+        transactionRepository.saveAll(transactionHistories);
 
         LOGGER.info("Created order successfully");
         return new BaseResponse(true, "Transaction successfully");
@@ -219,12 +220,12 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
         userWallet.setBalance(userWallet.getBalance() - amount);
         walletRepository.save(userWallet);
 
-        TransactionHistory userTransactionHistory = TransactionHistory.builder()
+        Transaction userTransaction = Transaction.builder()
                 .amount(amount)
                 .wallet(userWallet)
                 .type(EPaymentType.WITHDRAW)
                 .build();
-        transactionHistoryRepository.save(userTransactionHistory);
+        transactionRepository.save(userTransaction);
 
         return new BaseResponse(true, "Withdraw successfully");
     }
