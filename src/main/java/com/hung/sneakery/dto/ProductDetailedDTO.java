@@ -23,6 +23,9 @@ public class ProductDetailedDTO {
     @JsonProperty("properties")
     private Map<String, String> properties;
 
+    @JsonProperty("description")
+    private String description;
+
     @JsonProperty("startPrice")
     private Long startPrice;
 
@@ -38,9 +41,6 @@ public class ProductDetailedDTO {
     @JsonProperty("category")
     private String category;
 
-    //Format date time with JsonFormat
-    //https://www.baeldung.com/jackson-jsonformat
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
     @JsonProperty("bidClosingDate")
     private LocalDateTime bidClosingDate;
 }

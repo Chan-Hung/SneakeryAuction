@@ -156,6 +156,7 @@ public class BidServiceImpl implements BidService {
                 .name(request.getName())
                 .user(seller)
                 .category(category)
+                .description(request.getDescription())
                 .properties(request.getProperties())
                 .images(images)
                 .build();

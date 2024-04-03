@@ -38,6 +38,9 @@ public class Product extends AbstractCommonEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Media> images;
 
+    @Column
+    private String description;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
     @PrimaryKeyJoinColumn
     @JsonManagedReference

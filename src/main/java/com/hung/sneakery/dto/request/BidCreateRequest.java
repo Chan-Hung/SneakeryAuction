@@ -31,6 +31,9 @@ public class BidCreateRequest {
     @NotEmpty
     private Map<String, String> properties;
 
+    @JsonProperty("description")
+    private String description;
+
     @JsonProperty("bidClosingDateTime")
     @NotNull
     private LocalDateTime bidClosingDateTime;

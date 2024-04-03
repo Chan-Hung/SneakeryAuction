@@ -30,6 +30,7 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
                 .imagePath(imagePath)
                 .category(product.getCategory().getName())
                 .properties(product.getProperties())
+                .description(product.getDescription())
                 .bidIncrement(product.getBid().getStepBid())
                 .currentPrice(getCurrentPrice(product))
                 .bidClosingDate(product.getBid().getClosingDateTime())
