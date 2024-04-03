@@ -23,9 +23,7 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender mailSender;
 
     @Override
-    public void sendRemindBidderEmail(User user, Product product) throws MessagingException, IOException {
-        String fromAddress = "sneakeryauction@gmail.com";
-        String senderName = "Shopping-Platform";
+    public void sendRemindBidderEmail(final User user, final Product product) throws MessagingException, IOException {
         String subject = "[Lời nhắc] Đấu giá của bạn đang diễn ra";
         String templatePath = "classpath:email-templates/reminder.html";
 
@@ -34,23 +32,22 @@ public class MailServiceImpl implements MailService {
         content = content.replace("[[URL]]", productLink);
         content = content.replace("[[NAME]]", user.getUsername());
 
-        sendEmail(user.getEmail(), fromAddress, senderName, subject, content);
+        sendEmail(user.getEmail(), subject, content);
     }
 
-    private String readEmailTemplate(String templatePath) throws IOException {
+    private String readEmailTemplate(final String templatePath) throws IOException {
         File file = ResourceUtils.getFile(templatePath);
         return new String(Files.readAllBytes(file.toPath()));
     }
 
-    private void sendEmail(String toAddress, String fromAddress, String senderName, String subject, String content) throws MessagingException, UnsupportedEncodingException {
+    private void sendEmail(final String subject, final String toAddress, final String content) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom(fromAddress, senderName);
+        helper.setFrom("sneakeryauction@gmail.com", "Shopping-Platform");
         helper.setTo(toAddress);
         helper.setSubject(subject);
         helper.setText(content, true);
-
         mailSender.send(message);
     }
 }
