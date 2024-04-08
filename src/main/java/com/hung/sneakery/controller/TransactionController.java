@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 
 @RestController
 @Api(tags = "Transaction By PayPal APIs")
-@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000/", "https://sneakery.vercel.app/", "https://www.sandbox.paypal.com/"})
+@CrossOrigin(origins = {"http://localhost:3000/", "https://sneakery.vercel.app/", "https://www.sandbox.paypal.com/"})
 @RequestMapping("/transactions")
 public class TransactionController {
 

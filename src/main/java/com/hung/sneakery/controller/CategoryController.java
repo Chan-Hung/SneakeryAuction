@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @Api(tags = "Category APIs")
-@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/", "https://aunction-react-js.vercel.app/"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://sneakery.vercel.app/", "https://aunction-react-js.vercel.app/"})
 @RequestMapping("/categories")
 public class CategoryController {
 

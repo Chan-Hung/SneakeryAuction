@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Bid APIs")
-@CrossOrigin(origins = {"https://sneakery-kietdarealist.vercel.app/", "http://localhost:3000", "https://sneakery.vercel.app/"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://sneakery.vercel.app/"})
 @RequestMapping("/bids")
 public class BidController {
 
