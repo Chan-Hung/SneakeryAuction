@@ -37,6 +37,10 @@ public class Bid extends AbstractCommonEntity {
     private Long priceWin;
 
     @Column
+    @Nullable
+    private Long reservePrice;
+
+    @Column
     private Boolean isBidSnipping;
 
     //Using a Shared Primary Key - Behaves as a foreign key

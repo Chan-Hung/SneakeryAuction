@@ -42,6 +42,9 @@ public class BidCreateRequest {
     @NotNull
     private Long priceStart;
 
+    @JsonProperty("reservePrice")
+    private Long reservePrice;
+
     @JsonProperty("stepBid")
     @NotNull
     private Long stepBid;

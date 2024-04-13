@@ -12,17 +12,21 @@ import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.BidService;
 import com.hung.sneakery.service.CountdownService;
+import com.hung.sneakery.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class BidServiceImpl implements BidService {
@@ -52,6 +56,9 @@ public class BidServiceImpl implements BidService {
 
     @Resource
     private ProductConverter productConverter;
+
+    @Resource
+    private MailService mailService;
 
     @Override
     @Transactional
@@ -85,6 +92,9 @@ public class BidServiceImpl implements BidService {
         if (Boolean.TRUE.equals(bid.getIsBidSnipping())) {
             handleBidSniping(bid);
         }
+        if (shouldRemindBidder(currentBidHistory, buyer)) {
+            sendRemindBidderEmailAsync(currentBidHistory.getUser(), product);
+        }
         return new BaseResponse("Place bid successfully");
     }
 
@@ -100,6 +110,20 @@ public class BidServiceImpl implements BidService {
             bid.setClosingDateTime(bid.getClosingDateTime().plusMinutes(3));
             countdownService.biddingCountdown(bid);
         }
+    }
+
+    private boolean shouldRemindBidder(BidHistory currentBidHistory, User buyer) {
+        return currentBidHistory != null && !currentBidHistory.getUser().equals(buyer);
+    }
+
+    private void sendRemindBidderEmailAsync(User user, Product product) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                mailService.sendRemindBidderEmail(user, product);
+            } catch (MessagingException | IOException | NullPointerException e) {
+                throw new BidPlacingException(e.getMessage());
+            }
+        });
     }
 
     private void checkBidIsValid(final Long currentAmount, final Long stepBid, final Long amount, final Long bidIncrement) {
@@ -165,6 +189,7 @@ public class BidServiceImpl implements BidService {
                 .priceStart(request.getPriceStart())
                 .stepBid(request.getStepBid())
                 .closingDateTime(request.getBidClosingDateTime())
+                .reservePrice(request.getReservePrice())
                 .product(product)
                 .isBidSnipping(request.getIsBidSniping())
                 .build();

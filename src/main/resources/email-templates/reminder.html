@@ -1,69 +1,82 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Nhắc nhở: Đấu giá của bạn đang diễn ra</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style type="text/css">
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        ul,
+        ol,
+        li {
             margin: 0;
             padding: 0;
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            font-size: 17px;
         }
-
         .container {
-            max-width: 600px;
-            margin: 20px auto;
+            max-width: 700px;
+            margin: auto;
             padding: 20px;
-            background-color: #ffffff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f4f4f4;
         }
-
-        p {
-            font-size: 16px;
-            line-height: 1.5;
+        .header {
+            text-align: center;
+            padding: 20px 0;
         }
-
-        a {
+        .header h1 {
+            font-size: 36px;
             color: #3F83F8;
-            text-decoration: none;
+            margin-bottom: 10px;
         }
-
-        a:hover {
-            text-decoration: underline;
+        .content {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
         }
-
-        .button {
-            background-color: #3F83F8;
-            border: 1px solid #3F83F8;
-            border-radius: 5px;
-            color: #ffffff;
+        .btn {
             display: inline-block;
-            font-family: Helvetica, Arial, sans-serif;
-            font-size: 20px;
-            padding: 5px 15px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            background-color: #3F83F8;
+            color: rgb(255, 255, 255);
             text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
         }
-
-        .button:hover {
-            background-color: #1b64d2;
-            border-color: #1b64d2;
-        }
+        .content p {
+             line-height: 1.5; /* Set line height for paragraphs */
+         }
     </style>
 </head>
-
 <body>
 <div class="container">
-    <p>Xin chào [[NAME]],</p>
-    <p>Chúng tôi gửi email này để nhắc nhở bạn về việc đấu giá đang diễn ra của bạn trên Sneakery.</p>
-    <p>Hiện tại, có những người khác đã đấu giá cao hơn và thời gian còn lại không nhiều. Đừng bỏ lỡ cơ hội để giữ lại sản phẩm của bạn.</p>
-    <p>Truy cập vào tài khoản và tham gia đấu giá ngay bây giờ để không bị lỡ hẹn.</p>
-    <a href="[[URL]]" target="_blank" class="button">Đấu giá ngay</a>
-    <p>Trân trọng,<br>Đội ngũ Sneakery</p>
+    <div class="header">
+        <h1>Welcome to Sneakery!</h1>
+        <img src="https://res.cloudinary.com/dki8kpq7y/image/upload/v1711288138/Pngtree_yellow_classic_alarm_clock_sale_7249689_urfp5x.png" width="150" height="120" alt="Logo">
+    </div>
+    <div class="content">
+        <p>Xin chào [[NAME]],</p>
+        <br>
+        <p>Chúng tôi gửi email này để nhắc bạn về phiên đấu giá đang diễn ra trên Sneakery.</p>
+        <p>Hiện tại, có những người khác đã đấu giá cao hơn và thời gian còn lại không nhiều. Đừng bỏ lỡ cơ hội để giữ lại sản phẩm của bạn.</p>
+        <br>
+        <p>Tiếp tục đấu giá để sở hữu sản phẩm ưng ý.</p>
+        <a href="[[URL]]" class="btn">Đấu giá</a>
+        <p>Trân trọng,<br>Đội ngũ Sneakery</p>
+    </div>
 </div>
 </body>
-
 </html>

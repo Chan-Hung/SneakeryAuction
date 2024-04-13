@@ -15,9 +15,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
+import java.util.logging.Logger;
 
 @Service
 public class MailServiceImpl implements MailService {
+    private static final Logger LOGGER = Logger.getLogger(MailServiceImpl.class.getName());
 
     @Resource
     private JavaMailSender mailSender;
@@ -32,7 +34,7 @@ public class MailServiceImpl implements MailService {
         content = content.replace("[[URL]]", productLink);
         content = content.replace("[[NAME]]", user.getUsername());
 
-        sendEmail(user.getEmail(), subject, content);
+        sendEmail(subject, user.getEmail(), content);
     }
 
     private String readEmailTemplate(final String templatePath) throws IOException {
