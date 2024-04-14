@@ -41,12 +41,18 @@ public class CountdownServiceImpl implements CountdownService {
     private OrderRepository orderRepository;
 
     private final Timer timer = new Timer();
+    private TimerTask currentCountdownTask;
 
     @Override
     public void biddingCountdown(Bid bid) {
         LOGGER.info("---CURRENT TIME EXECUTE: {}", LocalDateTime.now());
+
+        cancelPreviousCountdownTask();
+
         Date closingDate = Date.from(bid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
-        timer.schedule(new CountdownTask(bid, this), closingDate);
+        currentCountdownTask = new CountdownTask(bid, this);
+
+        timer.schedule(currentCountdownTask, closingDate);
         LOGGER.info("---CURRENT TIME SCHEDULE: {}", closingDate);
     }
 
@@ -62,6 +68,13 @@ public class CountdownServiceImpl implements CountdownService {
         @Override
         public void run() {
             countdownService.handleBidCompletion(bid);
+        }
+    }
+
+    private void cancelPreviousCountdownTask() {
+        if (currentCountdownTask != null) {
+            currentCountdownTask.cancel();
+            LOGGER.info("Previous countdown task canceled.");
         }
     }
 
