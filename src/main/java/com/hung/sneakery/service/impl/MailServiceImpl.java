@@ -3,23 +3,21 @@ package com.hung.sneakery.service.impl;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.service.MailService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.util.logging.Logger;
+import java.io.*;
 
 @Service
 public class MailServiceImpl implements MailService {
-    private static final Logger LOGGER = Logger.getLogger(MailServiceImpl.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
 
     @Resource
     private JavaMailSender mailSender;
@@ -38,8 +36,21 @@ public class MailServiceImpl implements MailService {
     }
 
     private String readEmailTemplate(final String templatePath) throws IOException {
-        File file = ResourceUtils.getFile(templatePath);
-        return new String(Files.readAllBytes(file.toPath()));
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(templatePath);
+        if (inputStream == null) {
+            throw new FileNotFoundException("Template file not found: " + templatePath);
+        }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            return content.toString();
+        } catch (Exception e) {
+            LOGGER.error("Error reading email template", e);
+            return StringUtils.EMPTY;
+        }
     }
 
     private void sendEmail(final String subject, final String toAddress, final String content) throws MessagingException, UnsupportedEncodingException {
