@@ -120,8 +120,9 @@ public class BidServiceImpl implements BidService {
         CompletableFuture.runAsync(() -> {
             try {
                 mailService.sendRemindBidderEmail(user, product);
+                LOGGER.info("Sent remind email to user: {}", user.getUsername());
             } catch (MessagingException | IOException | NullPointerException e) {
-                throw new BidPlacingException(e.getMessage());
+                LOGGER.info("Failed to send remind email due to: {}", e.getMessage());
             }
         });
     }
