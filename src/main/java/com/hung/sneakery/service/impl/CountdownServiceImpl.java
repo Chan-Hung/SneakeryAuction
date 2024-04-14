@@ -68,10 +68,10 @@ public class CountdownServiceImpl implements CountdownService {
     private void handleBidCompletion(Bid bid) {
         Tuple winnerTuple = bidHistoryRepository.getWinner(bid.getId());
         if (winnerTuple == null) {
-            LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getId());
+            LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getProduct().getName());
             setPriceWinAndSaveBid(bid, 0L);
         } else {
-            LOGGER.info("---TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}---", bid.getId());
+            LOGGER.info("---TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}---", bid.getProduct().getName());
             handleWinnerBid(bid, winnerTuple);
         }
     }
@@ -80,7 +80,7 @@ public class CountdownServiceImpl implements CountdownService {
         BigInteger priceWin = winnerTuple.get("priceWin", BigInteger.class);
         BigInteger userId = winnerTuple.get("buyerId", BigInteger.class);
         if (bid.getReservePrice() != null && priceWin.compareTo(BigInteger.valueOf(bid.getReservePrice())) < 0) {
-            LOGGER.info("---PRICE WIN: {} < RESERVE PRICE: {} FOR BID {}---", priceWin, bid.getReservePrice(), bid.getId());
+            LOGGER.info("---PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}---", priceWin, bid.getReservePrice(), bid.getProduct().getName());
             setPriceWinAndSaveBid(bid, 0L);
             return;
         }
@@ -92,7 +92,7 @@ public class CountdownServiceImpl implements CountdownService {
     private void setPriceWinAndSaveBid(Bid bid, Long priceWin) {
         bid.setPriceWin(priceWin);
         bidRepository.save(bid);
-        LOGGER.info("---UPDATE PRICE WIN {} SUCCESSFULLY---", priceWin);
+        LOGGER.info("---UPDATE PRICE WIN {} FOR PRODUCT {} SUCCESSFULLY---", priceWin, bid.getProduct().getName());
     }
 
     private void createAndSaveOrder(Bid bid, Long userId) {
