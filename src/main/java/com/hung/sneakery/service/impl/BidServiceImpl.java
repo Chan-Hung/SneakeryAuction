@@ -32,6 +32,8 @@ import java.util.concurrent.CompletableFuture;
 public class BidServiceImpl implements BidService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BidServiceImpl.class);
+    private static final String EMAIL_SUBJECT = "[Lời nhắc] Đấu giá của bạn đang diễn ra";
+    private static final String EMAIL_TEMPLATE_PATH = "classpath:email-templates/reminder.html";
 
     @Resource
     private UserRepository userRepository;
@@ -119,7 +121,7 @@ public class BidServiceImpl implements BidService {
     private void sendRemindBidderEmailAsync(User user, Product product) {
         CompletableFuture.runAsync(() -> {
             try {
-                mailService.sendRemindBidderEmail(user, product);
+                mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, user, product);
                 LOGGER.info("Sent remind email to user: {}", user.getUsername());
             } catch (MessagingException | IOException | NullPointerException e) {
                 LOGGER.info("Failed to send remind email due to: {}", e.getMessage());

@@ -23,10 +23,7 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender mailSender;
 
     @Override
-    public void sendRemindBidderEmail(final User user, final Product product) throws MessagingException, IOException {
-        String subject = "[Lời nhắc] Đấu giá của bạn đang diễn ra";
-        String templatePath = "classpath:email-templates/reminder.html";
-
+    public void sendEmail(final String subject, final String templatePath, final User user, final Product product) throws MessagingException, IOException {
         String content = readEmailTemplate(templatePath);
         String productLink = "https://sneakery.vercel.app/products/" + product.getId();
         content = content.replace("[[URL]]", productLink);

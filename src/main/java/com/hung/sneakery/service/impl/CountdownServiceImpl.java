@@ -10,6 +10,8 @@ import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.repository.OrderRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.CountdownService;
+import com.hung.sneakery.service.MailService;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,8 @@ import java.util.TimerTask;
 public class CountdownServiceImpl implements CountdownService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CountdownServiceImpl.class);
-
+    private static final String EMAIL_SUBJECT = "Kết quả phiên đấu giá";
+    private static final String EMAIL_TEMPLATE_PATH = "classpath:email-templates/reserve-price-notification.html";
     @Resource
     private BidHistoryRepository bidHistoryRepository;
 
@@ -40,11 +43,14 @@ public class CountdownServiceImpl implements CountdownService {
     @Resource
     private OrderRepository orderRepository;
 
+    @Resource
+    private MailService mailService;
+
     private final Timer timer = new Timer();
     private TimerTask currentCountdownTask;
 
     @Override
-    public void biddingCountdown(Bid bid) {
+    public void biddingCountdown(final Bid bid) {
         LOGGER.info("---CURRENT TIME EXECUTE: {}", LocalDateTime.now());
 
         cancelPreviousCountdownTask();
@@ -78,7 +84,7 @@ public class CountdownServiceImpl implements CountdownService {
         }
     }
 
-    private void handleBidCompletion(Bid bid) {
+    private void handleBidCompletion(final Bid bid) {
         Tuple winnerTuple = bidHistoryRepository.getWinner(bid.getId());
         if (winnerTuple == null) {
             LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getProduct().getName());
@@ -89,38 +95,41 @@ public class CountdownServiceImpl implements CountdownService {
         }
     }
 
-    private void handleWinnerBid(Bid bid, Tuple winnerTuple) {
-        BigInteger priceWin = winnerTuple.get("priceWin", BigInteger.class);
-        BigInteger userId = winnerTuple.get("buyerId", BigInteger.class);
-        if (bid.getReservePrice() != null && priceWin.compareTo(BigInteger.valueOf(bid.getReservePrice())) < 0) {
-            LOGGER.info("---PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}---", priceWin, bid.getReservePrice(), bid.getProduct().getName());
-            setPriceWinAndSaveBid(bid, 0L);
-            return;
+    @SneakyThrows
+    private void handleWinnerUnderReservePrice(Bid bid, final Long priceWin, final User winner) {
+        LOGGER.info("---PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}---", priceWin, bid.getReservePrice(), bid.getProduct().getName());
+
+        // Send email to notify winner not reach to reserve price
+        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, winner, bid.getProduct());
+        setPriceWinAndSaveBid(bid, 0L);
+    }
+
+    private void handleWinnerBid(final Bid bid, final Tuple winnerTuple) {
+        Long priceWin = winnerTuple.get("priceWin", BigInteger.class).longValue();
+        Long userId = winnerTuple.get("buyerId", BigInteger.class).longValue();
+        User winner = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Winner not found"));
+        if (bid.getReservePrice() != null && priceWin < bid.getReservePrice()) {
+            handleWinnerUnderReservePrice(bid, priceWin, winner);
         }
-        setPriceWinAndSaveBid(bid, priceWin.longValue());
-        createAndSaveOrder(bid, userId.longValue());
+        setPriceWinAndSaveBid(bid, priceWin);
+        createAndSaveOrder(bid, winner);
         LOGGER.info("---Created order successfully---");
     }
 
-    private void setPriceWinAndSaveBid(Bid bid, Long priceWin) {
+    private void setPriceWinAndSaveBid(final Bid bid, final Long priceWin) {
         bid.setPriceWin(priceWin);
         bidRepository.save(bid);
         LOGGER.info("---UPDATE PRICE WIN {} FOR PRODUCT {} SUCCESSFULLY---", priceWin, bid.getProduct().getName());
     }
 
-    private void createAndSaveOrder(Bid bid, Long userId) {
-        Bid savedBid = bidRepository.findById(bid.getId())
-                .orElseThrow(() -> new NotFoundException("Bid not found"));
-
+    private void createAndSaveOrder(final Bid bid, final User winner) {
         Order order = new Order();
-        order.setBid(savedBid);
+        order.setBid(bid);
         order.setStatus(EOrderStatus.PENDING);
 
-        User seller = savedBid.getProduct().getUser();
+        User seller = bid.getProduct().getUser();
         order.setSeller(seller);
-
-        User winner = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Winner not found"));
         order.setWinner(winner);
 
         orderRepository.save(order);
