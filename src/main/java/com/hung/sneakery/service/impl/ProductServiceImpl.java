@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
@@ -60,8 +61,7 @@ public class ProductServiceImpl implements ProductService {
         Specification<Product> spec = Specification.where(null);
 
         if (Objects.nonNull(keyword) && !keyword.isEmpty()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.like(cb.lower(root.get("name")), "%" + keyword.toLowerCase() + "%"));
+            spec = spec.and(searchByKeyword(keyword));
         }
         if (Objects.nonNull(category) && !category.isEmpty()) {
             spec = spec.and((root, query, cb) -> {
@@ -84,6 +84,17 @@ public class ProductServiceImpl implements ProductService {
 
         Page<Product> products = productRepository.findAll(spec, pageable);
         return products.map(productConverter::convertToProductDTO);
+    }
+
+    private Specification<Product> searchByKeyword(String keyword) {
+        return (root, query, cb) -> {
+            String[] words = keyword.split("\\s+");
+            Predicate predicate = cb.conjunction();
+            for (String word : words) {
+                predicate = cb.and(predicate, cb.like(cb.lower(root.get("name")), "%" + word.toLowerCase() + "%"));
+            }
+            return predicate;
+        };
     }
 
     @Override
