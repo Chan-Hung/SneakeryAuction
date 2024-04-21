@@ -12,7 +12,6 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -38,12 +37,12 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
     }
 
     private Long getCurrentPrice(final Product product) {
-        Map<Long, BidHistory> bidHistoryMap = product.getBid().getBidHistories().stream()
+        Map<Long, Long> bidHistoryMap = product.getBid().getBidHistories().stream()
                 .filter(bidHistory -> EBidStatus.SUCCESS.equals(bidHistory.getStatus()))
-                .collect(Collectors.toMap(BidHistory::getId, Function.identity()));
+                .collect(Collectors.toMap(BidHistory::getId, BidHistory::getPrice));
 
         return CollectionUtils.isEmpty(bidHistoryMap) ?
                 product.getBid().getPriceStart() :
-                bidHistoryMap.get(Collections.max(bidHistoryMap.keySet())).getPrice();
+                Collections.max(bidHistoryMap.values());
     }
 }
