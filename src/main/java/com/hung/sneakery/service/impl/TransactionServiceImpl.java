@@ -106,8 +106,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     private RedirectUrls buildRedirectUrls() {
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setReturnUrl("http://localhost:3000/success");
-        redirectUrls.setCancelUrl("http://localhost:3000/cancel");
+        redirectUrls.setReturnUrl("https://sneakery.vercel.app/success");
+        redirectUrls.setCancelUrl("https://sneakery.vercel.app/cancel");
         return redirectUrls;
     }
 
