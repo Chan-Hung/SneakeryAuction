@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Product APIs")
-@CrossOrigin(origins = {"http://localhost:3000", "https://sneakery.vercel.app/", "https://aunction-react-js.vercel.app/"})
+@CrossOrigin(origins = {"http://localhost:3000", "https://sneakery.vercel.app/", "https://sneakery-admin.vercel.app/"})
 @RequestMapping("/products")
 public class ProductController {
 

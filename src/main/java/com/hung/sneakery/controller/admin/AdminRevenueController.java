@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 
 @RestController
 @Api(tags = "Revenue APIs")
-@CrossOrigin(originPatterns = {"http://localhost:3000", "https://aunction-react-js.vercel.app/"})
+@CrossOrigin(originPatterns = {"http://localhost:3000", "https://sneakery-admin.vercel.app/"})
 @RequestMapping("/admin/revenue")
 public class AdminRevenueController {
 
