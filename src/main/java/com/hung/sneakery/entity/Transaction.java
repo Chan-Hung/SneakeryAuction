@@ -1,6 +1,5 @@
 package com.hung.sneakery.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hung.sneakery.enums.EPaymentType;
 import lombok.*;
 
@@ -27,7 +26,6 @@ public class Transaction extends AbstractCommonEntity {
     private EPaymentType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id")
-    @JsonIgnore
-    private Wallet wallet;
+    @JoinColumn(name = "user_id")
+    private User user;
 }

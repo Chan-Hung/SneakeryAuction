@@ -2,14 +2,10 @@ package com.hung.sneakery.controller;
 
 import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
-import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.enums.EPaymentType;
-import com.hung.sneakery.service.TransactionService;
-import com.paypal.api.payments.Links;
-import com.paypal.api.payments.Payment;
+import com.hung.sneakery.service.PayPalService;
+import com.hung.sneakery.service.StripeService;
 import io.swagger.annotations.Api;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,50 +17,31 @@ import javax.annotation.Resource;
 public class TransactionController {
 
     @Resource
-    private TransactionService transactionService;
+    private PayPalService payPalService;
 
-    @PostMapping("/payment")
-    public BaseResponse payment(@RequestBody final PaymentRequest paymentRequest) {
-        Payment payment = transactionService.createPayment(paymentRequest);
-        for (Links link : payment.getLinks()) {
-            if (link.getRel().equals("approval_url")) {
-                return new BaseResponse(true, link.getHref());
-            }
-        }
-        return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
+    @Resource
+    private StripeService stripeService;
+
+    @PostMapping("/paypal")
+    public BaseResponse payWithPayPal(@RequestBody final PaymentRequest paymentRequest) {
+        return payPalService.processPayment(paymentRequest);
     }
 
-    @GetMapping("/cancel")
-    public BaseResponse cancelPay() {
-        return new BaseResponse(false, "cancel");
+    @GetMapping("/paypal/success")
+    public BaseResponse successPayWithPayPal(@RequestParam("paymentId") final String paymentId,
+                                             @RequestParam("payerId") final String payerId,
+                                             @RequestParam("paymentType") final EPaymentType type) {
+        return payPalService.handleSuccessPayment(paymentId, payerId, type);
     }
 
-    @GetMapping("/success")
-    public BaseResponse successPay(@RequestParam("paymentId") final String paymentId,
-                                   @RequestParam("payerId") final String payerId,
-                                   @RequestParam("paymentType") final EPaymentType type) {
-        Payment payment = transactionService.executePayment(paymentId, payerId);
-        if (payment.getState().equals("approved")) {
-            return transactionService.handleSuccess(payment, type);
-        }
-        return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
+    @PostMapping("/stripe")
+    public BaseResponse payWithStripe(@RequestBody final PaymentRequest paymentRequest) {
+        return stripeService.processPayment(paymentRequest);
     }
 
-    @GetMapping("/{walletId}")
-    public Page<Transaction> getByWallet(@PathVariable final Long walletId, final Pageable pageable) {
-        return transactionService.getByWallet(walletId, pageable);
-    }
-
-    @GetMapping("/withdraw")
-    public BaseResponse withdraw(@RequestParam(name = "amount") final Long amount) {
-        return transactionService.withdraw(amount);
-    }
-
-    @GetMapping("/paid")
-    public BaseResponse paidByWinner(
-            @RequestParam(name = "orderId") final Long orderId,
-            @RequestParam(name = "shippingFee") final Long shippingFee,
-            @RequestParam(name = "subtotal") final Long subtotal) {
-        return transactionService.paidByWinner(orderId, shippingFee, subtotal);
+    @GetMapping("/stripe/success")
+    public BaseResponse successPayWithStripe(@RequestParam("sessionId") final String checkoutSessionId,
+                                             @RequestParam("paymentType") final EPaymentType type) {
+        return stripeService.handleSuccessPayment(checkoutSessionId, type);
     }
 }

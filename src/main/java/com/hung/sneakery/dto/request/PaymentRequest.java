@@ -10,9 +10,9 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class PaymentRequest {
 
-    @JsonProperty("userId")
+    @JsonProperty("purpose")
     @NotNull
-    private Long userId;
+    private String purpose;
 
     @JsonProperty("amount")
     @NotNull

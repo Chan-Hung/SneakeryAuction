@@ -12,9 +12,10 @@ import java.util.Map;
 
 @Service
 public class CloudinaryServiceImpl implements CloudinaryService {
-    public static final String CLOUDINARY_CLOUD_NAME = "dki8kpq7y";
-    public static final String CLOUDINARY_API_KEY = "127493437893745";
-    public static final String CLOUDINARY_API_SECRET = "BL6qANmHBdpW_pxP2327WXj6WOA";
+
+    private static final String CLOUDINARY_CLOUD_NAME = System.getenv("CLOUDINARY_CLOUD_NAME");
+    private static final String CLOUDINARY_API_KEY = System.getenv("CLOUDINARY_API_KEY");
+    private static final String CLOUDINARY_API_SECRET = System.getenv("CLOUDINARY_API_SECRET");
 
     private final Cloudinary cloudinary;
 
