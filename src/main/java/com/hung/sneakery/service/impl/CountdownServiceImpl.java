@@ -5,10 +5,8 @@ import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.Order;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.EOrderStatus;
-import com.hung.sneakery.repository.BidHistoryRepository;
 import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.repository.OrderRepository;
-import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.CountdownService;
 import com.hung.sneakery.service.MailService;
 import lombok.SneakyThrows;
@@ -30,14 +28,9 @@ public class CountdownServiceImpl implements CountdownService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CountdownServiceImpl.class);
     private static final String EMAIL_SUBJECT = "Kết quả phiên đấu giá";
     private static final String EMAIL_TEMPLATE_PATH = "classpath:email-templates/reserve-price-notification.html";
-    @Resource
-    private BidHistoryRepository bidHistoryRepository;
 
     @Resource
     private BidRepository bidRepository;
-
-    @Resource
-    private UserRepository userRepository;
 
     @Resource
     private OrderRepository orderRepository;

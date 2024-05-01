@@ -28,6 +28,13 @@ public class MailServiceImpl implements MailService {
         String productLink = "https://sneakery.vercel.app/products/" + product.getId();
         content = content.replace("[[URL]]", productLink);
         content = content.replace("[[NAME]]", user.getUsername());
+        content = content.replace("[[PRODUCT_NAME]]", product.getName());
+        for (int i = 0; i < product.getImages().size(); i++) {
+            if (Boolean.TRUE.equals(product.getImages().get(i).getIsThumbnail())) {
+                content = content.replace("[[THUMBNAIL_URL]]", product.getImages().get(i).getPath());
+                break;
+            }
+        }
 
         sendEmail(subject, user.getEmail(), content);
     }

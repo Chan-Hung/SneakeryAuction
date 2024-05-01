@@ -50,15 +50,30 @@
             margin-bottom: 10px;
             padding: 10px 20px;
             background-color: #3F83F8;
-            color: rgb(255, 255, 255);
+            color: white;
             text-decoration: none;
             border-radius: 5px;
             border: none;
             cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
         }
         .content p {
-             line-height: 1.5; /* Set line height for paragraphs */
-         }
+            line-height: 1.5;
+        }
+        .product {
+            margin-bottom: 20px;
+        }
+        .product img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .product-info {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -71,6 +86,14 @@
         <p>Xin chào [[NAME]],</p>
         <br>
         <p>Chúng tôi gửi email này để nhắc bạn về phiên đấu giá đang diễn ra trên Sneakery.</p>
+        <div class="product">
+            <div class="product-info">
+                <img src="[[THUMBNAIL_URL]]" alt="Product Thumbnail">
+                <div>
+                    <h3>[[PRODUCT_NAME]]</h3>
+                </div>
+            </div>
+        </div>
         <p>Hiện tại, có những người khác đã đấu giá cao hơn và thời gian còn lại không nhiều. Đừng bỏ lỡ cơ hội để giữ lại sản phẩm của bạn.</p>
         <br>
         <p>Tiếp tục đấu giá để sở hữu sản phẩm ưng ý.</p>
