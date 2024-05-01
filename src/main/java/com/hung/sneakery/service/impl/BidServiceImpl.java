@@ -64,7 +64,6 @@ public class BidServiceImpl implements BidService {
     private SneakeryUtil sneakeryUtil;
 
     @Override
-    @Transactional
     public BaseResponse placeBid(final BidPlaceRequest request) {
         User buyer = sneakeryUtil.getCurrentUser();
         Product product = productRepository.findById(request.getProductId())
@@ -153,7 +152,8 @@ public class BidServiceImpl implements BidService {
         }
     }
 
-    final void createBidHistory(final Bid bid, final User buyer, final Long amount, final Long currentPrice) {
+    @Transactional
+    void createBidHistory(final Bid bid, final User buyer, final Long amount, final Long currentPrice) {
         BidHistory bidHistory = BidHistory.builder()
                 .maxPrice(amount)
                 .actualPrice(currentPrice)
