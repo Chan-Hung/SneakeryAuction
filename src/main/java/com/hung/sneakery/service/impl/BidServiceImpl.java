@@ -150,7 +150,7 @@ public class BidServiceImpl implements BidService {
         if (amount <= currentPrice) {
             throw new BidPlacingException("Lượt ra giá của bạn phải cao hơn số tiền hiện tại");
         }
-        if (isValidBidIncrement) {
+        if (!isValidBidIncrement) {
             throw new BidPlacingException("Bước giá cho sản phẩm này là " + stepBid + " $");
         }
     }
