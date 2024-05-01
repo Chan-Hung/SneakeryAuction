@@ -6,13 +6,12 @@ import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.EPaymentType;
 import com.hung.sneakery.repository.TransactionRepository;
-import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.PayPalService;
+import com.hung.sneakery.utils.SneakeryUtil;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,7 +29,7 @@ public class PayPalServiceImpl implements PayPalService {
     private TransactionRepository transactionRepository;
 
     @Resource
-    private UserRepository userRepository;
+    private SneakeryUtil sneakeryUtil;
 
     private static final String CLIENT_BASE_URL = System.getenv("CLIENT_BASE_URL");
 
@@ -113,7 +112,7 @@ public class PayPalServiceImpl implements PayPalService {
         Payment executedPayment = payment.execute(apiContext, paymentExecute);
         if (executedPayment.getState().equals("approved")) {
             Long amount = Long.parseLong(StringUtils.removeEnd(executedPayment.getTransactions().get(0).getAmount().getTotal(), ".00"));
-            User user = getCurrentUser();
+            User user = sneakeryUtil.getCurrentUser();
             Transaction transaction = Transaction.builder()
                     .amount(amount)
                     .type(type)
@@ -123,10 +122,5 @@ public class PayPalServiceImpl implements PayPalService {
             return new BaseResponse(true, "Pay successfully");
         }
         return new BaseResponse(false, "PayPal is not available now, please contact to our customer service");
-    }
-
-    private User getCurrentUser() {
-        String usernameWinner = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByUsername(usernameWinner);
     }
 }

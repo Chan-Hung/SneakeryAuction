@@ -10,9 +10,8 @@ import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.EBidStatus;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.BidHistoryRepository;
-import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.BidHistoryService;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.hung.sneakery.utils.SneakeryUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,13 +26,13 @@ public class BidHistoryServiceImpl implements BidHistoryService {
     private BidHistoryRepository bidHistoryRepository;
 
     @Resource
-    private UserRepository userRepository;
-
-    @Resource
     private ProductConverter productConverter;
 
     @Resource
     private BidHistoryConverter bidHistoryConverter;
+
+    @Resource
+    private SneakeryUtil sneakeryUtil;
 
     @Override
     public List<BidHistoryDTO> getHistoryByProduct(final Long productId) {
@@ -46,8 +45,7 @@ public class BidHistoryServiceImpl implements BidHistoryService {
 
     @Override
     public List<GetBidHistoryByUser> getHistoryByUser() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username);
+        User user = sneakeryUtil.getCurrentUser();
 
         List<BidHistory> bidHistoryList = bidHistoryRepository.findByUser_IdOrderByCreatedDateDesc(user.getId());
         List<GetBidHistoryByUser> getBidHistoryByUsers = new ArrayList<>();
@@ -72,7 +70,7 @@ public class BidHistoryServiceImpl implements BidHistoryService {
                 .bidHistoryId(bidHistory.getId())
                 .status(bidHistory.getStatus().toString())
                 .createdAt(bidHistory.getCreatedDate())
-                .amount(bidHistory.getPrice())
+                .amount(bidHistory.getActualPrice())
                 .product(productConverter.convertToProductDTO(bidHistory.getBid().getProduct()))
                 .build();
     }

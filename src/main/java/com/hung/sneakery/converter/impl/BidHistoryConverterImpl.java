@@ -17,7 +17,7 @@ public class BidHistoryConverterImpl implements BidHistoryConverter {
     public BidHistoryDTO convertToBidHistoryDTO(BidHistory bidHistory) {
         return BidHistoryDTO.builder()
                 .bidHistoryId(bidHistory.getId())
-                .bidAmount(bidHistory.getPrice())
+                .bidAmount(bidHistory.getActualPrice())
                 .status(bidHistory.getStatus().toString())
                 .createdAt(bidHistory.getCreatedDate())
                 .userName(bidHistory.getUser().getUsername())

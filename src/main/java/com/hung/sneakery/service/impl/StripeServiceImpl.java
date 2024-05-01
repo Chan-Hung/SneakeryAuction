@@ -6,8 +6,8 @@ import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.EPaymentType;
 import com.hung.sneakery.repository.TransactionRepository;
-import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.StripeService;
+import com.hung.sneakery.utils.SneakeryUtil;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -17,7 +17,6 @@ import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.CustomerListParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import lombok.SneakyThrows;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,7 +29,7 @@ public class StripeServiceImpl implements StripeService {
     private TransactionRepository transactionRepository;
 
     @Resource
-    private UserRepository userRepository;
+    private SneakeryUtil sneakeryUtil;
 
     private static final String CLIENT_BASE_URL = System.getenv("CLIENT_BASE_URL");
     private static final String STRIPE_SECRET_KEY = System.getenv("STRIPE_SECRET_KEY");
@@ -39,7 +38,7 @@ public class StripeServiceImpl implements StripeService {
     @SneakyThrows
     public BaseResponse processPayment(final PaymentRequest paymentRequest) {
         Stripe.apiKey = STRIPE_SECRET_KEY; //NOSONAR
-        User user = getCurrentUser();
+        User user = sneakeryUtil.getCurrentUser();
 
         Customer customer = findOrCreateCustomer(user.getEmail(), user.getUsername());
 
@@ -52,7 +51,7 @@ public class StripeServiceImpl implements StripeService {
     @SneakyThrows
     public BaseResponse handleSuccessPayment(String checkoutSessionId, EPaymentType type) {
         Session session = Session.retrieve(checkoutSessionId);
-        User user = getCurrentUser();
+        User user = sneakeryUtil.getCurrentUser();
 
         Transaction transaction = Transaction.builder()
                 .amount(session.getAmountTotal() / 100)
@@ -61,11 +60,6 @@ public class StripeServiceImpl implements StripeService {
                 .build();
         transactionRepository.save(transaction);
         return new BaseResponse(true, "Pay successfully");
-    }
-
-    private User getCurrentUser() {
-        String usernameWinner = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByUsername(usernameWinner);
     }
 
     private Customer findOrCreateCustomer(final String email, final String name) throws StripeException {

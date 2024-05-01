@@ -7,11 +7,8 @@ import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.enums.EBidStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,12 +34,10 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
     }
 
     private Long getCurrentPrice(final Product product) {
-        Map<Long, Long> bidHistoryMap = product.getBid().getBidHistories().stream()
+        return product.getBid().getBidHistories().stream()
                 .filter(bidHistory -> EBidStatus.SUCCESS.equals(bidHistory.getStatus()))
-                .collect(Collectors.toMap(BidHistory::getId, BidHistory::getPrice));
-
-        return CollectionUtils.isEmpty(bidHistoryMap) ?
-                product.getBid().getPriceStart() :
-                Collections.max(bidHistoryMap.values());
+                .map(BidHistory::getActualPrice)
+                .max(Long::compareTo)
+                .orElse(product.getBid().getPriceStart());
     }
 }

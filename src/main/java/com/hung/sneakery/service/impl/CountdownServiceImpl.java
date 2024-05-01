@@ -1,10 +1,10 @@
 package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.entity.Bid;
+import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.Order;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.EOrderStatus;
-import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.BidHistoryRepository;
 import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.repository.OrderRepository;
@@ -17,10 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.persistence.Tuple;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -85,35 +84,33 @@ public class CountdownServiceImpl implements CountdownService {
     }
 
     private void handleBidCompletion(final Bid bid) {
-        Tuple winnerTuple = bidHistoryRepository.getWinner(bid.getId());
-        if (winnerTuple == null) {
+        BidHistory highestBid = bid.getBidHistories()
+                .stream()
+                .max(Comparator.comparing(BidHistory::getActualPrice))
+                .orElse(null);
+        if (highestBid == null) {
             LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getProduct().getName());
             setPriceWinAndSaveBid(bid, 0L);
         } else {
             LOGGER.info("---TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}---", bid.getProduct().getName());
-            handleWinnerBid(bid, winnerTuple);
+            handleWinnerBid(bid, highestBid);
         }
     }
 
     @SneakyThrows
-    private void handleWinnerUnderReservePrice(Bid bid, final Long priceWin, final User winner) {
-        LOGGER.info("---PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}---", priceWin, bid.getReservePrice(), bid.getProduct().getName());
+    private void handleWinnerUnderReservePrice(final Bid bid, final BidHistory highestBid) {
+        LOGGER.info("---PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}---", highestBid.getActualPrice(), bid.getReservePrice(), bid.getProduct().getName());
 
         // Send email to notify winner not reach to reserve price
-        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, winner, bid.getProduct());
+        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, bid.getHolder(), bid.getProduct());
         setPriceWinAndSaveBid(bid, 0L);
     }
 
-    private void handleWinnerBid(final Bid bid, final Tuple winnerTuple) {
-        Long priceWin = winnerTuple.get("priceWin", BigInteger.class).longValue();
-        Long userId = winnerTuple.get("buyerId", BigInteger.class).longValue();
-        User winner = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Winner not found"));
-        if (bid.getReservePrice() != null && priceWin < bid.getReservePrice()) {
-            handleWinnerUnderReservePrice(bid, priceWin, winner);
+    private void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
+        if (bid.getReservePrice() != null && highestBid.getActualPrice() < bid.getReservePrice()) {
+            handleWinnerUnderReservePrice(bid, highestBid);
         }
-        setPriceWinAndSaveBid(bid, priceWin);
-        createAndSaveOrder(bid, winner);
+        setPriceWinAndSaveBid(bid, highestBid.getActualPrice());
         LOGGER.info("---Created order successfully---");
     }
 

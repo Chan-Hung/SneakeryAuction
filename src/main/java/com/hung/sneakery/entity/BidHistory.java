@@ -20,7 +20,10 @@ public class BidHistory extends AbstractCommonEntity {
     private Long id;
 
     @Column
-    private Long price;
+    private Long maxPrice;
+
+    @Column
+    private Long actualPrice;
 
     @Column
     @Enumerated(EnumType.STRING)
