@@ -1,7 +1,10 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.entity.BidHistory;
+import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.User;
+import com.hung.sneakery.enums.EBidStatus;
 import com.hung.sneakery.service.MailService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -14,6 +17,8 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.*;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 @Service
 public class MailServiceImpl implements MailService {
@@ -29,12 +34,24 @@ public class MailServiceImpl implements MailService {
         content = content.replace("[[URL]]", productLink);
         content = content.replace("[[NAME]]", user.getUsername());
         content = content.replace("[[PRODUCT_NAME]]", product.getName());
-        for (int i = 0; i < product.getImages().size(); i++) {
-            if (Boolean.TRUE.equals(product.getImages().get(i).getIsThumbnail())) {
-                content = content.replace("[[THUMBNAIL_URL]]", product.getImages().get(i).getPath());
-                break;
-            }
-        }
+        content = content.replace("[[HOLDER]]", product.getBid().getHolder().getUsername());
+
+        String thumbnailPath = product.getImages().stream()
+                .filter(image -> Boolean.TRUE.equals(image.getIsThumbnail()))
+                .findFirst()
+                .map(Media::getPath)
+                .orElse(StringUtils.EMPTY);
+        content = content.replace("[[THUMBNAIL_URL]]", thumbnailPath);
+
+        Long currentPrice = product.getBid().getBidHistories().stream()
+                .filter(bidHistory -> EBidStatus.SUCCESS.equals(bidHistory.getStatus()))
+                .map(BidHistory::getActualPrice)
+                .max(Long::compareTo)
+                .orElse(product.getBid().getPriceStart());
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+        currencyFormatter.setMinimumFractionDigits(0);
+        String formattedCurrentPrice = currencyFormatter.format(currentPrice);
+        content = content.replace("[[CURRENT_PRICE]]", formattedCurrentPrice);
 
         sendEmail(subject, user.getEmail(), content);
     }

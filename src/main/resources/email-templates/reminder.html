@@ -45,18 +45,27 @@
             margin-bottom: 20px;
         }
         .btn {
-            display: inline-block;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            padding: 10px 20px;
-            background-color: #3F83F8;
-            color: white;
-            text-decoration: none;
+            display: block;
+            margin: 10px auto;
+            padding: 15px 25px;
+            color: #3F83F8;
+            background-color: white;
+            border: 1px solid #3F83F8;
             border-radius: 5px;
-            border: none;
             cursor: pointer;
             font-size: 18px;
-            transition: background-color 0.3s ease;
+            text-align: center;
+            width: fit-content;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            color: white;
+            border: 1px solid #3F83F8;
+            background-color: #3F83F8;
+            transform: translateY(-2px);
         }
         .content p {
             line-height: 1.5;
@@ -90,7 +99,9 @@
             <div class="product-info">
                 <img src="[[THUMBNAIL_URL]]" alt="Product Thumbnail">
                 <div>
-                    <h3>[[PRODUCT_NAME]]</h3>
+                    <h3>Sản phẩm: [[PRODUCT_NAME]]</h3>
+                    <h3>Giá hiện tại: [[CURRENT_PRICE]]</h3>
+                    <h3>Người chơi hiện giữ giá cao nhất: [[HOLDER]]</h3>
                 </div>
             </div>
         </div>
