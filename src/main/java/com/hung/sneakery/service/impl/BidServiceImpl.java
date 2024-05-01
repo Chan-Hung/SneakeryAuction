@@ -143,14 +143,12 @@ public class BidServiceImpl implements BidService {
 
     final void checkBidIsValid(final Bid bid, final BidHistory currentHighestBid, final BidPlaceRequest request) {
         Long stepBid = bid.getStepBid();
-        boolean isValidBidIncrement = (request.getAmount() - bid.getPriceStart()) % stepBid == 0;
         Long amount = request.getAmount();
         Long currentPrice = currentHighestBid != null ? currentHighestBid.getActualPrice() : bid.getPriceStart();
-
         if (amount <= currentPrice) {
             throw new BidPlacingException("Lượt ra giá của bạn phải cao hơn số tiền hiện tại");
         }
-        if (!isValidBidIncrement) {
+        if (currentPrice + stepBid > amount) {
             throw new BidPlacingException("Bước giá cho sản phẩm này là " + stepBid + " $");
         }
     }
