@@ -2,6 +2,7 @@ package com.hung.sneakery.converter.impl;
 
 import com.hung.sneakery.converter.ProductDetailedConverter;
 import com.hung.sneakery.dto.ProductDetailedDTO;
+import com.hung.sneakery.entity.Bid;
 import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
@@ -16,20 +17,27 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
 
     @Override
     public ProductDetailedDTO convertToProductDetailedDTO(Product product) {
-        List<String> imagePath = product.getImages().stream()
-                .map(Media::getPath).collect(Collectors.toList());
+        List<String> imagePath = product.getImages()
+                .stream()
+                .map(Media::getPath)
+                .collect(Collectors.toList());
+
+        Bid bid = product.getBid();
 
         return ProductDetailedDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
-                .startPrice(product.getBid().getPriceStart())
+                .startPrice(bid.getPriceStart())
                 .imagePath(imagePath)
                 .category(product.getCategory().getName())
                 .properties(product.getProperties())
                 .description(product.getDescription())
-                .bidIncrement(product.getBid().getStepBid())
+                .bidIncrement(bid.getStepBid())
                 .currentPrice(getCurrentPrice(product))
-                .bidClosingDate(product.getBid().getClosingDateTime())
+                .holder(bid.getHolder().getUsername())
+                .seller(product.getUser().getUsername())
+                .bidCreatedDate(bid.getCreatedDate())
+                .bidClosingDate(bid.getClosingDateTime())
                 .build();
     }
 

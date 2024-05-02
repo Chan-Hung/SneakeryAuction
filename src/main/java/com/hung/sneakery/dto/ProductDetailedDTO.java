@@ -32,6 +32,12 @@ public class ProductDetailedDTO {
     @JsonProperty("currentPrice")
     private Long currentPrice;
 
+    @JsonProperty("holder")
+    private String holder;
+
+    @JsonProperty("seller")
+    private String seller;
+
     @JsonProperty("bidIncrement")
     private Long bidIncrement;
 
@@ -40,6 +46,9 @@ public class ProductDetailedDTO {
 
     @JsonProperty("category")
     private String category;
+
+    @JsonProperty("bidCreatedDate")
+    private LocalDateTime bidCreatedDate;
 
     @JsonProperty("bidClosingDate")
     private LocalDateTime bidClosingDate;

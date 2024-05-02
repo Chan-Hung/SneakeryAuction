@@ -15,9 +15,10 @@ public interface MailService {
      * @param product      the product
      * @param subject      the subject
      * @param templatePath the template path
+     * @param currentPrice the current price
      * @throws MessagingException if an error occurs
      * @throws IOException        if an error occurs
      */
-    void sendEmail(String subject, String templatePath, User user, Product product) throws MessagingException, IOException;
+    void sendEmail(String subject, String templatePath, User user, Product product, Long currentPrice) throws MessagingException, IOException;
 }
 

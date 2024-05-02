@@ -1,10 +1,8 @@
 package com.hung.sneakery.service.impl;
 
-import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.User;
-import com.hung.sneakery.enums.EBidStatus;
 import com.hung.sneakery.service.MailService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,7 +26,7 @@ public class MailServiceImpl implements MailService {
     private JavaMailSender mailSender;
 
     @Override
-    public void sendEmail(final String subject, final String templatePath, final User user, final Product product) throws MessagingException, IOException {
+    public void sendEmail(final String subject, final String templatePath, final User user, final Product product, final Long currentPrice) throws MessagingException, IOException {
         String content = readEmailTemplate(templatePath);
         String productLink = "https://sneakery.vercel.app/products/" + product.getId();
         content = content.replace("[[URL]]", productLink);
@@ -43,11 +41,6 @@ public class MailServiceImpl implements MailService {
                 .orElse(StringUtils.EMPTY);
         content = content.replace("[[THUMBNAIL_URL]]", thumbnailPath);
 
-        Long currentPrice = product.getBid().getBidHistories().stream()
-                .filter(bidHistory -> EBidStatus.SUCCESS.equals(bidHistory.getStatus()))
-                .map(BidHistory::getActualPrice)
-                .max(Long::compareTo)
-                .orElse(product.getBid().getPriceStart());
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         currencyFormatter.setMinimumFractionDigits(0);
         String formattedCurrentPrice = currencyFormatter.format(currentPrice);

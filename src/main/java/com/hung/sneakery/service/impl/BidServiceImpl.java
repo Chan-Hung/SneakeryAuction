@@ -83,7 +83,7 @@ public class BidServiceImpl implements BidService {
             handleBidSniping(bid);
         }
         if (shouldRemindBidder(currentHighestBid, buyer)) {
-            sendRemindBidderEmailAsync(currentHighestBid.getUser(), product);
+            sendRemindBidderEmailAsync(currentHighestBid.getUser(), product, currentPrice);
         }
         return new BaseResponse("Place bid successfully");
     }
@@ -123,10 +123,10 @@ public class BidServiceImpl implements BidService {
         return currentHighestBid != null && !currentHighestBid.getUser().equals(buyer);
     }
 
-    private void sendRemindBidderEmailAsync(final User user, final Product product) {
+    private void sendRemindBidderEmailAsync(final User user, final Product product, final Long currentPrice) {
         CompletableFuture.runAsync(() -> {
             try {
-                mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, user, product);
+                mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, user, product, currentPrice);
                 LOGGER.info("Sent remind email to user: {}", user.getUsername());
             } catch (MessagingException | IOException | NullPointerException e) {
                 LOGGER.info("Failed to send remind email due to: {}", e.getMessage());
@@ -152,8 +152,7 @@ public class BidServiceImpl implements BidService {
         }
     }
 
-    @Transactional
-    void createBidHistory(final Bid bid, final User buyer, final Long amount, final Long currentPrice) {
+    private void createBidHistory(final Bid bid, final User buyer, final Long amount, final Long currentPrice) {
         BidHistory bidHistory = BidHistory.builder()
                 .maxPrice(amount)
                 .actualPrice(currentPrice)

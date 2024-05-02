@@ -2,13 +2,17 @@ package com.hung.sneakery.converter.impl;
 
 import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.ProductDTO;
+import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
+import com.hung.sneakery.enums.EBidStatus;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,15 +25,26 @@ public class ProductConverterImpl implements ProductConverter {
                 .filter(image -> BooleanUtils.isTrue(image.getIsThumbnail()))
                 .findFirst()
                 .map(Media::getPath)
-                .orElse(null);
+                .orElse(StringUtils.EMPTY);
+
+        Long currentPrice = product.getBid().getBidHistories().stream()
+                .filter(bidHistory -> EBidStatus.SUCCESS.equals(bidHistory.getStatus()))
+                .map(BidHistory::getActualPrice)
+                .max(Long::compareTo)
+                .orElse(product.getBid().getPriceStart());
+
+        Integer numberOfBids = product.getBid().getBidHistories().size();
+        String holder = Objects.nonNull(product.getBid().getHolder()) ? product.getBid().getHolder().getUsername() : null;
 
         return ProductDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .imagePath(imagePath)
-                .startPrice(product.getBid().getPriceStart())
-                .username(product.getUser().getUsername())
+                .currentPrice(currentPrice)
+                .holder(holder)
+                .bidCreatedDate(product.getBid().getCreatedDate())
                 .bidClosingDate(product.getBid().getClosingDateTime())
+                .numberOfBids(numberOfBids)
                 .build();
     }
 

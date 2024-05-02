@@ -95,7 +95,7 @@ public class CountdownServiceImpl implements CountdownService {
         LOGGER.info("---PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}---", highestBid.getActualPrice(), bid.getReservePrice(), bid.getProduct().getName());
 
         // Send email to notify winner not reach to reserve price
-        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, bid.getHolder(), bid.getProduct());
+        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, bid.getHolder(), bid.getProduct(), null);
         setPriceWinAndSaveBid(bid, 0L);
     }
 

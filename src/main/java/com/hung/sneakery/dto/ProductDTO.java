@@ -16,18 +16,21 @@ public class ProductDTO {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("startPrice")
-    private Long startPrice;
-
     @JsonProperty("imagePath")
     private String imagePath;
 
-    @JsonProperty("userName")
-    private String username;
+    @JsonProperty("currentPrice")
+    private Long currentPrice;
 
-    //Format date time with JsonFormat
-    //https://www.baeldung.com/jackson-jsonformat
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:00 dd/MM/yyyy")
+    @JsonProperty("holder")
+    private String holder;
+
+    @JsonProperty("bidCreatedDate")
+    private LocalDateTime bidCreatedDate;
+
     @JsonProperty("bidClosingDate")
     private LocalDateTime bidClosingDate;
+
+    @JsonProperty("numberOfBids")
+    private Integer numberOfBids;
 }

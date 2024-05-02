@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@Api(tags = "Transaction By PayPal APIs")
+@Api(tags = "Transaction APIs")
 @CrossOrigin(origins = {"http://localhost:3000/", "https://sneakery.vercel.app/", "https://www.sandbox.paypal.com/"})
 @RequestMapping("/transactions")
 public class TransactionController {
