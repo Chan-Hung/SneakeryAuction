@@ -10,6 +10,7 @@ import com.hung.sneakery.enums.EBidStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -34,7 +35,7 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
                 .description(product.getDescription())
                 .bidIncrement(bid.getStepBid())
                 .currentPrice(getCurrentPrice(product))
-                .holder(bid.getHolder().getUsername())
+                .holder(Objects.nonNull(bid.getHolder()) ? bid.getHolder().getUsername() : null)
                 .seller(product.getUser().getUsername())
                 .bidCreatedDate(bid.getCreatedDate())
                 .bidClosingDate(bid.getClosingDateTime())
