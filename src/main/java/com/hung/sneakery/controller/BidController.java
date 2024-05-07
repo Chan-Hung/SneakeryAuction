@@ -6,6 +6,8 @@ import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.service.BidService;
 import io.swagger.annotations.Api;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +38,13 @@ public class BidController {
 
     @GetMapping("/uploaded-products")
     @PreAuthorize("hasRole('USER')")
-    public List<BidDTO> getAll() {
-        return bidService.getAllUploadedProduct();
+    public List<BidDTO> getUploadedProducts() {
+        return bidService.getUploadedProduct();
+    }
+
+    @GetMapping("/win")
+    @PreAuthorize("hasRole('USER')")
+    public Page<BidDTO> getWinningBids(final Pageable pageable) {
+        return bidService.getWinningBids(pageable);
     }
 }

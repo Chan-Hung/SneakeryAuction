@@ -1,5 +1,6 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.converter.BidConverter;
 import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.BidDTO;
 import com.hung.sneakery.dto.request.BidCreateRequest;
@@ -16,6 +17,9 @@ import com.hung.sneakery.service.MailService;
 import com.hung.sneakery.utils.SneakeryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -62,6 +66,9 @@ public class BidServiceImpl implements BidService {
 
     @Resource
     private SneakeryUtil sneakeryUtil;
+
+    @Resource
+    private BidConverter bidConverter;
 
     @Override
     public BaseResponse placeBid(final BidPlaceRequest request) {
@@ -175,7 +182,7 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public List<BidDTO> getAllUploadedProduct() {
+    public List<BidDTO> getUploadedProduct() {
         User seller = sneakeryUtil.getCurrentUser();
 
         List<Product> uploadedProducts = productRepository.findByUser(seller);
@@ -194,6 +201,15 @@ public class BidServiceImpl implements BidService {
             bidDTOList.add(bidDTO);
         }
         return bidDTOList;
+    }
+
+    @Override
+    public Page<BidDTO> getWinningBids(final Pageable pageable) {
+        User user = sneakeryUtil.getCurrentUser();
+
+        Page<Bid> bidsPage = bidRepository.findByHolderAndPriceWinNotNull(user, pageable);
+        List<BidDTO> bidDTOs = bidConverter.convertToBidDTOList(bidsPage.getContent());
+        return new PageImpl<>(bidDTOs, pageable, bidsPage.getTotalElements());
     }
 
     @Transactional

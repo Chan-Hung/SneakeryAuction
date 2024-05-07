@@ -4,6 +4,8 @@ import com.hung.sneakery.dto.BidDTO;
 import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public interface BidService {
     /**
      * Create A Bid
      *
-     * @param request   BidCreateRequest
+     * @param request BidCreateRequest
      * @return BaseResponse
      */
     BaseResponse createBid(BidCreateRequest request);
@@ -30,5 +32,12 @@ public interface BidService {
      *
      * @return List<BidDTO>
      */
-    List<BidDTO> getAllUploadedProduct();
+    List<BidDTO> getUploadedProduct();
+
+    /**
+     * Get Winning Bids
+     *
+     * @return List<BidDTO>
+     */
+    Page<BidDTO> getWinningBids(Pageable pageable);
 }
