@@ -2,11 +2,14 @@ package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.entity.Bid;
 import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.EPaymentType;
+import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.repository.TransactionRepository;
 import com.hung.sneakery.service.StripeService;
+import com.hung.sneakery.utils.SneakeryConstant;
 import com.hung.sneakery.utils.SneakeryUtil;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -29,6 +32,9 @@ public class StripeServiceImpl implements StripeService {
     private TransactionRepository transactionRepository;
 
     @Resource
+    private BidRepository bidRepository;
+
+    @Resource
     private SneakeryUtil sneakeryUtil;
 
     private static final String CLIENT_BASE_URL = System.getenv("CLIENT_BASE_URL");
@@ -49,13 +55,15 @@ public class StripeServiceImpl implements StripeService {
 
     @Override
     @SneakyThrows
-    public BaseResponse handleSuccessPayment(String checkoutSessionId, EPaymentType type) {
+    public BaseResponse handleSuccessPayment(final String checkoutSessionId, final EPaymentType type, final Long productId) {
         Session session = Session.retrieve(checkoutSessionId);
         User user = sneakeryUtil.getCurrentUser();
-
+        Bid bid = bidRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException(SneakeryConstant.BID_NOT_FOUND));
         Transaction transaction = Transaction.builder()
                 .amount(session.getAmountTotal() / 100)
                 .type(type)
+                .bid(bid)
                 .user(user)
                 .build();
         transactionRepository.save(transaction);

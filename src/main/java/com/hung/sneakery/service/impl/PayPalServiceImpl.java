@@ -2,11 +2,14 @@ package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.dto.request.PaymentRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.entity.Bid;
 import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.EPaymentType;
+import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.repository.TransactionRepository;
 import com.hung.sneakery.service.PayPalService;
+import com.hung.sneakery.utils.SneakeryConstant;
 import com.hung.sneakery.utils.SneakeryUtil;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
@@ -27,6 +30,9 @@ public class PayPalServiceImpl implements PayPalService {
 
     @Resource
     private TransactionRepository transactionRepository;
+
+    @Resource
+    private BidRepository bidRepository;
 
     @Resource
     private SneakeryUtil sneakeryUtil;
@@ -103,7 +109,7 @@ public class PayPalServiceImpl implements PayPalService {
 
     @Override
     @SneakyThrows
-    public BaseResponse handleSuccessPayment(final String paymentId, final String payerId, final EPaymentType type) {
+    public BaseResponse handleSuccessPayment(final String paymentId, final String payerId, final EPaymentType type, final Long productId) {
         Payment payment = new Payment();
         payment.setId(paymentId);
 
@@ -113,9 +119,12 @@ public class PayPalServiceImpl implements PayPalService {
         if (executedPayment.getState().equals("approved")) {
             Long amount = Long.parseLong(StringUtils.removeEnd(executedPayment.getTransactions().get(0).getAmount().getTotal(), ".00"));
             User user = sneakeryUtil.getCurrentUser();
+            Bid bid = bidRepository.findById(productId)
+                    .orElseThrow(() -> new RuntimeException(SneakeryConstant.BID_NOT_FOUND));
             Transaction transaction = Transaction.builder()
                     .amount(amount)
                     .type(type)
+                    .bid(bid)
                     .user(user)
                     .build();
             transactionRepository.save(transaction);

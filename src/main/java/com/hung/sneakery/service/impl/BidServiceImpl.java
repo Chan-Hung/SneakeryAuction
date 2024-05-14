@@ -171,14 +171,12 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public BaseResponse createBid(final BidCreateRequest request) {
+    public BidDTO createBid(final BidCreateRequest request) {
         User seller = sneakeryUtil.getCurrentUser();
 
         Bid bid = mapToBid(request, seller);
-
         countdownService.biddingCountdown(bid);
-
-        return new BaseResponse("Created bidding product successfully");
+        return bidConverter.convertToBidDTO(bid);
     }
 
     @Override

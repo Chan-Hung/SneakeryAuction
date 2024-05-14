@@ -22,5 +22,5 @@ public interface PayPalService {
      * @param type      EPaymentType
      * @return BaseResponse
      */
-    BaseResponse handleSuccessPayment(String paymentId, String payerId, EPaymentType type);
+    BaseResponse handleSuccessPayment(String paymentId, String payerId, EPaymentType type, Long productId);
 }

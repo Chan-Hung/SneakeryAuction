@@ -21,5 +21,5 @@ public interface StripeService {
      * @param type              EPaymentType
      * @return BaseResponse
      */
-    BaseResponse handleSuccessPayment(String checkoutSessionId, EPaymentType type);
+    BaseResponse handleSuccessPayment(String checkoutSessionId, EPaymentType type, Long productId);
 }

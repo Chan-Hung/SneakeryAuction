@@ -25,7 +25,7 @@ public interface BidService {
      * @param request BidCreateRequest
      * @return BaseResponse
      */
-    BaseResponse createBid(BidCreateRequest request);
+    BidDTO createBid(BidCreateRequest request);
 
     /**
      * Get All Uploaded Products

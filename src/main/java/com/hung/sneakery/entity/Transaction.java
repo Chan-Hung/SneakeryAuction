@@ -26,6 +26,10 @@ public class Transaction extends AbstractCommonEntity {
     private EPaymentType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bid_id")
+    private Bid bid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 }
