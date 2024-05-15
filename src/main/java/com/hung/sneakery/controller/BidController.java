@@ -1,6 +1,7 @@
 package com.hung.sneakery.controller;
 
 import com.hung.sneakery.dto.BidDTO;
+import com.hung.sneakery.dto.BidDetailDTO;
 import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
@@ -32,7 +33,7 @@ public class BidController {
 
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
-    public BidDTO createBid(@Valid @RequestBody final BidCreateRequest bidCreateRequest) {
+    public BidDetailDTO createBid(@Valid @RequestBody final BidCreateRequest bidCreateRequest) {
         return bidService.createBid(bidCreateRequest);
     }
 

@@ -1,6 +1,7 @@
 package com.hung.sneakery.service;
 
 import com.hung.sneakery.dto.BidDTO;
+import com.hung.sneakery.dto.BidDetailDTO;
 import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
@@ -25,7 +26,7 @@ public interface BidService {
      * @param request BidCreateRequest
      * @return BaseResponse
      */
-    BidDTO createBid(BidCreateRequest request);
+    BidDetailDTO createBid(BidCreateRequest request);
 
     /**
      * Get All Uploaded Products

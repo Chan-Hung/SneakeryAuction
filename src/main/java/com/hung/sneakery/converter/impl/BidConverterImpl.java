@@ -3,6 +3,7 @@ package com.hung.sneakery.converter.impl;
 import com.hung.sneakery.converter.BidConverter;
 import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.BidDTO;
+import com.hung.sneakery.dto.BidDetailDTO;
 import com.hung.sneakery.entity.Bid;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,17 @@ public class BidConverterImpl implements BidConverter {
                 .priceStart(bid.getPriceStart())
                 .bidStartingDate(bid.getCreatedDate())
                 .product(productConverter.convertToProductDTO(bid.getProduct()))
+                .build();
+    }
+
+    @Override
+    public BidDetailDTO convertToBidDetailDTO(Bid bid) {
+        return BidDetailDTO.builder()
+                .bidId(bid.getId())
+                .priceWin(bid.getPriceWin())
+                .stepBid(bid.getStepBid())
+                .priceStart(bid.getPriceStart())
+                .bidStartingDate(bid.getCreatedDate())
                 .build();
     }
 

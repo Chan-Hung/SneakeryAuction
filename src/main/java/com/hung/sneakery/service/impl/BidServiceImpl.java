@@ -3,6 +3,7 @@ package com.hung.sneakery.service.impl;
 import com.hung.sneakery.converter.BidConverter;
 import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.BidDTO;
+import com.hung.sneakery.dto.BidDetailDTO;
 import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
@@ -171,12 +172,12 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public BidDTO createBid(final BidCreateRequest request) {
+    public BidDetailDTO createBid(final BidCreateRequest request) {
         User seller = sneakeryUtil.getCurrentUser();
 
         Bid bid = mapToBid(request, seller);
         countdownService.biddingCountdown(bid);
-        return bidConverter.convertToBidDTO(bid);
+        return bidConverter.convertToBidDetailDTO(bid);
     }
 
     @Override
