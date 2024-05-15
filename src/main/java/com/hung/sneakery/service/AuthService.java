@@ -1,5 +1,6 @@
 package com.hung.sneakery.service;
 
+import com.hung.sneakery.dto.request.ResetPasswordRequest;
 import com.hung.sneakery.dto.request.SignInRequest;
 import com.hung.sneakery.dto.request.SignUpRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
@@ -22,4 +23,12 @@ public interface AuthService {
      * @return BaseResponse
      */
     BaseResponse signUp(SignUpRequest request);
+
+    /**
+     * Reset Password
+     *
+     * @param request ResetPasswordRequest
+     * @return BaseResponse
+     */
+    BaseResponse resetPassword(ResetPasswordRequest request);
 }

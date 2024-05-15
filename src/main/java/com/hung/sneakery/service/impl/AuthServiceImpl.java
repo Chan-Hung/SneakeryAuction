@@ -2,6 +2,7 @@ package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.config.security.impl.UserDetailsImpl;
 import com.hung.sneakery.config.security.jwt.JwtUtils;
+import com.hung.sneakery.dto.request.ResetPasswordRequest;
 import com.hung.sneakery.dto.request.SignInRequest;
 import com.hung.sneakery.dto.request.SignUpRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
@@ -101,6 +102,17 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
         userRepository.save(user);
         return new BaseResponse("User registered successfully");
+    }
+
+    @Override
+    public BaseResponse resetPassword(final ResetPasswordRequest request) {
+        User user = userRepository.findByPhoneNumber(request.getPhoneNumber());
+        if (Objects.isNull(user)) {
+            throw new NotFoundException("User not found");
+        }
+        user.setPassword(encoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        return new BaseResponse("Reset password successfully");
     }
 
     private void handleRole(final Set<String> strRoles, final Set<Role> roles) {

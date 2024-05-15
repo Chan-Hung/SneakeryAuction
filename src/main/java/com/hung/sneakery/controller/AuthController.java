@@ -1,6 +1,7 @@
 package com.hung.sneakery.controller;
 
 
+import com.hung.sneakery.dto.request.ResetPasswordRequest;
 import com.hung.sneakery.dto.request.SignInRequest;
 import com.hung.sneakery.dto.request.SignUpRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
@@ -29,5 +30,10 @@ public class AuthController {
     @PostMapping("/signup")
     public BaseResponse signUp(@Valid @RequestBody final SignUpRequest signUpRequest) {
         return authService.signUp(signUpRequest);
+    }
+
+    @PostMapping("/resetPassword")
+    public BaseResponse resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        return authService.resetPassword(request);
     }
 }
