@@ -19,66 +19,29 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
-        LOGGER.error("Bad Request {}", ExceptionUtils.getStackTrace(ex));
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return buildErrorResponse(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({PayPalRESTException.class, PayPalTransactionException.class})
-    public ResponseEntity<Object> handlePayPalException(PayPalRESTException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    @ExceptionHandler({
+            PayPalRESTException.class,
+            PayPalTransactionException.class,
+            AuthenticationException.class,
+            BidCreatingException.class,
+            BidPlacingException.class,
+            UploadImageException.class,
+            DataIntegrityViolationException.class,
+            IllegalArgumentException.class,
+            ConstraintViolationException.class
+    })
+    public ResponseEntity<Object> handleGenericException(Exception ex) {
+        return buildErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
+    private ResponseEntity<Object> buildErrorResponse(Exception ex, HttpStatus status) {
+        LOGGER.error("Exception: {}", ExceptionUtils.getStackTrace(ex)); //NOSONAR
         ApplicationExceptionResponse error = new ApplicationExceptionResponse();
         error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
-    @ExceptionHandler({BidPlacingException.class, BidCreatingException.class})
-    public ResponseEntity<Object> handleBidException(BidPlacingException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
-    @ExceptionHandler(UploadImageException.class)
-    public ResponseEntity<Object> handleUploadImageException(UploadImageException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
-        LOGGER.error("Internal server error {}", ExceptionUtils.getStackTrace(ex));
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        error.setExceptionType(ex.getClass().getSimpleName());
+        return ResponseEntity.status(status).body(error);
     }
 }

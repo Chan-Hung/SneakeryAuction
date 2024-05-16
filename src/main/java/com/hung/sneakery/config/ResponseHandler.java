@@ -19,7 +19,6 @@ public class ResponseHandler implements ResponseBodyAdvice {
         return returnType.getContainingClass().getPackage().getName().contains("com.hung.sneakery.controller");
     }
 
-
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {

@@ -9,6 +9,7 @@ import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.*;
 import com.hung.sneakery.enums.EBidStatus;
+import com.hung.sneakery.exception.BidCreatingException;
 import com.hung.sneakery.exception.BidPlacingException;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.*;
@@ -173,8 +174,10 @@ public class BidServiceImpl implements BidService {
 
     @Override
     public BidDetailDTO createBid(final BidCreateRequest request) {
+        if (request.getBidClosingDateTime().isBefore(LocalDateTime.now())) {
+            throw new BidCreatingException("Cannot create bid with closing date time in the past.");
+        }
         User seller = sneakeryUtil.getCurrentUser();
-
         Bid bid = mapToBid(request, seller);
         countdownService.biddingCountdown(bid);
         return bidConverter.convertToBidDetailDTO(bid);
