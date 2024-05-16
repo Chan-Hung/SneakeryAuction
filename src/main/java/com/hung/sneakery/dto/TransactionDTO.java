@@ -5,12 +5,17 @@ import com.hung.sneakery.enums.EPaymentType;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class TransactionDTO {
 
     @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("createdAt")
+    private LocalDateTime createdAt;
 
     @JsonProperty("amount")
     private Long amount;

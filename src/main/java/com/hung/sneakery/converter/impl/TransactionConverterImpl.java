@@ -23,6 +23,7 @@ public class TransactionConverterImpl implements TransactionConverter {
     public TransactionDTO convertToTransactionDTO(Transaction transaction) {
         return TransactionDTO.builder()
                 .id(transaction.getId())
+                .createdAt(transaction.getCreatedDate())
                 .amount(transaction.getAmount())
                 .type(transaction.getType())
                 .bid(Objects.nonNull(transaction.getBid()) ? bidConverter.convertToBidDTO(transaction.getBid()) : null)
