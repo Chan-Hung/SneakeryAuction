@@ -38,18 +38,21 @@ public class CountdownServiceImpl implements CountdownService {
     @Resource
     private MailService mailService;
 
-    private final Timer timer = new Timer();
+    private Timer timer = new Timer();
     private TimerTask currentCountdownTask;
+    private boolean isTimerCancelled = false;
 
     @Override
     public void biddingCountdown(final Bid bid) {
         LOGGER.info("---CURRENT TIME EXECUTE: {}", LocalDateTime.now());
-
         cancelPreviousCountdownTask();
-
         Date closingDate = Date.from(bid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
         currentCountdownTask = new CountdownTask(bid, this);
-
+        // Reinitialize the timer if it has been cancelled
+        if (isTimerCancelled) {
+            timer = new Timer();
+            isTimerCancelled = false;
+        }
         timer.schedule(currentCountdownTask, closingDate);
         LOGGER.info("---CURRENT TIME SCHEDULE: {}", closingDate);
     }
@@ -69,9 +72,12 @@ public class CountdownServiceImpl implements CountdownService {
         }
     }
 
-    private void cancelPreviousCountdownTask() {
+    //Ensured methods modifying the timer or task are synchronized
+    // to avoid race conditions and ensure thread safety.
+    private synchronized void cancelPreviousCountdownTask() {
         if (currentCountdownTask != null) {
             currentCountdownTask.cancel();
+            isTimerCancelled = true;
             LOGGER.info("Previous countdown task canceled.");
         }
     }
