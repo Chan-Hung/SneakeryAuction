@@ -10,4 +10,6 @@ public class ApplicationExceptionResponse {
     private String exceptionType;
 
     private String message;
+
+    private Boolean success = false;
 }
