@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class ApplicationExceptionResponse {
 
+    private Boolean success = false;
+
     private String exceptionType;
 
     private String message;
-
-    private Boolean success = false;
 }

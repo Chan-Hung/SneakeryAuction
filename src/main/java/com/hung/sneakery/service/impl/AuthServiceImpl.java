@@ -115,6 +115,15 @@ public class AuthServiceImpl implements AuthService {
         return new BaseResponse("Reset password successfully");
     }
 
+    @Override
+    public BaseResponse verifyPhoneNumber(final String phoneNumber) {
+        User user = userRepository.findByPhoneNumber(phoneNumber);
+        if (Objects.isNull(user)) {
+            return new BaseResponse("Unregistered phone number");
+        }
+        return new BaseResponse("Existed phone number");
+    }
+
     private void handleRole(final Set<String> strRoles, final Set<Role> roles) {
         //If roles are null, default assigning to USER
         if (Objects.isNull(strRoles)) {

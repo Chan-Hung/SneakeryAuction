@@ -32,8 +32,13 @@ public class AuthController {
         return authService.signUp(signUpRequest);
     }
 
-    @PostMapping("/resetPassword")
-    public BaseResponse resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    @PostMapping("/password/reset")
+    public BaseResponse resetPassword(@Valid @RequestBody final ResetPasswordRequest request) {
         return authService.resetPassword(request);
+    }
+
+    @GetMapping("/phone-number/verify")
+    public BaseResponse verifyPhoneNumber(@RequestParam("phoneNumber") final String phoneNumber) {
+        return authService.verifyPhoneNumber(phoneNumber);
     }
 }

@@ -31,4 +31,12 @@ public interface AuthService {
      * @return BaseResponse
      */
     BaseResponse resetPassword(ResetPasswordRequest request);
+
+    /**
+     * Verify Phone Number
+     *
+     * @param phoneNumber String
+     * @return BaseResponse
+     */
+    BaseResponse verifyPhoneNumber(String phoneNumber);
 }
