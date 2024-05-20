@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Media APIs")
-@CrossOrigin(origins = {"http://localhost:3000", "https://sneakery.vercel.app/", "https://sneakery-admin.vercel.app/"})
 @RequestMapping("/medias")
 public class MediaController {
 

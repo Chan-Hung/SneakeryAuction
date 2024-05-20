@@ -13,7 +13,6 @@ import javax.validation.Valid;
 
 @RestController
 @Api(tags = "Address APIs")
-@CrossOrigin(origins = {"http://localhost:3000", "https://sneakery.vercel.app/", "https://sneakery-admin.vercel.app/"})
 @RequestMapping("/addresses")
 public class AddressController {
 

@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 
 @RestController
 @Api(tags = "Wallet APIs")
-@CrossOrigin(origins = {"http://localhost:3000", "https://sneakery.vercel.app/"})
 @RequestMapping("/wallet")
 public class WalletController {
 

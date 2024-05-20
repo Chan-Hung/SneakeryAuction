@@ -18,7 +18,6 @@ import java.util.List;
 
 @RestController
 @Api(tags = "Bid APIs")
-@CrossOrigin(origins = {"http://localhost:3000", "https://sneakery.vercel.app/"})
 @RequestMapping("/bids")
 public class BidController {
 

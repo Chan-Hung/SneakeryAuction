@@ -28,7 +28,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
     //Call getJwtFromCookie() method to get cookie's value
-    private String parseJwt(HttpServletRequest request){
+    private String parseJwt(HttpServletRequest request) {
 
         //Use cookies
 //        String jwt = jwtUtils.getJwtFromCookies(request);
@@ -37,8 +37,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         //Use Auth Header
         String headerAuth = request.getHeader("Authorization");
 
-        if(StringUtils.hasText(headerAuth) && headerAuth
-                .startsWith("Bearer ")){
+        if (StringUtils.hasText(headerAuth) && headerAuth
+                .startsWith("Bearer ")) {
             return headerAuth.substring(7);
         }
         return null;
@@ -46,10 +46,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try{
+        try {
             //get JWT from the HTTP Auth Header
             String jwt = parseJwt(request);
-            if(jwt != null && jwtUtils.validateJwtToken(jwt)){
+            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
 
                 //extract user information from token
                 String email = jwtUtils.getEmailFromJwtToken(jwt);
@@ -68,8 +68,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             }
-        }catch (Exception e){
-            logger.error("Cannot set user authentication: {}",e.getMessage());
+        } catch (Exception e) {
+            logger.error("Cannot set user authentication: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
     }
