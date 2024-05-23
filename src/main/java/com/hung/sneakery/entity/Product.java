@@ -41,7 +41,7 @@ public class Product extends AbstractCommonEntity {
     @Column
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "product")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "product")
     @PrimaryKeyJoinColumn
     @JsonManagedReference
     private Bid bid;
