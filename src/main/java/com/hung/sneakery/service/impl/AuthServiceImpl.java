@@ -125,7 +125,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void handleRole(final Set<String> strRoles, final Set<Role> roles) {
-        //If roles are null, default assigning to USER
         if (Objects.isNull(strRoles)) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new NotFoundException(ROLE_NOT_FOUND));
