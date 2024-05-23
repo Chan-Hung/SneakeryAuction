@@ -27,6 +27,9 @@ public class BidConverterImpl implements BidConverter {
                 .stepBid(bid.getStepBid())
                 .priceStart(bid.getPriceStart())
                 .bidStartingDate(bid.getCreatedDate())
+                .bidOutCome(bid.getBidOutcome())
+                .sellerPaymentStatus(bid.getSellerPaymentStatus())
+                .winnerPaymentStatus(bid.getWinnerPaymentStatus())
                 .product(productConverter.convertToProductDTO(bid.getProduct()))
                 .build();
     }

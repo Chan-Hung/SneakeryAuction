@@ -6,6 +6,7 @@ import com.hung.sneakery.entity.Bid;
 import com.hung.sneakery.entity.Transaction;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.EPaymentType;
+import com.hung.sneakery.enums.PaymentStatus;
 import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.repository.TransactionRepository;
 import com.hung.sneakery.service.PayPalService;
@@ -121,6 +122,11 @@ public class PayPalServiceImpl implements PayPalService {
             User user = sneakeryUtil.getCurrentUser();
             Bid bid = bidRepository.findById(productId)
                     .orElseThrow(() -> new RuntimeException(SneakeryConstant.BID_NOT_FOUND));
+            if (user.equals(bid.getProduct().getUser())) {
+                bid.setSellerPaymentStatus(PaymentStatus.COMPLETED);
+            } else if (user.equals(bid.getHolder())) {
+                bid.setWinnerPaymentStatus(PaymentStatus.COMPLETED);
+            }
             Transaction transaction = Transaction.builder()
                     .amount(amount)
                     .type(type)

@@ -2,11 +2,9 @@ package com.hung.sneakery.service.impl;
 
 import com.hung.sneakery.entity.Bid;
 import com.hung.sneakery.entity.BidHistory;
-import com.hung.sneakery.entity.Order;
-import com.hung.sneakery.entity.User;
-import com.hung.sneakery.enums.EOrderStatus;
+import com.hung.sneakery.enums.BidOutcome;
+import com.hung.sneakery.enums.PaymentStatus;
 import com.hung.sneakery.repository.BidRepository;
-import com.hung.sneakery.repository.OrderRepository;
 import com.hung.sneakery.service.CountdownService;
 import com.hung.sneakery.service.MailService;
 import lombok.SneakyThrows;
@@ -31,9 +29,6 @@ public class CountdownServiceImpl implements CountdownService {
 
     @Resource
     private BidRepository bidRepository;
-
-    @Resource
-    private OrderRepository orderRepository;
 
     @Resource
     private MailService mailService;
@@ -89,7 +84,7 @@ public class CountdownServiceImpl implements CountdownService {
                 .orElse(null);
         if (highestBid == null) {
             LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getProduct().getName());
-            setPriceWinAndSaveBid(bid, 0L);
+            setPriceWinAndSaveBid(bid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);
         } else {
             LOGGER.info("---TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}---", bid.getProduct().getName());
             handleWinnerBid(bid, highestBid);
@@ -102,32 +97,25 @@ public class CountdownServiceImpl implements CountdownService {
 
         // Send email to notify winner not reach to reserve price
         mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, bid.getHolder(), bid.getProduct(), null);
-        setPriceWinAndSaveBid(bid, 0L);
+        setPriceWinAndSaveBid(bid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);
     }
 
     private void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
         if (bid.getReservePrice() != null && highestBid.getActualPrice() < bid.getReservePrice()) {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
-        setPriceWinAndSaveBid(bid, highestBid.getActualPrice());
+        setPriceWinAndSaveBid(bid, highestBid.getActualPrice(), BidOutcome.CLOSED);
         LOGGER.info("---Created order successfully---");
     }
 
-    private void setPriceWinAndSaveBid(final Bid bid, final Long priceWin) {
+    private void setPriceWinAndSaveBid(final Bid bid, final Long priceWin, final BidOutcome bidOutcome) {
         bid.setPriceWin(priceWin);
+        bid.setBidOutcome(bidOutcome);
+        if (!BidOutcome.CLOSED_WITHOUT_WINNER.equals(bidOutcome)) {
+            bid.setWinnerPaymentStatus(PaymentStatus.PENDING);
+            bid.setSellerPaymentStatus(PaymentStatus.PENDING);
+        }
         bidRepository.save(bid);
         LOGGER.info("---UPDATE PRICE WIN {} FOR PRODUCT {} SUCCESSFULLY---", priceWin, bid.getProduct().getName());
-    }
-
-    private void createAndSaveOrder(final Bid bid, final User winner) {
-        Order order = new Order();
-        order.setBid(bid);
-        order.setStatus(EOrderStatus.PENDING);
-
-        User seller = bid.getProduct().getUser();
-        order.setSeller(seller);
-        order.setWinner(winner);
-
-        orderRepository.save(order);
     }
 }

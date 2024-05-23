@@ -190,16 +190,8 @@ public class BidServiceImpl implements BidService {
         List<Product> uploadedProducts = productRepository.findByUser(seller);
         List<BidDTO> bidDTOList = new ArrayList<>();
         for (Product product : uploadedProducts) {
-            Bid bid = bidRepository.findById(product.getId())
-                    .orElseThrow(() -> new RuntimeException("Bid not found"));
-            BidDTO bidDTO = BidDTO.builder()
-                    .bidId(bid.getId())
-                    .priceWin(bid.getPriceWin())
-                    .stepBid(bid.getStepBid())
-                    .priceStart(bid.getPriceStart())
-                    .bidStartingDate(bid.getCreatedDate())
-                    .product(productConverter.convertToProductDTO(product))
-                    .build();
+            Bid bid = bidRepository.findById(product.getId()).orElseThrow(() -> new NotFoundException("Bid not found"));
+            BidDTO bidDTO = bidConverter.convertToBidDTO(bid);
             bidDTOList.add(bidDTO);
         }
         return bidDTOList;

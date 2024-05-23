@@ -50,12 +50,15 @@ public class Bid extends AbstractCommonEntity {
     private Boolean isBidSnipping;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private BidOutcome bidOutcome = BidOutcome.OPEN;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private PaymentStatus sellerPaymentStatus;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private PaymentStatus winnerPaymentStatus;
 
     //Using a Shared Primary Key - Behaves as a foreign key
