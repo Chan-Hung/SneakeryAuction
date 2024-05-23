@@ -2,6 +2,8 @@ package com.hung.sneakery.entity;
 
 import com.hung.sneakery.enums.EPaymentType;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -27,6 +29,7 @@ public class Transaction extends AbstractCommonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bid_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Bid bid;
 
     @ManyToOne(fetch = FetchType.LAZY)

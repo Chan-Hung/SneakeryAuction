@@ -1,5 +1,7 @@
 package com.hung.sneakery.entity;
 
+import com.hung.sneakery.enums.BidOutcome;
+import com.hung.sneakery.enums.PaymentStatus;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -46,6 +48,15 @@ public class Bid extends AbstractCommonEntity {
 
     @Column
     private Boolean isBidSnipping;
+
+    @Column
+    private BidOutcome bidOutcome = BidOutcome.OPEN;
+
+    @Column
+    private PaymentStatus sellerPaymentStatus;
+
+    @Column
+    private PaymentStatus winnerPaymentStatus;
 
     //Using a Shared Primary Key - Behaves as a foreign key
     @OneToOne(fetch = FetchType.LAZY)
