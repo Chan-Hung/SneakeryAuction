@@ -9,6 +9,7 @@ import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.service.CountdownService;
 import com.hung.sneakery.service.MailService;
 import lombok.SneakyThrows;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,7 @@ public class CountdownServiceImpl implements CountdownService {
         LOGGER.info("TIME SCHEDULE HANDLE BID COMPLETION FOR PRODUCT: {}", bid.getProduct().getName());
         Bid managedBid = bidRepository.findById(bid.getId())
                 .orElseThrow(() -> new NotFoundException("Bid not found"));
+        Hibernate.initialize(managedBid.getBidHistories()); // Initialize BidHistories to avoid LazyInitializationException
         BidHistory highestBid = managedBid.getBidHistories()
                 .stream()
                 .max(Comparator.comparing(BidHistory::getActualPrice))
