@@ -82,6 +82,8 @@ public class CountdownServiceImpl implements CountdownService {
                 .stream()
                 .max(Comparator.comparing(BidHistory::getActualPrice))
                 .orElse(null);
+        LOGGER.info(bid.getBidHistories().toString());
+        LOGGER.info("---HIGHEST BID: {}---", highestBid);
         if (highestBid == null) {
             LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getProduct().getName());
             setPriceWinAndSaveBid(bid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);
