@@ -78,10 +78,10 @@ public class CountdownServiceImpl implements CountdownService {
     }
 
     private void handleBidCompletion(final Bid bid) {
+        LOGGER.info("---TIME SCHEDULE HANDLE BID COMPLETION FOR PRODUCT: {}---", bid.getProduct().getName());
         Set<BidHistory> bidHistories = bid.getBidHistories();
         if (bidHistories == null) {
             LOGGER.error("Bid histories are null for bid: {}", bid);
-            return;
         }
         Bid managedBid = bidRepository.findById(bid.getId())
                 .orElseThrow(() -> new NotFoundException("Bid not found"));
