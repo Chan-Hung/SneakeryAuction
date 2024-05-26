@@ -8,6 +8,7 @@ import com.hung.sneakery.dto.request.BidCreateRequest;
 import com.hung.sneakery.dto.request.BidPlaceRequest;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.*;
+import com.hung.sneakery.enums.BidOutcome;
 import com.hung.sneakery.enums.EBidStatus;
 import com.hung.sneakery.exception.BidCreatingException;
 import com.hung.sneakery.exception.BidPlacingException;
@@ -224,6 +225,7 @@ public class BidServiceImpl implements BidService {
 
         Bid bid = Bid.builder()
                 .priceStart(request.getPriceStart())
+                .bidOutcome(BidOutcome.OPEN)
                 .stepBid(request.getStepBid())
                 .closingDateTime(request.getBidClosingDateTime())
                 .reservePrice(request.getReservePrice())

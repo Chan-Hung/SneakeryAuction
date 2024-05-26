@@ -4,6 +4,7 @@ import com.hung.sneakery.entity.Bid;
 import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.enums.BidOutcome;
 import com.hung.sneakery.enums.PaymentStatus;
+import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.service.CountdownService;
 import com.hung.sneakery.service.MailService;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -35,18 +37,21 @@ public class CountdownServiceImpl implements CountdownService {
     private boolean isTimerCancelled = false;
 
     @Override
+    @Transactional
     public void biddingCountdown(final Bid bid) {
         LOGGER.info("---CURRENT TIME EXECUTE: {}", LocalDateTime.now());
+        Bid managedBid = bidRepository.findById(bid.getId())
+                .orElseThrow(() -> new NotFoundException("Bid not found"));
         cancelPreviousCountdownTask();
-        Date closingDate = Date.from(bid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
-        currentCountdownTask = new CountdownTask(bid, this);
+        Date closingDate = Date.from(managedBid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
+        currentCountdownTask = new CountdownTask(managedBid, this);
+
         // Reinitialize the timer if it has been cancelled
         if (isTimerCancelled) {
             timer = new Timer();
             isTimerCancelled = false;
         }
         timer.schedule(currentCountdownTask, closingDate);
-        LOGGER.info("---CURRENT TIME SCHEDULE: {}", closingDate);
     }
 
     private static class CountdownTask extends TimerTask {
@@ -75,12 +80,6 @@ public class CountdownServiceImpl implements CountdownService {
     }
 
     private void handleBidCompletion(final Bid bid) {
-
-        if (bid == null) {
-            LOGGER.error("Bid is null");
-            return;
-        }
-
         Set<BidHistory> bidHistories = bid.getBidHistories();
         if (bidHistories == null) {
             LOGGER.error("Bid histories are null for bid: {}", bid);
@@ -91,8 +90,6 @@ public class CountdownServiceImpl implements CountdownService {
                 .stream()
                 .max(Comparator.comparing(BidHistory::getActualPrice))
                 .orElse(null);
-        LOGGER.info(bid.getBidHistories().toString());
-        LOGGER.info("---HIGHEST BID: {}---", highestBid);
         if (highestBid == null) {
             LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getProduct().getName());
             setPriceWinAndSaveBid(bid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);

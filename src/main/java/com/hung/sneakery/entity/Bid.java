@@ -51,7 +51,7 @@ public class Bid extends AbstractCommonEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private BidOutcome bidOutcome = BidOutcome.OPEN;
+    private BidOutcome bidOutcome;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -67,7 +67,7 @@ public class Bid extends AbstractCommonEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bid", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bid", cascade = CascadeType.ALL)
     private Set<BidHistory> bidHistories = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "bid", cascade = CascadeType.ALL)
