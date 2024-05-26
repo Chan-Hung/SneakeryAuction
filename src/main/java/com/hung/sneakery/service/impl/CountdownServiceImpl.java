@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Service
 public class CountdownServiceImpl implements CountdownService {
@@ -78,6 +75,18 @@ public class CountdownServiceImpl implements CountdownService {
     }
 
     private void handleBidCompletion(final Bid bid) {
+
+        if (bid == null) {
+            LOGGER.error("Bid is null");
+            return;
+        }
+
+        Set<BidHistory> bidHistories = bid.getBidHistories();
+        if (bidHistories == null) {
+            LOGGER.error("Bid histories are null for bid: {}", bid);
+            return;
+        }
+
         BidHistory highestBid = bid.getBidHistories()
                 .stream()
                 .max(Comparator.comparing(BidHistory::getActualPrice))

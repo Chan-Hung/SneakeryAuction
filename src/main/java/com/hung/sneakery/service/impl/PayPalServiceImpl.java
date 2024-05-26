@@ -122,9 +122,10 @@ public class PayPalServiceImpl implements PayPalService {
             User user = sneakeryUtil.getCurrentUser();
             Bid bid = bidRepository.findById(productId)
                     .orElseThrow(() -> new RuntimeException(SneakeryConstant.BID_NOT_FOUND));
-            if (user.equals(bid.getProduct().getUser())) {
+            if (type.equals(EPaymentType.AUCTION_FEE) && user.equals(bid.getProduct().getUser())) {
                 bid.setSellerPaymentStatus(PaymentStatus.COMPLETED);
-            } else if (user.equals(bid.getHolder())) {
+            }
+            if (type.equals(EPaymentType.PAID) && user.equals(bid.getHolder())) {
                 bid.setWinnerPaymentStatus(PaymentStatus.COMPLETED);
             }
             Transaction transaction = Transaction.builder()
