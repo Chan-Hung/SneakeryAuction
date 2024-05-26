@@ -9,6 +9,7 @@ import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.service.CountdownService;
 import com.hung.sneakery.service.MailService;
 import lombok.SneakyThrows;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class CountdownServiceImpl implements CountdownService {
         LOGGER.info("---CURRENT TIME EXECUTE: {}", LocalDateTime.now());
         Bid managedBid = bidRepository.findById(bid.getId())
                 .orElseThrow(() -> new NotFoundException("Bid not found"));
+        Hibernate.initialize(managedBid.getBidHistories()); // Initialize the collection
         cancelPreviousCountdownTask();
         Date closingDate = Date.from(managedBid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
         currentCountdownTask = new CountdownTask(managedBid, this);
