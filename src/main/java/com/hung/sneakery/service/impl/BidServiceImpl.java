@@ -125,6 +125,7 @@ public class BidServiceImpl implements BidService {
             LOGGER.info(String.format("Current time: %s", currentTime)); //NOSONAR
             LOGGER.info(String.format("Bid end time: %s", bidEndTime)); //NOSONAR
             bid.setClosingDateTime(bid.getClosingDateTime().plusMinutes(3));
+            bidRepository.save(bid);
             countdownService.biddingCountdown(bid);
         }
     }

@@ -44,6 +44,7 @@ public class CountdownServiceImpl implements CountdownService {
 
         // Reinitialize the timer if it has been cancelled
         if (isTimerCancelled) {
+            LOGGER.info("Reinitialize the timer.");
             timer = new Timer();
             isTimerCancelled = false;
         }
