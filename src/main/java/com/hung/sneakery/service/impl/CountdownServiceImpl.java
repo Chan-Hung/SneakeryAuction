@@ -83,7 +83,7 @@ public class CountdownServiceImpl implements CountdownService {
                 .orElse(null);
         if (Objects.isNull(highestBid)) {
             LOGGER.info("TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}", bid.getProduct().getName());
-            setPriceWinAndSaveBid(bid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);
+            setPriceWinAndSaveBid(bid, null, BidOutcome.CLOSED_WITHOUT_WINNER);
         } else {
             LOGGER.info("TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}", bid.getProduct().getName());
             handleWinnerBid(bid, highestBid);
