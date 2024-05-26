@@ -9,7 +9,6 @@ import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.service.CountdownService;
 import com.hung.sneakery.service.MailService;
 import lombok.SneakyThrows;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -83,25 +82,25 @@ public class CountdownServiceImpl implements CountdownService {
         LOGGER.info("TIME SCHEDULE HANDLE BID COMPLETION FOR PRODUCT: {}", bid.getProduct().getName());
         Bid managedBid = bidRepository.findById(bid.getId())
                 .orElseThrow(() -> new NotFoundException("Bid not found"));
-        Hibernate.initialize(managedBid.getBidHistories()); // Initialize BidHistories to avoid LazyInitializationException
         BidHistory highestBid = managedBid.getBidHistories()
                 .stream()
                 .max(Comparator.comparing(BidHistory::getActualPrice))
                 .orElse(null);
         if (highestBid == null) {
-            LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", bid.getProduct().getName());
-            setPriceWinAndSaveBid(bid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);
+            LOGGER.info("---TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}---", managedBid.getProduct().getName());
+            setPriceWinAndSaveBid(managedBid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);
         } else {
-            LOGGER.info("---TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}---", bid.getProduct().getName());
-            handleWinnerBid(bid, highestBid);
+            LOGGER.info("---TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}---", managedBid.getProduct().getName());
+            handleWinnerBid(managedBid, highestBid);
         }
     }
 
     @SneakyThrows
     private void handleWinnerUnderReservePrice(final Bid bid, final BidHistory highestBid) {
-        LOGGER.info("---PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}---", highestBid.getActualPrice(), bid.getReservePrice(), bid.getProduct().getName());
+        LOGGER.info("PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}",
+                highestBid.getActualPrice(),
+                bid.getReservePrice(), bid.getProduct().getName());
 
-        // Send email to notify winner not reach to reserve price
         mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, bid.getHolder(), bid.getProduct(), null);
         setPriceWinAndSaveBid(bid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);
     }
@@ -111,7 +110,6 @@ public class CountdownServiceImpl implements CountdownService {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
         setPriceWinAndSaveBid(bid, highestBid.getActualPrice(), BidOutcome.CLOSED);
-        LOGGER.info("---Created order successfully---");
     }
 
     private void setPriceWinAndSaveBid(final Bid bid, final Long priceWin, final BidOutcome bidOutcome) {
@@ -122,6 +120,6 @@ public class CountdownServiceImpl implements CountdownService {
             bid.setSellerPaymentStatus(PaymentStatus.PENDING);
         }
         bidRepository.save(bid);
-        LOGGER.info("---UPDATE PRICE WIN {} FOR PRODUCT {} SUCCESSFULLY---", priceWin, bid.getProduct().getName());
+        LOGGER.info("UPDATE PRICE WIN {} FOR PRODUCT ID {} WITH WINNER {}", priceWin, bid.getProduct().getName(), bid.getHolder().getUsername());
     }
 }
