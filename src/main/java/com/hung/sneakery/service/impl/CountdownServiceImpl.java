@@ -113,6 +113,9 @@ public class CountdownServiceImpl implements CountdownService {
             bid.setPriceWin(bidHistory.getActualPrice());
             bid.setWinnerPaymentStatus(PaymentStatus.PENDING);
             bid.setSellerPaymentStatus(PaymentStatus.PENDING);
+            bid.setHolder(bidHistory.getUser());
+            LOGGER.info("Winner {}", bid.getHolder());
+            LOGGER.info("Winner Actual {}", bidHistory.getUser().getUsername());
         }
         bidRepository.save(bid);
     }
