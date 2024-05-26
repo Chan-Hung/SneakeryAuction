@@ -38,7 +38,7 @@ public class Bid extends AbstractCommonEntity {
     @Nullable
     private Long priceWin;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "holder_id")
     private User holder;
 

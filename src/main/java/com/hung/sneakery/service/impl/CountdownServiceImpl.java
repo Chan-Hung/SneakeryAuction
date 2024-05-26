@@ -113,8 +113,8 @@ public class CountdownServiceImpl implements CountdownService {
         if (!BidOutcome.CLOSED_WITHOUT_WINNER.equals(bidOutcome)) {
             bid.setWinnerPaymentStatus(PaymentStatus.PENDING);
             bid.setSellerPaymentStatus(PaymentStatus.PENDING);
+            LOGGER.info("Winner {}", bid.getHolder());
         }
         bidRepository.save(bid);
-        LOGGER.info("UPDATE PRICE WIN {} FOR PRODUCT ID {} WITH WINNER {}", priceWin, bid.getProduct().getName(), bid.getHolder().getUsername());
     }
 }
