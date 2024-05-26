@@ -9,7 +9,6 @@ import com.hung.sneakery.repository.BidRepository;
 import com.hung.sneakery.service.CountdownService;
 import com.hung.sneakery.service.MailService;
 import lombok.SneakyThrows;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,12 +40,9 @@ public class CountdownServiceImpl implements CountdownService {
     @Transactional
     public void biddingCountdown(final Bid bid) {
         LOGGER.info("---CURRENT TIME EXECUTE: {}", LocalDateTime.now());
-        Bid managedBid = bidRepository.findById(bid.getId())
-                .orElseThrow(() -> new NotFoundException("Bid not found"));
-        Hibernate.initialize(managedBid.getBidHistories()); // Initialize the collection
         cancelPreviousCountdownTask();
-        Date closingDate = Date.from(managedBid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
-        currentCountdownTask = new CountdownTask(managedBid, this);
+        Date closingDate = Date.from(bid.getClosingDateTime().atZone(ZoneId.systemDefault()).toInstant());
+        currentCountdownTask = new CountdownTask(bid, this);
 
         // Reinitialize the timer if it has been cancelled
         if (isTimerCancelled) {
@@ -86,6 +82,15 @@ public class CountdownServiceImpl implements CountdownService {
         if (bidHistories == null) {
             LOGGER.error("Bid histories are null for bid: {}", bid);
             return;
+        }
+        Bid managedBid = bidRepository.findById(bid.getId())
+                .orElseThrow(() -> new NotFoundException("Bid not found"));
+        Set<BidHistory> bidHistories2 = managedBid.getBidHistories();
+        if (bidHistories2 == null) {
+            LOGGER.error("Bid histories2 are null for bid: {}", bid);
+            return;
+        } else {
+            LOGGER.info("Bid histories2 are not null for bid: {}", bid.getBidHistories());
         }
 
         BidHistory highestBid = bid.getBidHistories()
