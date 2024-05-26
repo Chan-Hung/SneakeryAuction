@@ -14,10 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 public class CountdownServiceImpl implements CountdownService {
@@ -37,7 +39,6 @@ public class CountdownServiceImpl implements CountdownService {
     private boolean isTimerCancelled = false;
 
     @Override
-    @Transactional
     public void biddingCountdown(final Bid bid) {
         LOGGER.info("---CURRENT TIME EXECUTE: {}", LocalDateTime.now());
         cancelPreviousCountdownTask();
@@ -78,22 +79,10 @@ public class CountdownServiceImpl implements CountdownService {
     }
 
     private void handleBidCompletion(final Bid bid) {
-        LOGGER.info("---TIME SCHEDULE HANDLE BID COMPLETION FOR PRODUCT: {}---", bid.getProduct().getName());
-        Set<BidHistory> bidHistories = bid.getBidHistories();
-        if (bidHistories == null) {
-            LOGGER.error("Bid histories are null for bid: {}", bid);
-        }
+        LOGGER.info("TIME SCHEDULE HANDLE BID COMPLETION FOR PRODUCT: {}", bid.getProduct().getName());
         Bid managedBid = bidRepository.findById(bid.getId())
                 .orElseThrow(() -> new NotFoundException("Bid not found"));
-        Set<BidHistory> bidHistories2 = managedBid.getBidHistories();
-        if (bidHistories2 == null) {
-            LOGGER.error("Bid histories2 are null for bid: {}", bid);
-            return;
-        } else {
-            LOGGER.info("Bid histories2 are not null for bid: {}", bid.getBidHistories());
-        }
-
-        BidHistory highestBid = bid.getBidHistories()
+        BidHistory highestBid = managedBid.getBidHistories()
                 .stream()
                 .max(Comparator.comparing(BidHistory::getActualPrice))
                 .orElse(null);
