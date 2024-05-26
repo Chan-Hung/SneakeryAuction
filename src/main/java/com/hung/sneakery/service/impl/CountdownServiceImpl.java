@@ -97,23 +97,25 @@ public class CountdownServiceImpl implements CountdownService {
                 bid.getReservePrice(), bid.getProduct().getName());
 
         mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, bid.getHolder(), bid.getProduct(), null);
-        setPriceWinAndSaveBid(bid, 0L, BidOutcome.CLOSED_WITHOUT_WINNER);
+        setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED_WITHOUT_WINNER);
     }
 
     private void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
         if (bid.getReservePrice() != null && highestBid.getActualPrice() < bid.getReservePrice()) {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
-        setPriceWinAndSaveBid(bid, highestBid.getActualPrice(), BidOutcome.CLOSED);
+        setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED);
     }
 
-    private void setPriceWinAndSaveBid(final Bid bid, final Long priceWin, final BidOutcome bidOutcome) {
-        bid.setPriceWin(priceWin);
+    private void setPriceWinAndSaveBid(final Bid bid, final BidHistory bidHistory, final BidOutcome bidOutcome) {
         bid.setBidOutcome(bidOutcome);
-        if (!BidOutcome.CLOSED_WITHOUT_WINNER.equals(bidOutcome)) {
+        if (!BidOutcome.CLOSED_WITHOUT_WINNER.equals(bidOutcome) && Objects.nonNull(bidHistory)) {
+            bid.setPriceWin(bidHistory.getActualPrice());
             bid.setWinnerPaymentStatus(PaymentStatus.PENDING);
             bid.setSellerPaymentStatus(PaymentStatus.PENDING);
+            bid.setHolder(bidHistory.getUser());
             LOGGER.info("Winner {}", bid.getHolder());
+            LOGGER.info("Winner Actual {}", bidHistory.getUser().getUsername());
         }
         bidRepository.save(bid);
     }
