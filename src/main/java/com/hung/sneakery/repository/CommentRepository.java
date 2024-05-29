@@ -13,6 +13,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Page<Comment> findByProductIdAndParentCommentIsNull(Long productId, Pageable pageable);
 
-    Optional<Comment> findByParentCommentIdAndProductId(Long parentCommentId, Long productId);
+    Optional<Comment> findByIdAndProductId(Long parentCommentId, Long productId);
 
 }

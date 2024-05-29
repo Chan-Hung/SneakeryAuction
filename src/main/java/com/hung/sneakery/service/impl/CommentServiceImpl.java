@@ -55,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setUser(user);
         comment.setProduct(product);
         if (request.getParentCommentId() != null) {
-            Comment parentComment = commentRepository.findByParentCommentIdAndProductId(request.getParentCommentId(), request.getProductId()).orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOUND));
+            Comment parentComment = commentRepository.findByIdAndProductId(request.getParentCommentId(), request.getProductId()).orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOUND));
             comment.setParentComment(parentComment);
         }
         commentRepository.save(comment);
