@@ -1,4 +1,4 @@
-package com.hung.sneakery.controller;
+package com.hung.sneakery.controller.admin;
 
 import com.hung.sneakery.dto.request.ConfigRequest;
 import com.hung.sneakery.dto.response.BaseResponse;

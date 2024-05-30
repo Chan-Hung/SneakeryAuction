@@ -24,12 +24,12 @@ public class CategoryController {
         return categoryService.getOne(id);
     }
 
-    @GetMapping()
+    @GetMapping
     public Page<CategoryDTO> getAll(final Pageable pageable) {
         return categoryService.getAll(pageable);
     }
 
-    @PostMapping()
+    @PostMapping
     public CategoryDTO create(@Valid @RequestBody final CategoryRequest request) {
         return categoryService.create(request);
     }

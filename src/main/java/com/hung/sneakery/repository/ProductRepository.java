@@ -1,5 +1,6 @@
 package com.hung.sneakery.repository;
 
+import com.hung.sneakery.entity.Category;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<Long> getAllId();
 
     List<Product> findByUser(User user);
+
+    Integer countProductByCategory(Category category);
 }

@@ -24,12 +24,12 @@ public class AddressController {
         return addressService.getOne(id);
     }
 
-    @GetMapping()
+    @GetMapping
     public Page<AddressDTO> getAll(final Pageable pageable) {
         return addressService.getAll(pageable);
     }
 
-    @PostMapping()
+    @PostMapping
     public AddressDTO create(@Valid @RequestBody final AddressRequest request) {
         return addressService.create(request);
     }

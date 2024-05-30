@@ -12,14 +12,14 @@ import javax.annotation.Resource;
 
 @RestController
 @Api(tags = "Profile APIs")
-@RequestMapping("/admin/profiles")
-public class AdminProfileController {
+@RequestMapping("/profiles")
+public class ProfileController {
 
     @Resource
     private ProfileService profileService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping()
+    @GetMapping
     public Page<UserDTO> getAll(final Pageable pageable) {
         return profileService.getAll(pageable);
     }

@@ -25,12 +25,12 @@ public class CommentController {
     }
 
     @PostMapping
-    public CommentDTO create(@RequestBody @Valid CommentRequest commentRequest) {
+    public CommentDTO create(@RequestBody @Valid final CommentRequest commentRequest) {
         return commentService.create(commentRequest);
     }
 
     @PutMapping("/{id}")
-    public CommentDTO update(@PathVariable Long id, @RequestBody @Valid CommentRequest commentRequest) {
+    public CommentDTO update(@PathVariable final Long id, @RequestBody @Valid final CommentRequest commentRequest) {
         return commentService.update(id, commentRequest);
     }
 

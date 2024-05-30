@@ -30,7 +30,7 @@ public class BidController {
         return bidService.placeBid(bidPlaceRequest);
     }
 
-    @PostMapping()
+    @PostMapping
     @PreAuthorize("hasRole('USER')")
     public BidDetailDTO createBid(@Valid @RequestBody final BidCreateRequest bidCreateRequest) {
         return bidService.createBid(bidCreateRequest);

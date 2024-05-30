@@ -21,11 +21,6 @@ public class ProductController {
     @Resource
     private ProductService productService;
 
-    @GetMapping("/allid")
-    public List<Long> getAllProductId() {
-        return productService.getAllProductsId();
-    }
-
     @GetMapping("/homepage")
     public Page<ProductDTO> getProductsHomepage(final Pageable pageable) {
         return productService.getProductsHomepage(pageable);
