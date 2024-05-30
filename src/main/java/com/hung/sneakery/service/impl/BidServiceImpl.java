@@ -20,6 +20,7 @@ import com.hung.sneakery.utils.SneakeryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-//@RefreshScope
+@RefreshScope
 public class BidServiceImpl implements BidService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BidServiceImpl.class);
