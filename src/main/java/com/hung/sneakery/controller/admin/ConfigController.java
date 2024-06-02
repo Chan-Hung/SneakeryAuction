@@ -1,16 +1,11 @@
 package com.hung.sneakery.controller.admin;
 
-import com.hung.sneakery.dto.request.ConfigRequest;
-import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.ConfigDTO;
 import com.hung.sneakery.service.ConfigService;
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 
 @RestController
 @Api(tags = "Config APIs")
@@ -21,7 +16,12 @@ public class ConfigController {
     private ConfigService configService;
 
     @PutMapping
-    public BaseResponse update(@Valid @RequestBody final ConfigRequest request) {
+    public ConfigDTO update(@RequestBody final ConfigDTO request) {
         return configService.update(request);
+    }
+
+    @GetMapping
+    public ConfigDTO getAll() {
+        return configService.getAll();
     }
 }

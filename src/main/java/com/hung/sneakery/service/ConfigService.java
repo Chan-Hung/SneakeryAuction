@@ -1,9 +1,10 @@
 package com.hung.sneakery.service;
 
-import com.hung.sneakery.dto.request.ConfigRequest;
-import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.dto.ConfigDTO;
 
 public interface ConfigService {
 
-    BaseResponse update(ConfigRequest request);
+    ConfigDTO update(ConfigDTO request);
+
+    ConfigDTO getAll();
 }

@@ -16,6 +16,7 @@ import com.hung.sneakery.repository.*;
 import com.hung.sneakery.service.BidService;
 import com.hung.sneakery.service.CountdownService;
 import com.hung.sneakery.service.MailService;
+import com.hung.sneakery.utils.SneakeryConstant;
 import com.hung.sneakery.utils.SneakeryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class BidServiceImpl implements BidService {
     private static final String EMAIL_SUBJECT = "[Lời nhắc] Đấu giá của bạn đang diễn ra";
     private static final String EMAIL_TEMPLATE_PATH = "classpath:email-templates/reminder.html";
 
-    @Value("${hung.com.extendedMinute}")
+    @Value("${hung.extendedMinute}")
     private Integer extendedMinute;
 
     @Resource
@@ -78,8 +79,11 @@ public class BidServiceImpl implements BidService {
     @Override
     public BaseResponse placeBid(final BidPlaceRequest request) {
         User buyer = sneakeryUtil.getCurrentUser();
+        String message = SneakeryConstant.PLACE_BID_SUCCESSFULLY;
+        boolean success = true;
+
         Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new NotFoundException("Product not found"));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
         Bid bid = product.getBid();
         BidHistory currentHighestBid = bid.getBidHistories()
                 .stream()
@@ -91,13 +95,17 @@ public class BidServiceImpl implements BidService {
         Long currentPrice = handleAutomaticBidding(bid, currentHighestBid, request, buyer);
         createBidHistory(bid, buyer, request.getAmount(), currentPrice);
 
+        if (Objects.equals(currentPrice, request.getAmount())) {
+            success = false;
+            message = SneakeryConstant.PLACE_BID_SUCCESSFULLY;
+        }
         if (Boolean.TRUE.equals(bid.getIsBidSnipping())) {
             handleBidSniping(bid);
         }
         if (shouldRemindBidder(currentHighestBid, buyer)) {
             sendRemindBidderEmailAsync(currentHighestBid.getUser(), product, currentPrice);
         }
-        return new BaseResponse("Place bid successfully");
+        return new BaseResponse(success, message);
     }
 
     private Long handleAutomaticBidding(final Bid bid, final BidHistory highestBidHistory, final BidPlaceRequest request, final User buyer) {
@@ -113,7 +121,6 @@ public class BidServiceImpl implements BidService {
         } else {
             bid.setHolder(buyer);
         }
-
         return currentPrice;
     }
 
