@@ -1,5 +1,6 @@
 package com.hung.sneakery.service.impl;
 
+import com.hung.sneakery.config.AppProperties;
 import com.hung.sneakery.converter.BidConverter;
 import com.hung.sneakery.dto.BidDTO;
 import com.hung.sneakery.dto.BidDetailDTO;
@@ -20,8 +21,6 @@ import com.hung.sneakery.utils.SneakeryConstant;
 import com.hung.sneakery.utils.SneakeryUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -39,15 +38,14 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-@RefreshScope
 public class BidServiceImpl implements BidService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BidServiceImpl.class);
     private static final String EMAIL_SUBJECT = "[Lời nhắc] Đấu giá của bạn đang diễn ra";
     private static final String EMAIL_TEMPLATE_PATH = "classpath:email-templates/reminder.html";
 
-    @Value("${hung.extendedMinute}")
-    private Integer extendedMinute;
+    @Resource
+    private AppProperties appProperties;
 
     @Resource
     private ProductRepository productRepository;
@@ -125,15 +123,15 @@ public class BidServiceImpl implements BidService {
     }
 
     private void handleBidSniping(final Bid bid) {
-        LOGGER.info("Extended minutes: {}", extendedMinute);
+        LOGGER.info("Extended minutes: {}", appProperties.getExtendedMinute());
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime bidEndTime = bid.getClosingDateTime();
-        LocalDateTime threeMinutesBeforeBidEnd = bidEndTime.minusMinutes(extendedMinute);
+        LocalDateTime threeMinutesBeforeBidEnd = bidEndTime.minusMinutes(appProperties.getExtendedMinute());
 
         if (currentTime.isAfter(threeMinutesBeforeBidEnd) && (bidHistoryRepository.countByBid_IdAndCreatedDateAfter(bid.getId(), threeMinutesBeforeBidEnd) == 1)) {
             LOGGER.info("START EXTEND BID TIME");
             LOGGER.info(String.format("New bid end time: %s", bidEndTime)); //NOSONAR
-            bid.setClosingDateTime(bid.getClosingDateTime().plusMinutes(extendedMinute));
+            bid.setClosingDateTime(bid.getClosingDateTime().plusMinutes(appProperties.getExtendedMinute()));
             bidRepository.save(bid);
             countdownService.biddingCountdown(bid);
         }
