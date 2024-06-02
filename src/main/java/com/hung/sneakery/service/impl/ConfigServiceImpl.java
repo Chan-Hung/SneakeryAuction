@@ -17,7 +17,7 @@ public class ConfigServiceImpl implements ConfigService {
     private final AppProperties appProperties;
 
     @Override
-    public ConfigDTO update(ConfigDTO configDTO) {
+    public ConfigDTO update(ConfigRequest configDTO) {
         appProperties.setExtendedMinute(configDTO.getExtendedMinute());
         return ConfigDTO.builder().extendedMinute(appProperties.getExtendedMinute()).build();
     }
