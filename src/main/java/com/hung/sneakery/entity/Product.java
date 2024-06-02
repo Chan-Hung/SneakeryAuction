@@ -38,7 +38,6 @@ public class Product extends AbstractCommonEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Media> images;
 
-    @Lob
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
