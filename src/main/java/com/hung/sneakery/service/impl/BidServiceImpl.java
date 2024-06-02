@@ -97,7 +97,7 @@ public class BidServiceImpl implements BidService {
 
         if (Objects.equals(currentPrice, request.getAmount())) {
             success = false;
-            message = SneakeryConstant.PLACE_BID_SUCCESSFULLY;
+            message = SneakeryConstant.PLACE_BID_UNSUCCESSFULLY;
         }
         if (Boolean.TRUE.equals(bid.getIsBidSnipping())) {
             handleBidSniping(bid);
@@ -125,14 +125,14 @@ public class BidServiceImpl implements BidService {
     }
 
     private void handleBidSniping(final Bid bid) {
+        LOGGER.info("Extended minutes: {}", extendedMinute);
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime bidEndTime = bid.getClosingDateTime();
         LocalDateTime threeMinutesBeforeBidEnd = bidEndTime.minusMinutes(extendedMinute);
 
         if (currentTime.isAfter(threeMinutesBeforeBidEnd) && (bidHistoryRepository.countByBid_IdAndCreatedDateAfter(bid.getId(), threeMinutesBeforeBidEnd) == 1)) {
             LOGGER.info("START EXTEND BID TIME");
-            LOGGER.info(String.format("Current time: %s", currentTime)); //NOSONAR
-            LOGGER.info(String.format("Bid end time: %s", bidEndTime)); //NOSONAR
+            LOGGER.info(String.format("New bid end time: %s", bidEndTime)); //NOSONAR
             bid.setClosingDateTime(bid.getClosingDateTime().plusMinutes(extendedMinute));
             bidRepository.save(bid);
             countdownService.biddingCountdown(bid);
