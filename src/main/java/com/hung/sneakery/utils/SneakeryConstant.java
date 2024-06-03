@@ -7,4 +7,6 @@ public class SneakeryConstant {
 
     public static final String PLACE_BID_UNSUCCESSFULLY = "Lượt đấu giá chưa đủ chiến thắng sản phẩm";
     public static final String PRODUCT_NOT_FOUND = "Product not found";
+
+    public static final String PAYLOAD_TOO_LARGE = "Kích thước hình ảnh vượt giới hạn đăng tải";
 }

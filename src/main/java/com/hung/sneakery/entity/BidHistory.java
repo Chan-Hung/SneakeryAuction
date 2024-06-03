@@ -1,6 +1,5 @@
 package com.hung.sneakery.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hung.sneakery.enums.EBidStatus;
 import lombok.*;
 
@@ -31,11 +30,9 @@ public class BidHistory extends AbstractCommonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
-    @JsonIgnore
     private Bid bid;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
-    @JsonIgnore
     private User user;
 }
