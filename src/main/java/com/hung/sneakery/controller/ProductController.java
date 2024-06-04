@@ -31,6 +31,11 @@ public class ProductController {
         return productService.getOne(id);
     }
 
+    @GetMapping("/recommendations/{id}")
+    public Page<ProductDTO> getRecommendedProducts(@PathVariable final Long id, final Pageable pageable) {
+        return productService.getRecommendedProducts(id, pageable);
+    }
+
     @GetMapping
     public Page<ProductDTO> getAll(
             final Pageable pageable,

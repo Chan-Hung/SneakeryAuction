@@ -6,10 +6,12 @@ import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.entity.*;
+import com.hung.sneakery.enums.BidOutcome;
 import com.hung.sneakery.enums.ECondition;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.ProductService;
+import com.hung.sneakery.utils.SneakeryConstant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -53,6 +55,15 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> productPage = productRepository.findAll(pageable);
         List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
         return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
+    }
+
+    @Override
+    public Page<ProductDTO> getRecommendedProducts(Long id, final Pageable pageable) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
+        Page<Product> recommendedProducts = productRepository.findByCategoryAndBid_BidOutcome(product.getCategory(), BidOutcome.OPEN, pageable);
+        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(recommendedProducts.getContent());
+        return new PageImpl<>(productDTOs, pageable, recommendedProducts.getTotalElements());
     }
 
     @Override

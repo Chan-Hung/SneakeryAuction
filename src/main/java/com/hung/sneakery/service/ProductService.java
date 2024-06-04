@@ -36,6 +36,15 @@ public interface ProductService {
     Page<ProductDTO> getProductsHomepage(Pageable pageable);
 
     /**
+     * Get Related Products
+     *
+     * @param id       Long
+     * @param pageable Pageable
+     * @return Page<ProductDTO>
+     */
+    Page<ProductDTO> getRecommendedProducts(Long id, Pageable pageable);
+
+    /**
      * Get Products By Filter
      *
      * @param pageable   Pageable
