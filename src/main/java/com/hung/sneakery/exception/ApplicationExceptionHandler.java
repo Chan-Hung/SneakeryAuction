@@ -26,9 +26,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(SneakeryConstant.PAYLOAD_TOO_LARGE);
-        error.setExceptionType(ex.getClass().getSimpleName());
+        ApplicationExceptionResponse error = buildApplicationExceptionResponse(SneakeryConstant.PAYLOAD_TOO_LARGE, ex);
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(error);
     }
 
@@ -49,9 +47,14 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
     private ResponseEntity<Object> buildErrorResponse(Exception ex, HttpStatus status) {
         LOGGER.error("Exception: {}", ExceptionUtils.getStackTrace(ex)); //NOSONAR
-        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
-        error.setMessage(ex.getMessage());
-        error.setExceptionType(ex.getClass().getSimpleName());
+        ApplicationExceptionResponse error = buildApplicationExceptionResponse(ex.getMessage(), ex);
         return ResponseEntity.status(status).body(error);
+    }
+
+    private ApplicationExceptionResponse buildApplicationExceptionResponse(String message, Exception ex) {
+        ApplicationExceptionResponse error = new ApplicationExceptionResponse();
+        error.setMessage(message);
+        error.setExceptionType(ex.getClass().getSimpleName());
+        return error;
     }
 }
