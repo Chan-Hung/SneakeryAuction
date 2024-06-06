@@ -43,7 +43,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             UploadImageException.class,
             DataIntegrityViolationException.class,
             IllegalArgumentException.class,
-            ConstraintViolationException.class
+            ConstraintViolationException.class,
+            FeedbackCreatingException.class
     })
     public ResponseEntity<Object> handleGenericException(Exception ex) {
         return buildErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR);

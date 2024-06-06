@@ -18,6 +18,8 @@ public class SneakeryConstant {
 
     public static final String COMMENT_NOT_FOUND = "Comment not found";
 
+    public static final String FEEDBACK_NOT_FOUND = "Feedback not found";
+
     public static final String PLACE_BID_SUCCESSFULLY = "Đấu giá sản phẩm thành công";
 
     public static final String PLACE_BID_UNSUCCESSFULLY = "Lượt đấu giá chưa đủ chiến thắng sản phẩm";

@@ -3,9 +3,12 @@ package com.hung.sneakery.service.impl;
 import com.hung.sneakery.converter.FeedbackConverter;
 import com.hung.sneakery.dto.FeedbackDTO;
 import com.hung.sneakery.dto.request.FeedbackRequest;
+import com.hung.sneakery.entity.Bid;
 import com.hung.sneakery.entity.Feedback;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.User;
+import com.hung.sneakery.enums.BidOutcome;
+import com.hung.sneakery.exception.FeedbackCreatingException;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.FeedbackRepository;
 import com.hung.sneakery.repository.ProductRepository;
@@ -47,7 +50,13 @@ public class FeedbackServiceImpl implements FeedbackService {
         User user = sneakeryUtil.getCurrentUser();
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
-
+        Bid bid = product.getBid();
+        if (!bid.getBidOutcome().equals(BidOutcome.CLOSED)) {
+            throw new FeedbackCreatingException("Chỉ được feedback trên sản phẩm đã kết thúc đấu giá");
+        }
+        if (!bid.getHolder().equals(user)) {
+            throw new FeedbackCreatingException("Người thắng sản phẩm mới được phép feedback");
+        }
         Feedback feedback = Feedback.builder()
                 .rating(request.getRating())
                 .feedbackText(request.getFeedbackText())
@@ -61,11 +70,19 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public FeedbackDTO update(Long id, FeedbackRequest request) {
-        return null;
+        Feedback feedback = feedbackRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.FEEDBACK_NOT_FOUND));
+        feedback.setRating(request.getRating());
+        feedback.setFeedbackText(request.getFeedbackText());
+        feedbackRepository.save(feedback);
+        return feedbackConverter.convertToFeedbackDTO(feedback);
     }
 
     @Override
     public FeedbackDTO delete(Long id) {
-        return null;
+        Feedback feedback = feedbackRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.FEEDBACK_NOT_FOUND));
+        feedbackRepository.delete(feedback);
+        return feedbackConverter.convertToFeedbackDTO(feedback);
     }
 }
