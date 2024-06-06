@@ -1,6 +1,7 @@
 package com.hung.sneakery.converter.impl;
 
 import com.hung.sneakery.converter.ProductDetailedConverter;
+import com.hung.sneakery.converter.UserConverter;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.entity.Bid;
 import com.hung.sneakery.entity.BidHistory;
@@ -9,12 +10,16 @@ import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.enums.EBidStatus;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
 public class ProductDetailedConverterImpl implements ProductDetailedConverter {
+
+    @Resource
+    private UserConverter userConverter;
 
     @Override
     public ProductDetailedDTO convertToProductDetailedDTO(Product product) {
@@ -36,7 +41,7 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
                 .bidIncrement(bid.getStepBid())
                 .currentPrice(getCurrentPrice(product))
                 .holder(Objects.nonNull(bid.getHolder()) ? bid.getHolder().getUsername() : null)
-                .seller(product.getUser().getUsername())
+                .seller(userConverter.convertToUserDTO(product.getUser()))
                 .bidCreatedDate(bid.getCreatedDate())
                 .bidClosingDate(bid.getClosingDateTime())
                 .build();

@@ -36,7 +36,7 @@ public class ProductDetailedDTO {
     private String holder;
 
     @JsonProperty("seller")
-    private String seller;
+    private UserDTO seller;
 
     @JsonProperty("bidIncrement")
     private Long bidIncrement;

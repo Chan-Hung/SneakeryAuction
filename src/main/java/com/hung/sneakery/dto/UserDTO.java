@@ -18,12 +18,6 @@ public class UserDTO {
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("email")
-    private String email;
-
     @JsonProperty("isActive")
     private Boolean isActive;
-
-    @JsonProperty("address")
-    private AddressDTO address;
 }
