@@ -1,6 +1,7 @@
 package com.hung.sneakery.config.security.jwt;
 
 import com.hung.sneakery.config.security.impl.UserDetailsServiceImpl;
+import com.hung.sneakery.utils.SneakeryConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthTokenFilter.class);
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -25,20 +28,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
-
-    //Call getJwtFromCookie() method to get cookie's value
     private String parseJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader(SneakeryConstant.AUTHORIZATION);
 
-        //Use cookies
-//        String jwt = jwtUtils.getJwtFromCookies(request);
-//        return jwt;
-
-        //Use Auth Header
-        String headerAuth = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(headerAuth) && headerAuth
-                .startsWith("Bearer ")) {
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7);
         }
         return null;
@@ -49,7 +42,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             //get JWT from the HTTP Auth Header
             String jwt = parseJwt(request);
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            if (Objects.nonNull(jwt) && jwtUtils.validateJwtToken(jwt)) {
 
                 //extract user information from token
                 String email = jwtUtils.getEmailFromJwtToken(jwt);
@@ -69,7 +62,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e.getMessage());
+            LOGGER.error("Cannot set user authentication: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
     }

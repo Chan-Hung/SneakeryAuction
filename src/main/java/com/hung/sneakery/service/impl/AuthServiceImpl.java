@@ -15,6 +15,7 @@ import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.RoleRepository;
 import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.AuthService;
+import com.hung.sneakery.utils.SneakeryConstant;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,10 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,14 +46,10 @@ public class AuthServiceImpl implements AuthService {
     @Resource
     private JwtUtils jwtUtils;
 
-    private static final String ROLE_NOT_FOUND = "Role not found";
-
     @Override
     public JwtResponse signIn(final SignInRequest request) {
-        User user = userRepository.findByEmail(request.getEmail());
-        if (Objects.isNull(user)) {
-            throw new NotFoundException("Email not found");
-        }
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AuthenticationException(SneakeryConstant.USER_NOT_FOUND));
         if (Boolean.FALSE.equals(user.getIsActive())) {
             throw new AuthenticationException("User hasn't been activated");
         }
@@ -106,10 +100,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse resetPassword(final ResetPasswordRequest request) {
-        User user = userRepository.findByPhoneNumber(request.getPhoneNumber());
-        if (Objects.isNull(user)) {
-            throw new NotFoundException("User not found");
-        }
+        User user = userRepository.findByPhoneNumber(request.getPhoneNumber())
+                .orElseThrow(() -> new AuthenticationException(SneakeryConstant.USER_NOT_FOUND));
         user.setPassword(encoder.encode(request.getNewPassword()));
         userRepository.save(user);
         return new BaseResponse("Reset password successfully");
@@ -117,9 +109,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public BaseResponse verifyPhoneNumber(final String phoneNumber) {
-        User user = userRepository.findByPhoneNumber(phoneNumber);
-        if (Objects.isNull(user)) {
-            return new BaseResponse("Unregistered phone number");
+        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
+        if (!userOptional.isPresent()) {
+            throw new AuthenticationException(SneakeryConstant.USER_NOT_FOUND);
         }
         return new BaseResponse("Existed phone number");
     }
@@ -127,17 +119,17 @@ public class AuthServiceImpl implements AuthService {
     private void handleRole(final Set<String> strRoles, final Set<Role> roles) {
         if (Objects.isNull(strRoles)) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new NotFoundException(ROLE_NOT_FOUND));
+                    .orElseThrow(() -> new NotFoundException(SneakeryConstant.ROLE_NOT_FOUND));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
-                if ("admin".equals(role)) {
+                if (SneakeryConstant.ADMIN_ROLE.equals(role)) {
                     Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                            .orElseThrow(() -> new NotFoundException(ROLE_NOT_FOUND));
+                            .orElseThrow(() -> new NotFoundException(SneakeryConstant.ROLE_NOT_FOUND));
                     roles.add(adminRole);
                 } else {
                     Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                            .orElseThrow(() -> new NotFoundException(ROLE_NOT_FOUND));
+                            .orElseThrow(() -> new NotFoundException(SneakeryConstant.ROLE_NOT_FOUND));
                     roles.add(userRole);
                 }
             });

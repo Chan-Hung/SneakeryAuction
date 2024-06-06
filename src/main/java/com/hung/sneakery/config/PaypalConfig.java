@@ -1,6 +1,7 @@
 package com.hung.sneakery.config;
 
 
+import com.hung.sneakery.utils.SneakeryConstant;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
@@ -26,7 +27,7 @@ public class PaypalConfig {
     @Bean
     public Map<String, String> paypalSdkConfig() {
         HashMap<String, String> configMap = new HashMap<>();
-        configMap.put("mode", mode);
+        configMap.put(SneakeryConstant.MODE, mode);
         return configMap;
     }
 

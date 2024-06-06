@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${hung.com.jwtSecret}")
     private String jwtSecret;
@@ -20,7 +20,7 @@ public class JwtUtils {
     @Value("${hung.com.jwtExprirationMs}")
     private int jwtExpirationsMs;
 
-    public String generateJwtToken(Authentication authentication){
+    public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
@@ -31,7 +31,7 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String getEmailFromJwtToken(String token){
+    public String getEmailFromJwtToken(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
@@ -42,21 +42,21 @@ public class JwtUtils {
     //Validate Jwt Token to verify its authenticity
     //Assign signingKey secret to Jwt
     //If the signature is incorrect, the call to parseClaimsJws() will throw a SignatureException.
-    public boolean validateJwtToken(String authToken){
-        try{
+    public boolean validateJwtToken(String authToken) {
+        try {
             Jwts.parser()
                     .setSigningKey(jwtSecret) //assign signingKey secret
                     .parseClaimsJws(authToken); //throw 5 exceptions
             return true;
-        }catch(SignatureException e){
-            logger.error("Invalid JWT signature: {}", e.getMessage());
-        }//a JWT was not correctly constructed and be rejected
-        catch (MalformedJwtException e) {
-            logger.error("Invalid JWT token: {}", e.getMessage());
+        } catch (SignatureException e) {
+            LOGGER.error("Invalid JWT signature: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            //a JWT was not correctly constructed and be rejected
+            LOGGER.error("Invalid JWT token: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            logger.error("JWT token is unsupported: {}", e.getMessage());
+            LOGGER.error("JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            logger.error("JWT claims string is empty: {}", e.getMessage());
+            LOGGER.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
     }

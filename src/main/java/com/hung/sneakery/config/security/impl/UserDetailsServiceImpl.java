@@ -1,7 +1,9 @@
 package com.hung.sneakery.config.security.impl;
 
 import com.hung.sneakery.entity.User;
+import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.UserRepository;
+import com.hung.sneakery.utils.SneakeryConstant;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,10 +23,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //In this case, email is the username of the application
-        if(userRepository.findByEmail(email) == null)
-            throw new UsernameNotFoundException("User Not Found with email: " + email);
-        User user = userRepository.findByEmail(email);
-
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.USER_NOT_FOUND));
         return UserDetailsImpl.build(user);
     }
 }

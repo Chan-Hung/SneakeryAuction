@@ -30,10 +30,14 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(error);
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+        return buildErrorResponse(ex, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler({
             PayPalRESTException.class,
             PayPalTransactionException.class,
-            AuthenticationException.class,
             BidCreatingException.class,
             BidPlacingException.class,
             UploadImageException.class,

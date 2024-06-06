@@ -3,6 +3,7 @@ package com.hung.sneakery.config;
 import com.hung.sneakery.dto.response.BaseResponse;
 import com.hung.sneakery.dto.response.DataResponse;
 import com.hung.sneakery.dto.response.PageResponse;
+import com.hung.sneakery.utils.SneakeryConstant;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -16,7 +17,7 @@ public class ResponseHandler implements ResponseBodyAdvice {
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
-        return returnType.getContainingClass().getPackage().getName().contains("com.hung.sneakery.controller");
+        return returnType.getContainingClass().getPackage().getName().contains(SneakeryConstant.CONTROLLER_PACKAGE);
     }
 
     @Override

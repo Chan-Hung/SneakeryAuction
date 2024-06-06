@@ -1,5 +1,6 @@
 package com.hung.sneakery.config.security.jwt;
 
+import com.hung.sneakery.utils.SneakeryConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
@@ -14,21 +15,18 @@ import java.io.PrintWriter;
 
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
-    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
-
-    //Catch exception about unauthorization
-    //HttpServletResponse.SC_UNAUTHORIZED is the 401 Status code
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        logger.error("Unauthorized error: {}", authException.getMessage());
+        LOGGER.error("Unauthorized error: {}", authException.getMessage());
 
-        response.setContentType("application/json");
+        response.setContentType(SneakeryConstant.APPLICATION_JSON);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        String jsonResponse = String.format("{\"success\": false, \"exceptionType\": \"AuthenticationException\", \"message\": \"%s\"}", authException.getMessage());
+        String authenticationExceptionResponse = String.format(SneakeryConstant.AUTHENTICATION_EXCEPTION_RESPONSE, authException.getMessage());
         // Write the JSON response
         try (PrintWriter writer = response.getWriter()) {
-            writer.write(jsonResponse);
+            writer.write(authenticationExceptionResponse);
         }
     }
 }

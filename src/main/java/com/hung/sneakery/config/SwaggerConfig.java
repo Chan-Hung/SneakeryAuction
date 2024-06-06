@@ -1,5 +1,6 @@
 package com.hung.sneakery.config;
 
+import com.hung.sneakery.utils.SneakeryConstant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -16,7 +17,6 @@ import java.util.List;
 
 @EnableSwagger2
 @Configuration
-//@Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerConfig {
 
     @Bean
@@ -26,13 +26,13 @@ public class SwaggerConfig {
                 .securityContexts(Collections.singletonList(securityContext()))
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.hung.sneakery"))
+                .apis(RequestHandlerSelectors.basePackage(SneakeryConstant.BASE_PACKAGE))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiKey apiKey() {
-        return new ApiKey("JWT", "Authorization", "header");
+        return new ApiKey(SneakeryConstant.JWT, SneakeryConstant.AUTHORIZATION, SneakeryConstant.HEADER);
     }
 
     private SecurityContext securityContext() {
@@ -43,7 +43,7 @@ public class SwaggerConfig {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Collections.singletonList(new SecurityReference("JWT", authorizationScopes));
+        return Collections.singletonList(new SecurityReference(SneakeryConstant.JWT, authorizationScopes));
     }
 
     private ApiInfo apiInfo() {
