@@ -26,8 +26,8 @@ public class FeedbackDTO {
     private ProductDTO productDTO;
 
     @JsonProperty("winner")
-    private String winner;
+    private UserDTO winner;
 
     @JsonProperty("seller")
-    private String seller;
+    private UserDTO seller;
 }

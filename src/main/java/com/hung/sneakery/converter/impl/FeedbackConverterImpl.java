@@ -2,6 +2,7 @@ package com.hung.sneakery.converter.impl;
 
 import com.hung.sneakery.converter.FeedbackConverter;
 import com.hung.sneakery.converter.ProductConverter;
+import com.hung.sneakery.converter.UserConverter;
 import com.hung.sneakery.dto.FeedbackDTO;
 import com.hung.sneakery.entity.Feedback;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,9 @@ public class FeedbackConverterImpl implements FeedbackConverter {
     @Resource
     private ProductConverter productConverter;
 
+    @Resource
+    private UserConverter userConverter;
+
     @Override
     public FeedbackDTO convertToFeedbackDTO(Feedback feedback) {
         return FeedbackDTO.builder()
@@ -26,8 +30,8 @@ public class FeedbackConverterImpl implements FeedbackConverter {
                 .rating(feedback.getRating())
                 .feedbackText(feedback.getFeedbackText())
                 .productDTO(productConverter.convertToProductDTO(feedback.getProduct()))
-                .winner(feedback.getWinner().getUsername())
-                .seller(feedback.getSeller().getUsername())
+                .winner(userConverter.convertToUserDTO(feedback.getWinner()))
+                .seller(userConverter.convertToUserDTO(feedback.getSeller()))
                 .build();
     }
 
