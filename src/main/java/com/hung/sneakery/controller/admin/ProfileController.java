@@ -13,24 +13,22 @@ import javax.annotation.Resource;
 @RestController
 @Api(tags = "Profile APIs")
 @RequestMapping("/profiles")
+@PreAuthorize("hasRole('ADMIN')")
 public class ProfileController {
 
     @Resource
     private ProfileService profileService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public Page<UserDTO> getAll(final Pageable pageable) {
         return profileService.getAll(pageable);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public UserDTO getOne(@PathVariable final Long id) {
         return profileService.getOne(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public UserDTO update(@PathVariable final Long id, @RequestBody final UserDTO userDTO) {
         return profileService.update(id, userDTO);

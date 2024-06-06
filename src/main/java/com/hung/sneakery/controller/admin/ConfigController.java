@@ -4,6 +4,7 @@ import com.hung.sneakery.dto.ConfigDTO;
 import com.hung.sneakery.dto.request.ConfigRequest;
 import com.hung.sneakery.service.ConfigService;
 import io.swagger.annotations.Api;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -11,6 +12,7 @@ import javax.annotation.Resource;
 @RestController
 @Api(tags = "Config APIs")
 @RequestMapping("/configs")
+@PreAuthorize("hasRole('ADMIN')")
 public class ConfigController {
 
     @Resource

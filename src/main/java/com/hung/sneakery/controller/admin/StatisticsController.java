@@ -13,12 +13,12 @@ import javax.annotation.Resource;
 @RestController
 @Api(tags = "Statistics APIs")
 @RequestMapping("/statistics")
+@PreAuthorize("hasRole('ADMIN')")
 public class StatisticsController {
 
     @Resource
     private StatisticsService statisticsService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public StatisticsResponse getStatistics() {
         return statisticsService.getStatisticsResult();
