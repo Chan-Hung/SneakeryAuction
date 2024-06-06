@@ -8,6 +8,7 @@ import com.hung.sneakery.entity.Feedback;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.enums.BidOutcome;
+import com.hung.sneakery.enums.PaymentStatus;
 import com.hung.sneakery.exception.FeedbackCreatingException;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.FeedbackRepository;
@@ -54,8 +55,8 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (!bid.getBidOutcome().equals(BidOutcome.CLOSED)) {
             throw new FeedbackCreatingException("Chỉ được feedback trên sản phẩm đã kết thúc đấu giá");
         }
-        if (!bid.getHolder().equals(user)) {
-            throw new FeedbackCreatingException("Người thắng sản phẩm mới được phép feedback");
+        if (!(bid.getHolder().equals(user) && bid.getWinnerPaymentStatus().equals(PaymentStatus.COMPLETED))) {
+            throw new FeedbackCreatingException("Người thắng hoàn tất thanh toán mới được feedback sản phẩm");
         }
         Feedback feedback = Feedback.builder()
                 .rating(request.getRating())
