@@ -4,12 +4,10 @@ import com.hung.sneakery.converter.AddressConverter;
 import com.hung.sneakery.dto.AddressDTO;
 import com.hung.sneakery.dto.request.AddressRequest;
 import com.hung.sneakery.entity.Address;
-import com.hung.sneakery.entity.User;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.AddressRepository;
 import com.hung.sneakery.service.AddressService;
 import com.hung.sneakery.utils.SneakeryConstant;
-import com.hung.sneakery.utils.SneakeryUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +25,6 @@ public class AddressServiceImpl implements AddressService {
     @Resource
     private AddressConverter addressConverter;
 
-    @Resource
-    private SneakeryUtil sneakeryUtil;
-
     @Override
     public AddressDTO getOne(final Long id) {
         Address address = addressRepository.findById(id)
@@ -46,16 +41,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDTO create(final AddressRequest request) {
-        User user = sneakeryUtil.getCurrentUser();
-
-        Address address = Address.builder()
-                .homeNumber(request.getHomeNumber())
-                .wardCode(request.getWardCode())
-                .districtCode(request.getDistrictCode())
-                .cityCode(request.getCityCode())
-                .phoneNumber(request.getPhoneNumber())
-                .build();
-        address.setUser(user);
+        Address address = addressConverter.convertToAddress(request);
         addressRepository.save(address);
         return addressConverter.convertToAddressDTO(address);
     }
