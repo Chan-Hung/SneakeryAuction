@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDetailedDTO getOne(final Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException(String.format("Product not found with id: %s", productId)));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
         return productDetailedConverter.convertToProductDetailedDTO(product);
     }
 
@@ -112,8 +112,8 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public BaseResponse delete(final Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found"));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
         productRepository.delete(product);
-        return new BaseResponse(true, "Deleted product successfully");
+        return new BaseResponse(true, "Delete product successfully");
     }
 }

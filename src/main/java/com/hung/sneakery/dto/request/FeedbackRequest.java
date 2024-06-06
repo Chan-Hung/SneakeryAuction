@@ -4,21 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-public class CommentRequest {
+public class FeedbackRequest {
 
     @JsonProperty("productId")
     @NotNull
     private Long productId;
 
-    @JsonProperty("parentCommentId")
-    private Long parentCommentId;
+    @JsonProperty("rating")
+    private int rating;
 
-    @JsonProperty("commentText")
-    @NotBlank
-    private String commentText;
+    @JsonProperty("feedbackText")
+    private String feedbackText;
 }

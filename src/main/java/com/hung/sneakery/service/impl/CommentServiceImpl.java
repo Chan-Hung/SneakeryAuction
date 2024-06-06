@@ -10,6 +10,7 @@ import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.CommentRepository;
 import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.CommentService;
+import com.hung.sneakery.utils.SneakeryConstant;
 import com.hung.sneakery.utils.SneakeryUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,9 +35,6 @@ public class CommentServiceImpl implements CommentService {
     @Resource
     private CommentConverter commentConverter;
 
-    private static final String COMMENT_NOT_FOUND = "Comment not found";
-    private static final String PRODUCT_NOT_FOUND = "Product not found";
-
     @Override
     public Page<CommentDTO> getAllByProduct(final Long productId, final Pageable pageable) {
         Page<Comment> commentsPage = commentRepository.findByProductIdAndParentCommentIsNull(productId, pageable);
@@ -46,16 +44,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO create(final CommentRequest request) {
+        User user = sneakeryUtil.getCurrentUser();
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
+
         Comment comment = Comment.builder()
                 .commentText(request.getCommentText())
                 .build();
-        User user = sneakeryUtil.getCurrentUser();
-        Product product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND));
         comment.setUser(user);
         comment.setProduct(product);
         if (request.getParentCommentId() != null) {
-            Comment parentComment = commentRepository.findByIdAndProductId(request.getParentCommentId(), request.getProductId()).orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOUND));
+            Comment parentComment = commentRepository.findByIdAndProductId(request.getParentCommentId(), request.getProductId()).orElseThrow(() -> new NotFoundException(SneakeryConstant.COMMENT_NOT_FOUND));
             comment.setParentComment(parentComment);
         }
         commentRepository.save(comment);
@@ -65,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO update(final Long id, final CommentRequest request) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.COMMENT_NOT_FOUND));
         comment.setCommentText(request.getCommentText());
         commentRepository.save(comment);
         return commentConverter.convertToCommentDTO(comment);
@@ -74,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO delete(final Long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(COMMENT_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.COMMENT_NOT_FOUND));
         commentRepository.delete(comment);
         return commentConverter.convertToCommentDTO(comment);
     }

@@ -4,13 +4,19 @@ public class SneakeryConstant {
 
     public static final String ADMIN_ROLE = "admin";
 
+    public static final String ADDRESS_NOT_FOUND = "Address not found";
+
     public static final String ROLE_NOT_FOUND = "Role not found";
 
     public static final String USER_NOT_FOUND = "User not found";
 
     public static final String BID_NOT_FOUND = "Bid not found";
 
+    public static final String CATEGORY_NOT_FOUND = "Category not found";
+
     public static final String PRODUCT_NOT_FOUND = "Product not found";
+
+    public static final String COMMENT_NOT_FOUND = "Comment not found";
 
     public static final String PLACE_BID_SUCCESSFULLY = "Đấu giá sản phẩm thành công";
 

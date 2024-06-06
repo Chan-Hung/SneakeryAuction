@@ -14,5 +14,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByProductIdAndParentCommentIsNull(Long productId, Pageable pageable);
 
     Optional<Comment> findByIdAndProductId(Long parentCommentId, Long productId);
-
 }

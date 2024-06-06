@@ -7,12 +7,12 @@ import com.hung.sneakery.entity.Address;
 import com.hung.sneakery.entity.User;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.AddressRepository;
-import com.hung.sneakery.repository.UserRepository;
 import com.hung.sneakery.service.AddressService;
+import com.hung.sneakery.utils.SneakeryConstant;
+import com.hung.sneakery.utils.SneakeryUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,17 +25,15 @@ public class AddressServiceImpl implements AddressService {
     private AddressRepository addressRepository;
 
     @Resource
-    private UserRepository userRepository;
-
-    @Resource
     private AddressConverter addressConverter;
 
-    private static final String ADDRESS_NOT_FOUND = "Address not found";
+    @Resource
+    private SneakeryUtil sneakeryUtil;
 
     @Override
     public AddressDTO getOne(final Long id) {
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ADDRESS_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.ADDRESS_NOT_FOUND));
         return addressConverter.convertToAddressDTO(address);
     }
 
@@ -48,6 +46,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public AddressDTO create(final AddressRequest request) {
+        User user = sneakeryUtil.getCurrentUser();
+
         Address address = Address.builder()
                 .homeNumber(request.getHomeNumber())
                 .wardCode(request.getWardCode())
@@ -55,8 +55,6 @@ public class AddressServiceImpl implements AddressService {
                 .cityCode(request.getCityCode())
                 .phoneNumber(request.getPhoneNumber())
                 .build();
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username);
         address.setUser(user);
         addressRepository.save(address);
         return addressConverter.convertToAddressDTO(address);
@@ -65,7 +63,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressDTO update(final Long id, final AddressRequest request) {
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ADDRESS_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.ADDRESS_NOT_FOUND));
         address.setCityCode(request.getCityCode());
         address.setDistrictCode(request.getDistrictCode());
         address.setWardCode(request.getWardCode());
@@ -78,7 +76,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressDTO delete(final Long id) {
         Address address = addressRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ADDRESS_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.ADDRESS_NOT_FOUND));
         addressRepository.delete(address);
         return addressConverter.convertToAddressDTO(address);
     }

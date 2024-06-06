@@ -9,6 +9,7 @@ import com.hung.sneakery.exception.DataIntegrityViolationException;
 import com.hung.sneakery.exception.NotFoundException;
 import com.hung.sneakery.repository.CategoryRepository;
 import com.hung.sneakery.service.CategoryService;
+import com.hung.sneakery.utils.SneakeryConstant;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,12 +31,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Resource
     private PropertyConverter propertyConverter;
 
-    private static final String CATEGORY_NOT_FOUND = "Category not found";
-
     @Override
     public CategoryDTO getOne(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.CATEGORY_NOT_FOUND));
         return categoryConverter.convertToCategoryDTO(category);
     }
 
@@ -56,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO update(Long id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.CATEGORY_NOT_FOUND));
         category.setName(request.getName());
         category.setProperty(propertyConverter.convertPropertiesToMap(request.getProperties()));
         categoryRepository.save(category);
@@ -66,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO delete(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SneakeryConstant.CATEGORY_NOT_FOUND));
         if (CollectionUtils.isNotEmpty(category.getProducts())) {
             throw new DataIntegrityViolationException("Unable to delete. Category linked to products");
         }
