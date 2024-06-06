@@ -50,6 +50,9 @@ public class Bid extends AbstractCommonEntity {
     private Boolean isBidSnipping;
 
     @Column
+    private Integer numberOfBids;
+
+    @Column
     @Enumerated(EnumType.STRING)
     private BidOutcome bidOutcome;
 

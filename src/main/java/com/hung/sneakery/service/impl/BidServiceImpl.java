@@ -171,6 +171,8 @@ public class BidServiceImpl implements BidService {
     }
 
     private void createBidHistory(final Bid bid, final User buyer, final Long amount, final Long currentPrice) {
+        bid.setNumberOfBids(bid.getNumberOfBids() + 1);
+
         BidHistory bidHistory = BidHistory.builder()
                 .maxPrice(amount)
                 .actualPrice(currentPrice)

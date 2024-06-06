@@ -33,7 +33,6 @@ public class ProductConverterImpl implements ProductConverter {
                 .max(Long::compareTo)
                 .orElse(product.getBid().getPriceStart());
 
-        Integer numberOfBids = product.getBid().getBidHistories().size();
         String holder = Objects.nonNull(product.getBid().getHolder()) ? product.getBid().getHolder().getUsername() : null;
 
         return ProductDTO.builder()
@@ -44,7 +43,7 @@ public class ProductConverterImpl implements ProductConverter {
                 .holder(holder)
                 .bidCreatedDate(product.getBid().getCreatedDate())
                 .bidClosingDate(product.getBid().getClosingDateTime())
-                .numberOfBids(numberOfBids)
+                .numberOfBids(product.getBid().getNumberOfBids())
                 .build();
     }
 
