@@ -20,7 +20,7 @@ public class Feedback extends AbstractCommonEntity {
     @Column(nullable = false)
     private int rating;
 
-    @Column(nullable = false)
+    @Column
     private String feedbackText;
 
     @ManyToOne(fetch = FetchType.LAZY)
