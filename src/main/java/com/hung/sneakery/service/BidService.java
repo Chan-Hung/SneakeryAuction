@@ -41,4 +41,11 @@ public interface BidService {
      * @return List<BidDTO>
      */
     Page<BidDTO> getWinningBids(Pageable pageable);
+
+    /**
+     * Get Bid Revenue
+     *
+     * @return List<BidDTO>
+     */
+    Page<BidDTO> getBidRevenue(Pageable pageable);
 }

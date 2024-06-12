@@ -218,6 +218,13 @@ public class BidServiceImpl implements BidService {
         return new PageImpl<>(bidDTOs, pageable, bidsPage.getTotalElements());
     }
 
+    @Override
+    public Page<BidDTO> getBidRevenue(Pageable pageable) {
+        Page<Bid> bidsPage = bidRepository.findByBidOutcome(BidOutcome.CLOSED, pageable);
+        List<BidDTO> bidDTOs = bidConverter.convertToBidDTOList(bidsPage.getContent());
+        return new PageImpl<>(bidDTOs, pageable, bidsPage.getTotalElements());
+    }
+
     @Transactional
     protected Bid mapToBid(final BidCreateRequest request, final User seller) {
         Category category = categoryRepository.findById(request.getCategoryId())

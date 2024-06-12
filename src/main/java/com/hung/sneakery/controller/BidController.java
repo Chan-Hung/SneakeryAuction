@@ -47,4 +47,10 @@ public class BidController {
     public Page<BidDTO> getWinningBids(final Pageable pageable) {
         return bidService.getWinningBids(pageable);
     }
+
+    @GetMapping("/revenue")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<BidDTO> getBidRevenue(final Pageable pageable) {
+        return bidService.getBidRevenue(pageable);
+    }
 }
