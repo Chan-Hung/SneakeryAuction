@@ -1,5 +1,6 @@
 package com.hung.sneakery.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hung.sneakery.enums.BidOutcome;
 import com.hung.sneakery.enums.PaymentStatus;
@@ -38,8 +39,9 @@ public class BidDTO {
     @JsonProperty("sellerPaymentStatus")
     private PaymentStatus sellerPaymentStatus;
 
-    @JsonProperty("winnerPaymentStatus")
-    private PaymentStatus winnerPaymentStatus;
+    @JsonProperty("winner")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private WinnerDTO winner;
 
     @JsonProperty("product")
     @NotNull
