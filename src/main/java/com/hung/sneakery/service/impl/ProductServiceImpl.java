@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductDTO> getProductsHomepage(final Pageable pageable) {
-        Page<Product> productPage = productRepository.findAll(pageable);
+        Page<Product> productPage = productRepository.findAllByBid_BidOutcome(BidOutcome.OPEN, pageable);
         List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
         return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
     }

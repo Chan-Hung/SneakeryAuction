@@ -19,6 +19,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query(value = "SELECT id from products order by id", nativeQuery = true)
     List<Long> getAllId();
 
+    Page<Product> findAllByBid_BidOutcome(BidOutcome bidOutcome, Pageable pageable);
+
     List<Product> findByUser(User user);
 
     Integer countProductByCategory(Category category);

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    Page<Transaction> findAllByUser(User user, Pageable pageable);
+    Page<Transaction> findAllByUserAndBidIsNotNull(User user, Pageable pageable);
 
     @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.type = ?1")
     Long totalByPaymentType(EPaymentType type);

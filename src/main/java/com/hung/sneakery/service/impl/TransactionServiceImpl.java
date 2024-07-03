@@ -30,7 +30,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Page<TransactionDTO> getAllByUser(Pageable pageable) {
         User user = sneakeryUtil.getCurrentUser();
-        Page<Transaction> transactionPage = transactionRepository.findAllByUser(user, pageable);
+        Page<Transaction> transactionPage = transactionRepository.findAllByUserAndBidIsNotNull(user, pageable);
         List<TransactionDTO> transactionDTOs = transactionConverter.convertToTransactionDTOList(transactionPage.getContent());
         return new PageImpl<>(transactionDTOs, pageable, transactionPage.getTotalElements());
     }
