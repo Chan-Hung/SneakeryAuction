@@ -20,4 +20,10 @@ public class UserDTO {
 
     @JsonProperty("isActive")
     private Boolean isActive;
+
+    @JsonProperty("email")
+    private String email;
+
+    @JsonProperty("phoneNumber")
+    private String phoneNumber;
 }

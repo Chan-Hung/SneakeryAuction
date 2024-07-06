@@ -19,6 +19,8 @@ public class UserConverterImpl implements UserConverter {
                 .id(user.getId())
                 .username(user.getUsername())
                 .isActive(user.getIsActive())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
                 .build();
     }
 
