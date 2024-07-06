@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     Page<Feedback> findBySellerId(Long sellerId, Pageable pageable);
+
+    void deleteByProductId(Long productId);
 }

@@ -9,6 +9,8 @@ import com.hung.sneakery.entity.*;
 import com.hung.sneakery.enums.BidOutcome;
 import com.hung.sneakery.enums.ECondition;
 import com.hung.sneakery.exception.NotFoundException;
+import com.hung.sneakery.repository.CommentRepository;
+import com.hung.sneakery.repository.FeedbackRepository;
 import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.ProductService;
 import com.hung.sneakery.utils.SneakeryConstant;
@@ -34,6 +36,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Resource
     private ProductConverter productConverter;
+
+    @Resource
+    private CommentRepository commentRepository;
+
+    @Resource
+    private FeedbackRepository feedbackRepository;
 
     @Resource
     private ProductDetailedConverter productDetailedConverter;
@@ -113,6 +121,8 @@ public class ProductServiceImpl implements ProductService {
     public BaseResponse delete(final Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
+        commentRepository.deleteByProductId(productId);
+        feedbackRepository.deleteByProductId(productId);
         productRepository.delete(product);
         return new BaseResponse(true, "Delete product successfully");
     }
