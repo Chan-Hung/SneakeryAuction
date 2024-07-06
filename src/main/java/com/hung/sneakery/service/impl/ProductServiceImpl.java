@@ -100,6 +100,11 @@ public class ProductServiceImpl implements ProductService {
                 return cb.lessThanOrEqualTo(categoryJoin.get(Bid_.PRICE_START), priceEnd);
             });
         }
+        spec = spec.and((root, query, cb) -> {
+            Join<Product, Bid> bidJoin = root.join(Product_.BID, JoinType.INNER);
+            return cb.not(bidJoin.get(Bid_.BID_OUTCOME).in(BidOutcome.CLOSED, BidOutcome.CLOSED_WITHOUT_WINNER));
+        });
+
 
         Page<Product> products = productRepository.findAll(spec, pageable);
         return products.map(productConverter::convertToProductDTO);

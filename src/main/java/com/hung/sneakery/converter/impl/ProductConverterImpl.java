@@ -5,7 +5,6 @@ import com.hung.sneakery.dto.ProductDTO;
 import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
-import com.hung.sneakery.enums.BidOutcome;
 import com.hung.sneakery.enums.EBidStatus;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,9 +21,6 @@ public class ProductConverterImpl implements ProductConverter {
 
     @Override
     public ProductDTO convertToProductDTO(Product product) {
-        if (product.getBid().getBidOutcome().equals(BidOutcome.CLOSED) || product.getBid().getBidOutcome().equals(BidOutcome.CLOSED_WITHOUT_WINNER)) {
-            return null;
-        }
         String imagePath = product.getImages().stream()
                 .filter(image -> BooleanUtils.isTrue(image.getIsThumbnail()))
                 .findFirst()
