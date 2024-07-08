@@ -42,7 +42,7 @@ public class BidServiceImpl implements BidService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BidServiceImpl.class);
     private static final String EMAIL_SUBJECT = "[Lời nhắc] Đấu giá của bạn đang diễn ra";
-    private static final String EMAIL_TEMPLATE_PATH = "classpath:email-templates/reminder.html";
+    private static final String EMAIL_TEMPLATE_PATH = "email-templates/reminder.html";
 
     @Resource
     private AppProperties appProperties;
