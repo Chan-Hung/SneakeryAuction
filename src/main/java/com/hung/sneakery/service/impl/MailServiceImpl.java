@@ -27,6 +27,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendEmail(final String subject, final String templatePath, final User user, final Product product, final Long currentPrice) throws MessagingException, IOException {
+        LOGGER.info("Getting content");
         String content = readEmailTemplate(templatePath);
         String productLink = "https://sneakery.vercel.app/products/" + product.getId();
         content = content.replace("[[URL]]", productLink);
@@ -51,6 +52,7 @@ public class MailServiceImpl implements MailService {
 
     private String readEmailTemplate(final String templatePath) throws IOException {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(templatePath);
+        LOGGER.info("Reading email template");
         if (inputStream == null) {
             throw new FileNotFoundException("Template file not found: " + templatePath);
         }
