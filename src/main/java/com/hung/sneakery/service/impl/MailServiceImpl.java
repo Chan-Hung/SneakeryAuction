@@ -27,13 +27,13 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendEmail(final String subject, final String templatePath, final User user, final Product product, final Long currentPrice) throws MessagingException, IOException {
-        LOGGER.info("Getting content");
         String content = readEmailTemplate(templatePath);
         String productLink = "https://sneakery.vercel.app/products/" + product.getId();
         content = content.replace("[[URL]]", productLink);
         content = content.replace("[[NAME]]", user.getUsername());
         content = content.replace("[[PRODUCT_NAME]]", product.getName());
         content = content.replace("[[HOLDER]]", product.getBid().getHolder().getUsername());
+        LOGGER.info("Getting content");
 
         String thumbnailPath = product.getImages().stream()
                 .filter(image -> Boolean.TRUE.equals(image.getIsThumbnail()))
@@ -41,18 +41,19 @@ public class MailServiceImpl implements MailService {
                 .map(Media::getPath)
                 .orElse(StringUtils.EMPTY);
         content = content.replace("[[THUMBNAIL_URL]]", thumbnailPath);
+        LOGGER.info("Getting content 2");
 
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
         currencyFormatter.setMinimumFractionDigits(0);
         String formattedCurrentPrice = currencyFormatter.format(currentPrice);
         content = content.replace("[[CURRENT_PRICE]]", formattedCurrentPrice);
+        LOGGER.info("Getting content 3");
 
         sendEmail(subject, user.getEmail(), content);
     }
 
     private String readEmailTemplate(final String templatePath) throws IOException {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(templatePath);
-        LOGGER.info("Reading email template");
         if (inputStream == null) {
             throw new FileNotFoundException("Template file not found: " + templatePath);
         }
