@@ -3,6 +3,7 @@ package com.hung.sneakery.service.impl;
 import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
 import com.hung.sneakery.entity.User;
+import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.MailService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public class MailServiceImpl implements MailService {
     @Resource
     private JavaMailSender mailSender;
 
+    @Resource
+    private ProductRepository productRepository;
+
     @Override
     public void sendEmail(final String subject, final String templatePath, final User user, final Product product, final Long currentPrice) throws MessagingException, IOException {
         String content = readEmailTemplate(templatePath);
@@ -34,12 +38,12 @@ public class MailServiceImpl implements MailService {
         content = content.replace("[[PRODUCT_NAME]]", product.getName());
         content = content.replace("[[HOLDER]]", product.getBid().getHolder().getUsername());
 
-        String thumbnailPath = product.getImages().stream()
+        Product productFromDb = productRepository.findById(product.getId()).orElse(null);
+        String thumbnailPath = productFromDb.getImages().stream()
                 .filter(image -> Boolean.TRUE.equals(image.getIsThumbnail()))
                 .findFirst()
                 .map(Media::getPath)
                 .orElse(StringUtils.EMPTY);
-        LOGGER.info("Thumbnail {}", thumbnailPath);
 
         content = content.replace("[[THUMBNAIL_URL]]", thumbnailPath);
 
