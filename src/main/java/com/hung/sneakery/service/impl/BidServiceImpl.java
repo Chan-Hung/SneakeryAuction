@@ -89,12 +89,16 @@ public class BidServiceImpl implements BidService {
                 .max(Comparator.comparing(BidHistory::getActualPrice))
                 .orElse(null);
 
+        BidHistory currentHighestMaxPriceBid = bid.getBidHistories()
+                .stream()
+                .max(Comparator.comparing(BidHistory::getMaxPrice))
+                .orElse(null);
         checkBidderIsNotSeller(bid, buyer);
         checkBidIsValid(bid, currentHighestBid, request);
-        Long currentPrice = handleAutomaticBidding(bid, currentHighestBid, request, buyer);
+        Long currentPrice = handleAutomaticBidding(bid, currentHighestMaxPriceBid, request, buyer);
         createBidHistory(bid, buyer, request.getAmount(), currentPrice);
 
-        if (Objects.nonNull(currentHighestBid) && request.getAmount() < currentHighestBid.getMaxPrice()) {
+        if (Objects.nonNull(currentHighestMaxPriceBid) && request.getAmount() < currentHighestMaxPriceBid.getMaxPrice()) {
             success = false;
             message = SneakeryConstant.PLACE_BID_UNSUCCESSFULLY;
         }
