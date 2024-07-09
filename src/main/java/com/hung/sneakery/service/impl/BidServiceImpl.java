@@ -101,7 +101,7 @@ public class BidServiceImpl implements BidService {
         if (Boolean.TRUE.equals(bid.getIsBidSnipping())) {
             handleBidSniping(bid);
         }
-        if (shouldRemindBidder(currentHighestBid, buyer)) {
+        if (shouldRemindBidder(currentHighestBid, bid)) {
             sendRemindBidderEmailAsync(currentHighestBid.getUser(), product, currentPrice);
         }
         return new BaseResponse(success, message);
@@ -138,11 +138,14 @@ public class BidServiceImpl implements BidService {
         }
     }
 
-    private boolean shouldRemindBidder(final BidHistory currentHighestBid, final User buyer) {
+    private boolean shouldRemindBidder(final BidHistory currentHighestBid, final Bid bid) {
         String currentHighestBidder = currentHighestBid != null ? currentHighestBid.getUser().getUsername() : null;
-        String buyerName = buyer.getUsername();
-        LOGGER.info("Current highest bidder: {} & buyerName: {}", currentHighestBidder, buyerName);
-        return currentHighestBid != null && !currentHighestBid.getUser().equals(buyer);
+        String currentHolder = bid.getHolder().getUsername();
+
+        //If the current highest bid is not null and the current highest bidder is not the current holder any more
+        //then send mail to this current highest bidder
+        LOGGER.info("Current highest bidder: {} & currentHolder: {}", currentHighestBidder, currentHolder);
+        return currentHighestBid != null && !currentHighestBid.getUser().equals(bid.getHolder());
     }
 
     private void sendRemindBidderEmailAsync(final User user, final Product product, final Long currentPrice) {
