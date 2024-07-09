@@ -75,6 +75,7 @@ public class BidServiceImpl implements BidService {
     private BidConverter bidConverter;
 
     @Override
+    @Transactional
     public BaseResponse placeBid(final BidPlaceRequest request) {
         User buyer = sneakeryUtil.getCurrentUser();
         String message = SneakeryConstant.PLACE_BID_SUCCESSFULLY;

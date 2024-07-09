@@ -38,8 +38,7 @@ public class MailServiceImpl implements MailService {
         content = content.replace("[[PRODUCT_NAME]]", product.getName());
         content = content.replace("[[HOLDER]]", product.getBid().getHolder().getUsername());
 
-        Product productFromDb = productRepository.findById(product.getId()).orElse(null);
-        String thumbnailPath = productFromDb.getImages().stream()
+        String thumbnailPath = product.getImages().stream()
                 .filter(image -> Boolean.TRUE.equals(image.getIsThumbnail()))
                 .findFirst()
                 .map(Media::getPath)
