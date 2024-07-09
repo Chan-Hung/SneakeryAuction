@@ -105,8 +105,8 @@ public class BidServiceImpl implements BidService {
         if (Boolean.TRUE.equals(bid.getIsBidSnipping())) {
             handleBidSniping(bid);
         }
-        if (shouldRemindBidder(currentHighestBid, bid)) {
-            sendRemindBidderEmailAsync(currentHighestBid.getUser(), product, currentPrice);
+        if (shouldRemindBidder(currentHighestMaxPriceBid, bid)) {
+            sendRemindBidderEmailAsync(currentHighestMaxPriceBid.getUser(), product, currentPrice);
         }
         return new BaseResponse(success, message);
     }
