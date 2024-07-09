@@ -139,6 +139,9 @@ public class BidServiceImpl implements BidService {
     }
 
     private boolean shouldRemindBidder(final BidHistory currentHighestBid, final User buyer) {
+        String currentHighestBidder = currentHighestBid != null ? currentHighestBid.getUser().getUsername() : null;
+        String buyerName = buyer.getUsername();
+        LOGGER.info("Current highest bidder: {} & buyerName: {}", currentHighestBidder, buyerName);
         return currentHighestBid != null && !currentHighestBid.getUser().equals(buyer);
     }
 
