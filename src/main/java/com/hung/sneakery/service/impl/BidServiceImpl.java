@@ -94,7 +94,7 @@ public class BidServiceImpl implements BidService {
         Long currentPrice = handleAutomaticBidding(bid, currentHighestBid, request, buyer);
         createBidHistory(bid, buyer, request.getAmount(), currentPrice);
 
-        if (Objects.equals(currentPrice, request.getAmount())) {
+        if (Objects.nonNull(currentHighestBid) && request.getAmount() < currentHighestBid.getMaxPrice()) {
             success = false;
             message = SneakeryConstant.PLACE_BID_UNSUCCESSFULLY;
         }
