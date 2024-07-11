@@ -15,7 +15,6 @@ import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.ProductService;
 import com.hung.sneakery.utils.SneakeryConstant;
 import com.hung.sneakery.utils.SneakeryUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -105,7 +104,9 @@ public class ProductServiceImpl implements ProductService {
                 return cb.lessThanOrEqualTo(categoryJoin.get(Bid_.PRICE_START), priceEnd);
             });
         }
-        if (!StringUtils.equalsIgnoreCase(sneakeryUtil.getCurrentUser().getEmail(),"sneakeryauction@gmail.com")) {
+
+        //Handle show OPEN bid for general user
+        if (Objects.isNull(sneakeryUtil.getCurrentUser())) {
             spec = spec.and((root, query, cb) -> {
                 Join<Product, Bid> bidJoin = root.join(Product_.BID, JoinType.INNER);
                 return cb.not(bidJoin.get(Bid_.BID_OUTCOME).in(BidOutcome.CLOSED, BidOutcome.CLOSED_WITHOUT_WINNER));
