@@ -31,10 +31,7 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -113,24 +110,36 @@ public class BidServiceImpl implements BidService {
 
     private Long handleAutomaticBidding(final Bid bid, final BidHistory highestBidHistory, final BidPlaceRequest request, final User buyer) {
         Long currentPrice = bid.getPriceStart();
+        Long priceWin = bid.getPriceWin();
 
-        if (highestBidHistory != null) {
-            if (Objects.equals(request.getAmount(), highestBidHistory.getMaxPrice())) {
-                currentPrice = request.getAmount();
-            } else if (request.getAmount() < highestBidHistory.getMaxPrice()) {
-                currentPrice = request.getAmount() + bid.getStepBid();
+        //First bidder: priceWin = priceStart, holder = this bidder
+        if (Objects.isNull(highestBidHistory)) {
+            bid.setHolder(buyer);
+            bid.setPriceWin(currentPrice);
+            return currentPrice;
+        }
+        //Second bidder and more
+        if (Objects.equals(request.getAmount(), highestBidHistory.getMaxPrice())) {
+            //Case 1: The current price is equal to the highest bid -> Not change holder
+            currentPrice = request.getAmount();
+            priceWin = currentPrice;
+        } else if (request.getAmount() < highestBidHistory.getMaxPrice()) {
+            //Case 2: The current price is less than the highest bid -> Not change holder
+            currentPrice = request.getAmount();
+            priceWin = request.getAmount() + bid.getStepBid();
 
-                //Handle the case when the current price is greater than the highest bid
-                if (currentPrice > highestBidHistory.getMaxPrice()) {
-                    currentPrice = highestBidHistory.getMaxPrice();
-                }
-            } else if (request.getAmount() > highestBidHistory.getMaxPrice()) {
-                currentPrice = highestBidHistory.getMaxPrice() + bid.getStepBid();
-                bid.setHolder(buyer);
+            //Handle the case when the price win is greater than the highest bid
+            //Keep the price win equal the highest bid
+            if (priceWin > highestBidHistory.getMaxPrice()) {
+                priceWin = highestBidHistory.getMaxPrice();
             }
-        } else {
+        } else if (request.getAmount() > highestBidHistory.getMaxPrice()) {
+            //Case 3: The current price is greater than the highest bid -> Change holder
+            currentPrice = highestBidHistory.getMaxPrice() + bid.getStepBid();
+            priceWin = currentPrice;
             bid.setHolder(buyer);
         }
+        bid.setPriceWin(priceWin);
         return currentPrice;
     }
 

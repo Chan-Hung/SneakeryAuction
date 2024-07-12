@@ -4,10 +4,8 @@ import com.hung.sneakery.converter.ProductDetailedConverter;
 import com.hung.sneakery.converter.UserConverter;
 import com.hung.sneakery.dto.ProductDetailedDTO;
 import com.hung.sneakery.entity.Bid;
-import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
-import com.hung.sneakery.enums.EBidStatus;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -39,19 +37,11 @@ public class ProductDetailedConverterImpl implements ProductDetailedConverter {
                 .properties(product.getProperties())
                 .description(product.getDescription())
                 .bidIncrement(bid.getStepBid())
-                .currentPrice(getCurrentPrice(product))
+                .currentPrice(Objects.isNull(bid.getPriceWin()) ? bid.getPriceStart() : bid.getPriceWin())
                 .holder(Objects.nonNull(bid.getHolder()) ? bid.getHolder().getUsername() : null)
                 .seller(userConverter.convertToUserDTO(product.getUser()))
                 .bidCreatedDate(bid.getCreatedDate())
                 .bidClosingDate(bid.getClosingDateTime())
                 .build();
-    }
-
-    private Long getCurrentPrice(final Product product) {
-        return product.getBid().getBidHistories().stream()
-                .filter(bidHistory -> EBidStatus.SUCCESS.equals(bidHistory.getStatus()))
-                .map(BidHistory::getActualPrice)
-                .max(Long::compareTo)
-                .orElse(product.getBid().getPriceStart());
     }
 }

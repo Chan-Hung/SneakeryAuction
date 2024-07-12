@@ -2,10 +2,8 @@ package com.hung.sneakery.converter.impl;
 
 import com.hung.sneakery.converter.ProductConverter;
 import com.hung.sneakery.dto.ProductDTO;
-import com.hung.sneakery.entity.BidHistory;
 import com.hung.sneakery.entity.Media;
 import com.hung.sneakery.entity.Product;
-import com.hung.sneakery.enums.EBidStatus;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -27,11 +25,8 @@ public class ProductConverterImpl implements ProductConverter {
                 .map(Media::getPath)
                 .orElse(StringUtils.EMPTY);
 
-        Long currentPrice = product.getBid().getBidHistories().stream()
-                .filter(bidHistory -> EBidStatus.SUCCESS.equals(bidHistory.getStatus()))
-                .map(BidHistory::getActualPrice)
-                .max(Long::compareTo)
-                .orElse(product.getBid().getPriceStart());
+        Long currentPrice = Objects.isNull(product.getBid().getPriceWin()) ?
+                product.getBid().getPriceStart() : product.getBid().getPriceWin();
 
         String holder = Objects.nonNull(product.getBid().getHolder()) ? product.getBid().getHolder().getUsername() : null;
 

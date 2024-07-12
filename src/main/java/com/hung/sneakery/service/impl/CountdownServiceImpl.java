@@ -80,7 +80,7 @@ public class CountdownServiceImpl implements CountdownService {
         LOGGER.info("TIME SCHEDULE HANDLE BID COMPLETION FOR PRODUCT: {}", bid.getProduct().getName());
         Bid managedBid = bidRepository.findById(bid.getId()).orElseThrow(() -> new NotFoundException("Bid not found"));
         BidHistory highestBid = managedBid.getBidHistories().stream()
-                .max(Comparator.comparing(BidHistory::getActualPrice))
+                .max(Comparator.comparing(BidHistory::getMaxPrice))
                 .orElse(null);
         if (Objects.isNull(highestBid)) {
             LOGGER.info("TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}", bid.getProduct().getName());
@@ -94,7 +94,7 @@ public class CountdownServiceImpl implements CountdownService {
     @SneakyThrows
     private void handleWinnerUnderReservePrice(final Bid bid, final BidHistory highestBid) {
         LOGGER.info("PRICE WIN: {} < RESERVE PRICE: {} FOR PRODUCT {}",
-                highestBid.getActualPrice(),
+                bid.getPriceWin(),
                 bid.getReservePrice(), bid.getProduct().getName());
 
         mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH, bid.getHolder(), bid.getProduct(), null);
@@ -102,7 +102,7 @@ public class CountdownServiceImpl implements CountdownService {
     }
 
     private void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
-        if (bid.getReservePrice() != null && highestBid.getActualPrice() < bid.getReservePrice()) {
+        if (bid.getReservePrice() != null && bid.getPriceWin() < bid.getReservePrice()) {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
         setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED);
@@ -111,7 +111,7 @@ public class CountdownServiceImpl implements CountdownService {
     private void setPriceWinAndSaveBid(final Bid bid, final BidHistory bidHistory, final BidOutcome bidOutcome) {
         bid.setBidOutcome(bidOutcome);
         if (!BidOutcome.CLOSED_WITHOUT_WINNER.equals(bidOutcome) && Objects.nonNull(bidHistory)) {
-            bid.setPriceWin(bidHistory.getActualPrice());
+//            bid.setPriceWin(bidHistory.getActualPrice());
             bid.setWinnerPaymentStatus(PaymentStatus.PENDING);
             bid.setSellerPaymentStatus(PaymentStatus.PENDING);
             bid.setHolder(bidHistory.getUser());
