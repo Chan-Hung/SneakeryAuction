@@ -115,8 +115,15 @@ public class BidServiceImpl implements BidService {
         Long currentPrice = bid.getPriceStart();
 
         if (highestBidHistory != null) {
-            if (request.getAmount() < highestBidHistory.getMaxPrice() || Objects.equals(request.getAmount(), highestBidHistory.getMaxPrice())) {
+            if (Objects.equals(request.getAmount(), highestBidHistory.getMaxPrice())) {
                 currentPrice = request.getAmount();
+            } else if (request.getAmount() < highestBidHistory.getMaxPrice()) {
+                currentPrice = request.getAmount() + bid.getStepBid();
+
+                //Handle the case when the current price is greater than the highest bid
+                if (currentPrice > highestBidHistory.getMaxPrice()) {
+                    currentPrice = highestBidHistory.getMaxPrice();
+                }
             } else if (request.getAmount() > highestBidHistory.getMaxPrice()) {
                 currentPrice = highestBidHistory.getMaxPrice() + bid.getStepBid();
                 bid.setHolder(buyer);
