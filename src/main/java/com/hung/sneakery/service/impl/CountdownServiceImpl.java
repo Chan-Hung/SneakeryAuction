@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -104,16 +105,17 @@ public class CountdownServiceImpl implements CountdownService {
     }
 
     @SneakyThrows
-    private void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
+    @Transactional
+    void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
         Bid winnerBid = bidRepository.findById(bid.getId())
                 .orElseThrow(() -> new NotFoundException("Bid not found"));
-        LOGGER.info("PRICE WIN: {} >= RESERVE PRICE: {} FOR PRODUCT {}",
+        LOGGER.info("PRICE WIN: {} >= RESERVE PRICE: {} FOR PRODUCT {} OF WINNER {}",
                 winnerBid.getPriceWin(),
-                bid.getReservePrice(), bid.getProduct().getName());
+                bid.getReservePrice(), bid.getProduct().getName(), winnerBid.getHolder().getUsername());
         if (bid.getReservePrice() != null && winnerBid.getPriceWin() < bid.getReservePrice()) {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
-        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH_WINNER, bid.getHolder(), bid.getProduct(), winnerBid.getPriceWin());
+        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH_WINNER, winnerBid.getHolder(), bid.getProduct(), winnerBid.getPriceWin());
         setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED);
     }
 
