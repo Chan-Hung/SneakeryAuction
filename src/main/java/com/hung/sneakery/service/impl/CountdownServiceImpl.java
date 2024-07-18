@@ -105,13 +105,15 @@ public class CountdownServiceImpl implements CountdownService {
 
     @SneakyThrows
     private void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
+        Bid winnerBid = bidRepository.findById(bid.getId())
+                .orElseThrow(() -> new NotFoundException("Bid not found"));
         LOGGER.info("PRICE WIN: {} >= RESERVE PRICE: {} FOR PRODUCT {}",
-                bid.getPriceWin(),
+                winnerBid.getPriceWin(),
                 bid.getReservePrice(), bid.getProduct().getName());
-        if (bid.getReservePrice() != null && bid.getPriceWin() < bid.getReservePrice()) {
+        if (bid.getReservePrice() != null && winnerBid.getPriceWin() < bid.getReservePrice()) {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
-        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH_WINNER, bid.getHolder(), bid.getProduct(), bid.getPriceWin());
+        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH_WINNER, bid.getHolder(), bid.getProduct(), winnerBid.getPriceWin());
         setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED);
     }
 
