@@ -14,10 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class CountdownServiceImpl implements CountdownService {
@@ -115,7 +118,14 @@ public class CountdownServiceImpl implements CountdownService {
         if (bid.getReservePrice() != null && winnerBid.getPriceWin() < bid.getReservePrice()) {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
-        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH_WINNER, winnerBid.getHolder(), bid.getProduct(), winnerBid.getPriceWin());
+        CompletableFuture.runAsync(() -> {
+            try {
+                mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH_WINNER, winnerBid.getHolder(), bid.getProduct(), winnerBid.getPriceWin());
+                LOGGER.info("Sent remind email to user: {}", winnerBid.getHolder().getUsername());
+            } catch (MessagingException | IOException | NullPointerException e) {
+                LOGGER.info("Failed to send remind email due to: {}", e.getMessage());
+            }
+        });
         setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED);
     }
 
