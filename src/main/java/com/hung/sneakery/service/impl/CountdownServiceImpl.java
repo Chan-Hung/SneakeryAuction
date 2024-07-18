@@ -126,7 +126,7 @@ public class CountdownServiceImpl implements CountdownService {
                 LOGGER.info("Failed to send remind email due to: {}", e.getMessage());
             }
         });
-        setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED);
+        setPriceWinAndSaveBid(winnerBid, highestBid, BidOutcome.CLOSED);
     }
 
     private void setPriceWinAndSaveBid(final Bid bid, final BidHistory bidHistory, final BidOutcome bidOutcome) {
