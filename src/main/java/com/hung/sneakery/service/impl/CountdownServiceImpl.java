@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -79,8 +78,7 @@ public class CountdownServiceImpl implements CountdownService {
         }
     }
 
-    @Transactional
-    void handleBidCompletion(final Bid bid) {
+    private void handleBidCompletion(final Bid bid) {
         LOGGER.info("TIME SCHEDULE HANDLE BID COMPLETION FOR PRODUCT: {}", bid.getProduct().getName());
         Bid managedBid = bidRepository.findById(bid.getId()).orElseThrow(() -> new NotFoundException("Bid not found"));
         BidHistory highestBid = managedBid.getBidHistories().stream()
@@ -88,10 +86,10 @@ public class CountdownServiceImpl implements CountdownService {
                 .orElse(null);
         if (Objects.isNull(highestBid)) {
             LOGGER.info("TIME SCHEDULE SET PRICE WIN = 0 FOR PRODUCT: {}", bid.getProduct().getName());
-            setPriceWinAndSaveBid(managedBid, null, BidOutcome.CLOSED_WITHOUT_WINNER);
+            setPriceWinAndSaveBid(bid, null, BidOutcome.CLOSED_WITHOUT_WINNER);
         } else {
             LOGGER.info("TIME SCHEDULE SET PRICE WIN <> 0 FOR PRODUCT: {}", bid.getProduct().getName());
-            handleWinnerBid(managedBid, highestBid);
+            handleWinnerBid(bid, highestBid);
         }
     }
 
