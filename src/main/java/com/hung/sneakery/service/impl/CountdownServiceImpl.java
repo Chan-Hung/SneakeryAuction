@@ -23,7 +23,9 @@ public class CountdownServiceImpl implements CountdownService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CountdownServiceImpl.class);
     private static final String EMAIL_SUBJECT = "Kết quả phiên đấu giá";
-    private static final String EMAIL_TEMPLATE_PATH = "classpath:email-templates/reserve-price-notification.html";
+    private static final String EMAIL_TEMPLATE_PATH = "email-templates/reserve-price-notification.html";
+
+    private static final String EMAIL_TEMPLATE_PATH_WINNER = "email-templates/winner-notification.html";
 
     @Resource
     private BidRepository bidRepository;
@@ -101,17 +103,18 @@ public class CountdownServiceImpl implements CountdownService {
         setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED_WITHOUT_WINNER);
     }
 
+    @SneakyThrows
     private void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
         if (bid.getReservePrice() != null && bid.getPriceWin() < bid.getReservePrice()) {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
+        mailService.sendEmail(EMAIL_SUBJECT, EMAIL_TEMPLATE_PATH_WINNER, bid.getHolder(), bid.getProduct(), bid.getPriceWin());
         setPriceWinAndSaveBid(bid, highestBid, BidOutcome.CLOSED);
     }
 
     private void setPriceWinAndSaveBid(final Bid bid, final BidHistory bidHistory, final BidOutcome bidOutcome) {
         bid.setBidOutcome(bidOutcome);
         if (!BidOutcome.CLOSED_WITHOUT_WINNER.equals(bidOutcome) && Objects.nonNull(bidHistory)) {
-//            bid.setPriceWin(bidHistory.getActualPrice());
             bid.setWinnerPaymentStatus(PaymentStatus.PENDING);
             bid.setSellerPaymentStatus(PaymentStatus.PENDING);
             bid.setHolder(bidHistory.getUser());
