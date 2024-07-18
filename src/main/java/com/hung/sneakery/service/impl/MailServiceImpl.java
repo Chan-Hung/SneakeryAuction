@@ -18,6 +18,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.*;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 @Service
 public class MailServiceImpl implements MailService {
@@ -36,7 +37,9 @@ public class MailServiceImpl implements MailService {
         content = content.replace("[[URL]]", productLink);
         content = content.replace("[[NAME]]", user.getUsername());
         content = content.replace("[[PRODUCT_NAME]]", product.getName());
-        content = content.replace("[[HOLDER]]", product.getBid().getHolder().getUsername());
+        if (Objects.nonNull(product.getBid())) {
+            content = content.replace("[[HOLDER]]", product.getBid().getHolder().getUsername());
+        }
 
         String thumbnailPath = product.getImages().stream()
                 .filter(image -> Boolean.TRUE.equals(image.getIsThumbnail()))
