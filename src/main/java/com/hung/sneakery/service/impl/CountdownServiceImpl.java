@@ -105,6 +105,9 @@ public class CountdownServiceImpl implements CountdownService {
 
     @SneakyThrows
     private void handleWinnerBid(final Bid bid, final BidHistory highestBid) {
+        LOGGER.info("PRICE WIN: {} >= RESERVE PRICE: {} FOR PRODUCT {}",
+                bid.getPriceWin(),
+                bid.getReservePrice(), bid.getProduct().getName());
         if (bid.getReservePrice() != null && bid.getPriceWin() < bid.getReservePrice()) {
             handleWinnerUnderReservePrice(bid, highestBid);
         }
