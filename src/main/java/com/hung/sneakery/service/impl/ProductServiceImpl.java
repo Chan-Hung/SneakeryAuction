@@ -15,10 +15,13 @@ import com.hung.sneakery.repository.ProductRepository;
 import com.hung.sneakery.service.ProductService;
 import com.hung.sneakery.utils.SneakeryConstant;
 import com.hung.sneakery.utils.SneakeryUtil;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,6 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@CacheConfig(cacheNames = "productCache")
 public class ProductServiceImpl implements ProductService {
 
     @Resource
@@ -50,11 +54,31 @@ public class ProductServiceImpl implements ProductService {
     @Resource
     private SneakeryUtil sneakeryUtil;
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+
     @Override
     public ProductDetailedDTO getOne(final Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
-        return productDetailedConverter.convertToProductDetailedDTO(product);
+        ValueOperations<String, Object> opsForValue = redisTemplate.opsForValue();
+
+        // Generate a unique key for storing this product detail in Redis
+        String key = "Product_" + productId;
+
+        // Try to fetch the product detail from Redis
+        ProductDetailedDTO productDetailedDTO = (ProductDetailedDTO) opsForValue.get(key);
+
+        if (productDetailedDTO == null) {
+            // If not found in Redis, fetch from database
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new NotFoundException(SneakeryConstant.PRODUCT_NOT_FOUND));
+            productDetailedDTO = productDetailedConverter.convertToProductDetailedDTO(product);
+
+            // Store the product detail in Redis
+            opsForValue.set(key, productDetailedDTO);
+        }
+
+        return productDetailedDTO;
     }
 
     @Override
@@ -64,9 +88,25 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<ProductDTO> getProductsHomepage(final Pageable pageable) {
-        Page<Product> productPage = productRepository.findAllByBid_BidOutcome(BidOutcome.OPEN, pageable);
-        List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
-        return new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
+            ValueOperations<String, Object> opsForValue = redisTemplate.opsForValue();
+
+            // Generate a unique key for storing this product detail in Redis
+            String key = "HomepageProducts_" + pageable.getPageNumber() + "_" + pageable.getPageSize();
+
+            // Try to fetch the product detail from Redis
+            Page<ProductDTO> productDTOPage = (Page<ProductDTO>) opsForValue.get(key);
+
+            if (productDTOPage == null) {
+                // If not found in Redis, fetch from database
+                Page<Product> productPage = productRepository.findAllByBid_BidOutcome(BidOutcome.OPEN, pageable);
+                List<ProductDTO> productDTOs = productConverter.convertToProductDTOList(productPage.getContent());
+                productDTOPage = new PageImpl<>(productDTOs, pageable, productPage.getTotalElements());
+
+                // Store the product detail in Redis
+                opsForValue.set(key, productDTOPage);
+            }
+
+            return productDTOPage;
     }
 
     @Override
