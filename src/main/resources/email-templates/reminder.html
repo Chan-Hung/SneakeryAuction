@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        ul,
+        ol,
+        li {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            font-size: 17px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            font-size: 36px;
+            color: #3F83F8;
+            margin-bottom: 10px;
+        }
+        .content {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            color: #3F83F8;
+            background-color: white;
+            border: 1px solid #3F83F8;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+            width: fit-content;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            color: white;
+            border: 1px solid #3F83F8;
+            background-color: #3F83F8;
+            transform: translateY(-2px);
+        }
+        .content p {
+            line-height: 1.5;
+        }
+        .product {
+            margin-bottom: 20px;
+        }
+        .product img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .product-info {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Welcome to Sneakery!</h1>
+    </div>
+    <div class="content">
+        <p>Xin chào [[NAME]],</p>
+        <br>
+        <p>Chúng tôi gửi email này để nhắc bạn về phiên đấu giá đang diễn ra trên Sneakery.</p>
+        <br>
+        <div class="product">
+            <div class="product-info">
+                <img src="[[THUMBNAIL_URL]]" alt="Product Thumbnail">
+                <div>
+                    <h3>Sản phẩm: [[PRODUCT_NAME]]</h3>
+                    <h3>Giá hiện tại: [[CURRENT_PRICE]]</h3>
+                    <h3>Người chơi hiện giữ giá cao nhất: [[HOLDER]]</h3>
+                </div>
+            </div>
+        </div>
+        <p>Hiện tại, có những người khác đã đấu giá cao hơn và thời gian còn lại không nhiều. Đừng bỏ lỡ cơ hội để giữ lại sản phẩm của bạn.</p>
+        <br>
+        <p>Tiếp tục đấu giá để sở hữu sản phẩm ưng ý.</p>
+        <a href="[[URL]]" class="btn">Đấu giá</a>
+        <p>Trân trọng,<br>Đội ngũ Sneakery</p>
+    </div>
+</div>
+</body>
+</html>

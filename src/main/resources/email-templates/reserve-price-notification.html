@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        ul,
+        ol,
+        li {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lato', sans-serif;
+            font-weight: 400;
+            font-size: 17px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .header h1 {
+            font-size: 36px;
+            color: #3F83F8;
+            margin-bottom: 10px;
+        }
+        .content {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            line-height: 1.5;
+        }
+        .product {
+            margin-bottom: 20px;
+        }
+        .product img {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .product-info {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Xin chào bạn!</h1>
+        <img src="https://res.cloudinary.com/dki8kpq7y/image/upload/v1711288138/Pngtree_yellow_classic_alarm_clock_sale_7249689_urfp5x.png" width="150" height="120" alt="Logo">
+    </div>
+    <div class="content">
+        <p>Xin chào [[NAME]],</p>
+        <br>
+        <p>Cảm ơn bạn đã tham gia đấu giá trên Sneakery.</p>
+        <div class="product">
+            <div class="product-info">
+                <img src="[[THUMBNAIL_URL]]" alt="Product Thumbnail">
+                <div>
+                    <h3>[[PRODUCT_NAME]]</h3>
+                </div>
+            </div>
+        </div>
+        <p>Chúng tôi rất tiếc phải thông báo rằng mặc dù bạn đã có mức giá cao nhất phiên, nhưng đó chưa phải là số tiền mà người bán thực sự muốn bán.</p>
+        <p>Hy vọng bạn sẽ tiếp tục quan tâm đến sản phẩm này và tham gia các phiên đấu giá tương lai.</p>
+        <br>
+        <p>Đừng ngần ngại liên hệ nếu bạn có bất kỳ câu hỏi.</p>
+        <br>
+        <p>Trân trọng,<br>Đội ngũ Sneakery</p>
+    </div>
+</div>
+</body>
+</html>

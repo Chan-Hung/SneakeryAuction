@@ -1,0 +1,56 @@
+package com.hung.sneakery.controller;
+
+import com.hung.sneakery.dto.BidDTO;
+import com.hung.sneakery.dto.BidDetailDTO;
+import com.hung.sneakery.dto.request.BidCreateRequest;
+import com.hung.sneakery.dto.request.BidPlaceRequest;
+import com.hung.sneakery.dto.response.BaseResponse;
+import com.hung.sneakery.service.BidService;
+import io.swagger.annotations.Api;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.List;
+
+@RestController
+@Api(tags = "Bid APIs")
+@RequestMapping("/bids")
+public class BidController {
+
+    @Resource
+    private BidService bidService;
+
+    @PostMapping("/place")
+    @PreAuthorize("hasRole('USER')")
+    public BaseResponse placeBid(@Valid @RequestBody final BidPlaceRequest bidPlaceRequest) {
+        return bidService.placeBid(bidPlaceRequest);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('USER')")
+    public BidDetailDTO createBid(@Valid @RequestBody final BidCreateRequest bidCreateRequest) {
+        return bidService.createBid(bidCreateRequest);
+    }
+
+    @GetMapping("/uploaded-products")
+    @PreAuthorize("hasRole('USER')")
+    public List<BidDTO> getUploadedProducts() {
+        return bidService.getUploadedProduct();
+    }
+
+    @GetMapping("/win")
+    @PreAuthorize("hasRole('USER')")
+    public Page<BidDTO> getWinningBids(final Pageable pageable) {
+        return bidService.getWinningBids(pageable);
+    }
+
+    @GetMapping("/revenue")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Page<BidDTO> getBidRevenue(final Pageable pageable) {
+        return bidService.getBidRevenue(pageable);
+    }
+}
